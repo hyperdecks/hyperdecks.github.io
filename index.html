@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Hyperdecks | University of St.Gallen</title>
+<meta name="description" content="Online lecture slides of the Chair for Interaction- and Communication-based Systems, University of St.Gallen">
+<style>
+@font-face{font-family:HSGSans;font-weight:300;font-style:normal;font-display:swap;
+  src:local("Gill Sans MT Pro Light"),local("GillSansMTPro-Light"),local("Gill Sans Nova Light"),local("Gill Sans Light"),url(assets/GilliusADFNo2-Regular.otf) format("opentype")}
+@font-face{font-family:HSGSans;font-weight:600;font-style:normal;font-display:swap;
+  src:local("Gill Sans MT Pro Medium"),local("GillSansMTPro-Medium"),local("Gill Sans Nova Medium"),local("Gill Sans SemiBold"),url(assets/GilliusADFNo2-Bold.otf) format("opentype")}
+:root{--green:#00802F;--dgreen:#0A5F2D;--fg:#000;--body:#1a1a1a;--quiet:#595959;--line:#d9d9d9;--bg:#fff}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;background:var(--bg);color:var(--body);
+  font-family:HSGSans,"Gill Sans MT Pro","Gill Sans MT","Gill Sans",Calibri,sans-serif;font-weight:300;font-size:18px;line-height:1.45;-webkit-font-smoothing:antialiased}
+a{color:var(--green);text-underline-offset:.15em}
+a:focus-visible{outline:2px solid var(--green);outline-offset:3px}
+h1,h2,h3,p{margin:0}
+.wrap{max-width:1120px;margin:0 auto;padding:0 32px}
+
+header{position:relative;overflow:hidden;border-bottom:1px solid var(--line)}
+header .wrap{position:relative;z-index:1;padding-top:32px;padding-bottom:132px}
+.logo{display:block;width:230px;height:auto}
+.kicker{margin-top:56px;font-size:20px;color:var(--fg)}
+h1{font-size:56px;font-weight:300;line-height:1.05;letter-spacing:-.01em;color:var(--fg);margin-top:8px}
+.intro{margin-top:20px;max-width:720px;color:var(--fg)}
+.wedge{position:absolute;right:0;bottom:0;width:46%;height:100px;background:var(--green);clip-path:polygon(100% 0,100% 100%,0 100%,6% 45%)}
+.tagline{position:absolute;right:32px;bottom:22px;z-index:2;font-family:"Palatino Linotype",Palatino,"Book Antiqua",serif;font-size:15px;color:#fff}
+
+main{flex:1}
+main .wrap{padding-top:48px;padding-bottom:64px}
+h2{font-size:32px;font-weight:300;line-height:1.1;color:var(--fg);margin-bottom:24px}
+
+.decks{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:28px}
+.card{position:relative;display:flex;flex-direction:column;border:1px solid var(--line);background:#fff;transition:border-color .15s,box-shadow .15s}
+.card:hover,.card:focus-within{border-color:var(--green);box-shadow:0 6px 20px rgba(0,0,0,.08)}
+.card img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover;border-bottom:1px solid var(--line)}
+.card .body{padding:20px 22px 22px;display:flex;flex-direction:column;flex:1}
+.meta{font-size:14px;color:var(--quiet)}
+.card h3{font-size:26px;font-weight:300;line-height:1.15;color:var(--fg);margin:4px 0 10px}
+.card h3 a{color:inherit;text-decoration:none}
+.card h3 a::after{content:"";position:absolute;inset:0}
+.card p.desc{font-size:16px;margin-bottom:18px}
+.foot{margin-top:auto;display:flex;justify-content:space-between;align-items:center;font-size:15px}
+.open{display:inline-flex;align-items:center;gap:8px;background:var(--green);color:#fff;padding:7px 14px;border-radius:17px;font-weight:600}
+.card:hover .open{background:var(--dgreen)}
+.count{color:var(--quiet)}
+
+footer{border-top:1px solid var(--line);font-size:14px;color:var(--quiet)}
+footer .wrap{padding-top:20px;padding-bottom:32px}
+
+@media (max-width:820px){
+  body{font-size:17px}
+  .wrap{padding:0 16px}
+  .logo{width:180px}
+  .kicker{margin-top:36px}
+  h1{font-size:40px}
+  header .wrap{padding-bottom:96px}
+  .wedge{width:80%;height:72px}
+  .tagline{right:16px;bottom:14px}
+  .decks{grid-template-columns:1fr}
+  h2{font-size:26px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="wrap">
+    <img class="logo" src="assets/hsg_logo.png" alt="University of St.Gallen">
+    <p class="kicker">Institute of Computer Science</p>
+    <h1>Hyperdecks</h1>
+    <p class="intro">Lecture slides of the <a href="https://interactions.ics.unisg.ch/">Chair for Interaction- and Communication-based Systems</a> (Prof. Dr. Simon Mayer), as online presentations that also work on a phone and print to PDF.</p>
+  </div>
+  <div class="wedge" aria-hidden="true"></div>
+  <p class="tagline">From insight to impact.</p>
+</header>
+
+<main>
+  <div class="wrap">
+    <h2>Courses</h2>
+    <div class="decks">
+      <article class="card">
+        <img src="assets/computersysteme.jpg" alt="Title slide of the first lecture: Computersysteme, Welcome and Introduction, with the HSG logo and a gear-shaped word cloud">
+        <div class="body">
+          <p class="meta">Bachelor in Computer Science · Autumn 2026</p>
+          <h3><a href="computersystems/">Computersysteme (1,904)</a></h3>
+          <p class="desc">How an algorithm in a high-level language becomes instructions that a processor executes: from bits to circuits, to a processor, to assembly language.</p>
+          <p class="foot"><span class="open">Open course →</span><span class="count">4 lectures</span></p>
+        </div>
+      </article>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="wrap"><a href="https://interactions.ics.unisg.ch/">Chair for Interaction- and Communication-based Systems</a> | Institute of Computer Science | University of St.Gallen</div>
+</footer>
+</body>
+</html>
