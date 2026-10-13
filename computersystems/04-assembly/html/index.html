@@ -1,0 +1,637 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Assembly Language | University of St.Gallen</title>
+<style>@font-face{font-family:HSGSans;font-weight:300;font-style:normal;font-display:swap;src:local("Gill Sans MT Pro Light"),local("GillSansMTPro-Light"),local("Gill Sans Nova Light"),local("GillSansNova-Light"),local("Gill Sans Light"),local("GillSans-Light"),url(assets/GilliusADFNo2-Regular.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:300;font-style:italic;font-display:swap;src:local("Gill Sans MT Pro Light Italic"),local("GillSansMTPro-LightItalic"),local("Gill Sans Nova Light Italic"),local("GillSansNova-LightItalic"),local("Gill Sans Light Italic"),local("GillSans-LightItalic"),url(assets/GilliusADFNo2-Italic.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:600;font-style:normal;font-display:swap;src:local("Gill Sans MT Pro Medium"),local("GillSansMTPro-Medium"),local("Gill Sans Nova Medium"),local("GillSansNova-Medium"),local("Gill Sans SemiBold"),local("GillSans-SemiBold"),url(assets/GilliusADFNo2-Bold.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:600;font-style:italic;font-display:swap;src:local("Gill Sans MT Pro Medium Italic"),local("GillSansMTPro-MediumItalic"),local("Gill Sans Nova Medium Italic"),local("Gill Sans SemiBold Italic"),local("GillSans-SemiBoldItalic"),url(assets/GilliusADFNo2-BoldItalic.otf) format('opentype')}
+@font-face{font-family:HSGSerif;font-weight:400;font-style:normal;font-display:swap;src:local("Palatino Linotype"),local("PalatinoLinotype-Roman"),local("Palatino"),local("Palatino-Roman"),local("Book Antiqua"),url(assets/texgyrepagella-regular.otf) format('opentype')}
+@font-face{font-family:HSGSerif;font-weight:400;font-style:italic;font-display:swap;src:local("Palatino Linotype Italic"),local("PalatinoLinotype-Italic"),local("Palatino Italic"),local("Palatino-Italic"),url(assets/texgyrepagella-italic.otf) format('opentype')}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+/* One unit (U) is 1% of a 16:9 slide; the template slide is 13.33in wide, so calc(1*var(--u)) = 9.6pt.
+   Type scale of the HSG template, fixed for every deck: headline 32pt (calc(3.33*var(--u))), body 18.7pt (calc(1.94*var(--u))), sub-points 14pt (calc(1.46*var(--u))),
+   small 12pt (calc(1.25*var(--u))), source 8pt (calc(.83*var(--u))). Text is Gill Sans Light; bold is Gill Sans Medium. */
+:root{--ctl:60px;--bar:var(--ctl);--u:min(1vw,calc((100vh - var(--bar))/56.25));--u:min(1vw,calc((100dvh - var(--bar))/56.25));
+  --s-h1:calc(5.2*var(--u));--s-h2:calc(3.33*var(--u));--s-kick:calc(2.1*var(--u));--s-body:calc(1.94*var(--u));--s-mid:calc(1.6*var(--u));--s-sub:calc(1.46*var(--u));--s-small:calc(1.25*var(--u));--s-tiny:calc(.83*var(--u));
+  --green:#00802F;--dgreen:#0A5F2D;--salmon:#EB6969;--teal:#73A5AF;--row-a:#CBD8CD;--row-b:#E7EDE8;--yellow:#FFF04B;
+  --fg:#000000;--body:#1a1a1a;--quiet:#595959;--line:#d9d9d9;--k-stage:#e4e4e4}
+body{font-family:HSGSans,"Gill Sans MT Pro","Gill Sans MT","Gill Sans","Gill Sans Nova",Calibri,sans-serif;font-weight:300;
+  -webkit-font-smoothing:antialiased;overflow:hidden;background:var(--k-stage);color:var(--fg)}
+h1,h2,h3,p,ul,ol,dl,dd,figure,pre{margin:0;padding:0}
+b,strong,th{font-weight:600}
+a{color:var(--green);text-underline-offset:.15em}
+a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+code,pre{font-family:"Courier New",Courier,"Liberation Mono",monospace;font-weight:400}
+mark{background:var(--yellow);color:inherit;padding:0 .1em}
+sub,sup{font-size:.65em;line-height:0}
+
+.slide{position:absolute;left:50%;top:calc((100% - var(--bar))/2);width:calc(100*var(--u));height:calc(56.25*var(--u));transform:translate(-50%,-50%);
+  overflow:hidden;visibility:hidden;background:#fff;color:var(--fg)}
+.slide.active{visibility:visible}
+/* the title sits in the template's title box (calc(4.1*var(--u)) to calc(10.8*var(--u)), text on its bottom line); content starts at calc(14*var(--u)) */
+.frame{position:relative;z-index:1;width:100%;height:100%;padding:calc(4.1*var(--u)) calc(3.92*var(--u)) calc(5*var(--u));display:flex;flex-direction:column;min-width:0}
+.headrow{display:flex;justify-content:space-between;align-items:flex-end;gap:calc(3*var(--u));min-height:calc(6.7*var(--u));flex:none}
+h2{font-size:var(--s-h2);font-weight:300;line-height:1.08;letter-spacing:-.005em;color:var(--fg);max-width:calc(78*var(--u));text-wrap:balance}
+.lead{font-size:var(--s-body);line-height:1.25;margin-top:calc(3.2*var(--u));max-width:calc(86*var(--u));color:var(--body)}
+.main{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;padding:calc(3.2*var(--u)) 0 calc(.6*var(--u))}
+.l-menu .main,.l-quiz .main,.l-image .main,.l-gallery .main,.l-people .main,.l-syllabus .main{justify-content:safe center}
+.lead+.main{padding-top:calc(2.6*var(--u))}
+.source{position:absolute;left:calc(3.92*var(--u));bottom:calc(2.1*var(--u));max-width:calc(84*var(--u));font-size:var(--s-tiny);line-height:1.3;color:var(--quiet);z-index:2}
+.dfoot{position:absolute;left:calc(3.92*var(--u));bottom:calc(2.1*var(--u));font-size:var(--s-tiny);color:var(--quiet);z-index:2}
+.source~.dfoot{display:none}
+/* the slide number in the green HSG tab, bottom right */
+.pn{position:absolute;right:calc(3.94*var(--u));top:calc(51.41*var(--u));width:calc(2.33*var(--u));height:calc(2.56*var(--u));z-index:3;display:grid;place-items:center;padding:calc(.45*var(--u)) 0 0 calc(.45*var(--u));
+  font-size:calc(1.1*var(--u));font-weight:300;color:#fff;font-variant-numeric:tabular-nums}
+.pn svg{position:absolute;inset:0;width:100%;height:100%;fill:var(--green);z-index:-1}
+
+/* running text: paragraphs without a mark, points with a dash as on the template */
+.copy{display:grid;gap:calc(1.5*var(--u));align-content:start;min-width:0}
+.copy p{font-size:var(--s-body);line-height:1.25;color:var(--body)}
+ul.dash{list-style:none;display:grid;gap:calc(.9*var(--u))}
+ul.dash>li{position:relative;padding-left:calc(2.2*var(--u));font-size:var(--s-body);line-height:1.25;color:var(--body)}
+ul.dash>li::before{content:"-";position:absolute;left:calc(.1*var(--u))}
+ul.dash ul{list-style:none;display:grid;gap:calc(.25*var(--u));margin-top:calc(.35*var(--u))}
+ul.dash ul li{position:relative;padding-left:calc(1.8*var(--u));font-size:var(--s-sub);line-height:1.25;color:var(--body)}
+ul.dash ul li::before{content:"-";position:absolute;left:0}
+.dense ul.dash>li,.dense .copy p{font-size:var(--s-mid)}
+.dense ul.dash{gap:calc(.6*var(--u))}
+.group h3{font-size:calc(2.4*var(--u));font-weight:300;line-height:1.15;color:var(--fg);margin-bottom:calc(.5*var(--u))}
+.group ul.dash{gap:calc(.2*var(--u))}
+.dense .group ul.dash>li,.dense .group p{font-size:var(--s-mid)}
+.groups{display:grid;gap:calc(3*var(--u))}
+.defs{display:grid;grid-template-columns:auto 1fr;gap:calc(.45*var(--u)) calc(4*var(--u));font-size:var(--s-mid);line-height:1.25;color:var(--body)}
+.defs dt{position:relative;padding-left:calc(2.2*var(--u))}
+.defs dt::before{content:"-";position:absolute;left:calc(.1*var(--u))}
+.after{font-size:var(--s-body);line-height:1.3;color:var(--body);margin-top:calc(2.6*var(--u));padding-left:calc(24*var(--u))}
+
+/* copy on the left, picture, box or code on the right */
+.split{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:calc(4*var(--u));align-items:center}
+.split.wide{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.l-code .split{align-items:start}
+.pic{display:flex;flex-direction:column;align-items:center;min-height:0}
+.pic img{display:block;max-width:100%;max-height:calc(34*var(--u));width:auto;height:auto;object-fit:contain}
+.pic.shadow img{filter:drop-shadow(calc(.35*var(--u)) calc(.35*var(--u)) calc(.55*var(--u)) rgba(0,0,0,.38))}
+.pic figcaption{font-size:var(--s-tiny);color:var(--quiet);margin-top:calc(.9*var(--u));text-align:center;max-width:calc(44*var(--u))}
+
+/* boxes: green for a question to the room, an outline for an example or a note, teal for a remark */
+.box{border-radius:calc(.9*var(--u));padding:calc(1.3*var(--u)) calc(2*var(--u));font-size:var(--s-mid);line-height:1.25;text-wrap:balance}
+.box.green{background:var(--green);border:calc(.12*var(--u)) solid var(--dgreen);color:#fff;text-align:center}
+.box.outline{background:#fff;border:calc(.12*var(--u)) solid var(--green);color:var(--body);border-radius:0}
+.box.teal{background:var(--teal);border:calc(.12*var(--u)) solid #5d8f99;color:#fff;border-radius:0}
+.box h3{font-size:var(--s-mid);font-weight:600;margin-bottom:calc(.4*var(--u))}
+.box a{color:inherit}
+.callout{flex:none;max-width:calc(34*var(--u));margin-bottom:calc(-1*var(--u))}
+.callout.box{font-size:var(--s-sub)}
+
+pre.code{font-size:calc(1.3*var(--u));line-height:1.35;padding:calc(1.6*var(--u)) calc(2*var(--u));white-space:pre;overflow:hidden;tab-size:4}
+pre.code.small{font-size:calc(1.05*var(--u))}
+pre.code.outline{background:#fff;border:calc(.12*var(--u)) solid var(--green);color:#262626}
+pre.code.teal{background:var(--teal);border:calc(.12*var(--u)) solid #5d8f99;color:#fff}
+.codecap{font-size:var(--s-tiny);color:var(--quiet);margin-top:calc(.8*var(--u))}
+
+/* table: green header, rows in two green tints, white rules */
+table.t{width:100%;border-collapse:collapse;font-size:var(--s-mid);line-height:1.2}
+.t th{background:var(--green);color:#fff;text-align:left;padding:calc(.75*var(--u)) calc(1*var(--u))}
+.t td{padding:calc(.65*var(--u)) calc(1*var(--u));color:var(--body);vertical-align:top}
+.t tr:nth-child(odd) td{background:var(--row-a)}
+.t tr:nth-child(even) td{background:var(--row-b)}
+.t th+th,.t td+td{border-left:calc(.15*var(--u)) solid #fff}
+.t tr+tr td{border-top:calc(.15*var(--u)) solid #fff}
+.t td:first-child{font-weight:600;color:var(--fg)}
+.t.many{font-size:var(--s-sub)}
+.t.many td{padding:calc(.45*var(--u)) calc(1*var(--u))}
+
+/* menu: the topics of the day in a thin green frame */
+.menu{border:calc(.12*var(--u)) solid var(--green);padding:calc(2.6*var(--u)) calc(2.4*var(--u));width:calc(66*var(--u));display:grid;gap:calc(.35*var(--u))}
+.menu p{font-size:var(--s-sub);line-height:1.3;color:var(--body)}
+.menu p.cur{font-weight:600;color:var(--green)}
+
+/* quiz: questions in green boxes, staggered in two columns */
+.quiz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(2.6*var(--u)) calc(3*var(--u));align-items:center}
+.quiz .box{justify-self:start;max-width:calc(40*var(--u))}
+.quiz .box:nth-child(even){justify-self:end}
+.quiz.n3 .box:last-child{grid-column:1/-1;justify-self:center}
+
+/* task: a salmon label set at an angle, as on the template's homework slides */
+.task{position:relative;flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;gap:calc(4*var(--u))}
+.task .copy{align-self:start}
+.stamp{justify-self:center;background:var(--salmon);border:calc(.12*var(--u)) solid #d65b5b;border-radius:calc(1.1*var(--u));color:#fff;font-size:calc(3*var(--u));line-height:1.2;
+  padding:calc(1.7*var(--u)) calc(2.8*var(--u));transform:rotate(-9deg);text-align:center;max-width:calc(44*var(--u));text-wrap:balance}
+.task .go{position:absolute;right:calc(4*var(--u));bottom:calc(2*var(--u));font-size:var(--s-sub)}
+.task.solo{grid-template-columns:1fr}
+
+.gallery{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:calc(3*var(--u));align-items:end}
+.gallery .pic img{max-height:calc(30*var(--u))}
+.people{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:calc(3*var(--u));align-items:end;justify-items:center}
+.person{display:flex;flex-direction:column;align-items:center;text-align:center;gap:calc(1.4*var(--u))}
+.person img{width:calc(13*var(--u));height:calc(16*var(--u));object-fit:cover;display:block;filter:drop-shadow(calc(.35*var(--u)) calc(.35*var(--u)) calc(.55*var(--u)) rgba(0,0,0,.38))}
+.person .name{font-size:var(--s-small);line-height:1.25;color:var(--fg)}
+.person .role{font-size:var(--s-small);line-height:1.25;color:var(--body)}
+.people.n1 img,.people.n2 img{width:calc(17*var(--u));height:calc(21*var(--u))}
+
+/* quote: the quote is the headline, right aligned, the picture below on the left */
+.l-quote .headrow{justify-content:flex-end}
+.l-quote h2{text-align:right;max-width:calc(64*var(--u));line-height:1.15;text-wrap:balance}
+.attr{font-size:var(--s-mid);text-align:right;color:var(--body);margin-top:calc(1*var(--u))}
+.qbody{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:calc(4*var(--u));align-items:end;padding:calc(2*var(--u)) 0 calc(1*var(--u))}
+.qbody .pic{align-items:flex-start}
+.qbody .pic img{width:100%;max-height:calc(30*var(--u));object-position:left bottom}
+.qbody ul.dash>li{font-size:var(--s-sub)}
+
+/* questions and study slides carry the template's pictures: the figure on the question mark and the light bulb */
+.figure{display:flex;justify-content:center;align-items:center}
+.figure img{width:calc(22*var(--u));height:auto;display:block}
+.bulb{position:absolute;right:calc(4*var(--u));top:calc(2.2*var(--u));width:calc(10*var(--u));height:auto;z-index:2}
+.l-study .headrow{padding-right:calc(12*var(--u))}
+.l-questions .split{grid-template-columns:minmax(0,1fr) calc(24*var(--u))}
+.takeh{font-size:var(--s-mid);color:var(--body);margin-bottom:calc(1.6*var(--u))}
+.l-questions ul.dash{gap:calc(1.5*var(--u))}
+
+.l-questions .after{padding-left:calc(30*var(--u))}
+.l-questions.bare .main{justify-content:flex-end}
+.l-questions.bare .figure{justify-content:flex-end;padding-right:calc(2*var(--u))}
+.l-questions.bare .figure img{width:calc(24*var(--u))}
+
+/* syllabus: the course plan, one bar per session; the current one is teal; assignments in salmon on the right */
+.plan{display:grid;grid-template-columns:calc(11*var(--u)) calc(6*var(--u)) minmax(0,1fr) calc(23*var(--u));column-gap:calc(1.6*var(--u));align-items:center}
+.legend{grid-column:1;display:grid;gap:calc(1*var(--u));align-self:center}
+.legend span{display:grid;place-items:center;height:calc(3.4*var(--u));font-size:calc(1.05*var(--u));color:#fff}
+.lg-l{background:var(--green)}.lg-e{background:var(--dgreen)}.lg-a{background:var(--salmon)}
+.rows{grid-column:2/4;display:grid;grid-template-columns:calc(6*var(--u)) minmax(0,1fr);column-gap:calc(1.6*var(--u));row-gap:calc(.4*var(--u));align-items:center}
+.l-syllabus .main{padding-top:calc(1.4*var(--u))}
+.rows .date{font-size:calc(.72*var(--u));color:var(--quiet);text-align:right;font-variant-numeric:tabular-nums}
+.rows .bar{height:calc(2.15*var(--u));display:grid;place-items:center;font-size:calc(1.1*var(--u));color:#fff;background:var(--green);border-bottom:calc(.15*var(--u)) solid #00591f;padding:0 calc(1*var(--u));
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rows .bar.ex{background:var(--dgreen)}
+.rows .bar.cur{background:var(--teal);border-color:#5d8f99}
+.rows .brk{grid-column:2;height:calc(.45*var(--u));background:#111;margin:calc(.3*var(--u)) 0}
+.assign{grid-column:4;display:grid;row-gap:calc(.4*var(--u));align-self:stretch}
+.assign div{background:var(--salmon);color:#fff;font-size:calc(1.05*var(--u));display:grid;place-items:center;text-align:center;padding:calc(1*var(--u));margin:calc(.3*var(--u)) 0}
+
+/* title slide: logo, title and the course on the left, the gear on the right, the green wedge at the foot */
+.l-title .frame,.l-section .frame{padding:0;display:block}
+.logo{position:absolute;left:calc(3.9*var(--u));top:calc(3.4*var(--u));width:calc(24.3*var(--u));height:auto;z-index:2}
+.art{position:absolute;inset:0;overflow:hidden;z-index:0}
+.gear{position:absolute;left:calc(47.65*var(--u));top:calc(-1.9*var(--u));width:calc(53.2*var(--u));height:calc(53.2*var(--u));object-fit:contain}
+.veil{position:absolute;inset:0;z-index:1;background:linear-gradient(to top right,#fff 0%,rgba(255,255,255,.6) 50%,rgba(255,255,255,0) 100%)}
+.wedge{position:absolute;left:calc(50*var(--u));top:calc(34.65*var(--u));width:calc(50*var(--u));height:calc(21.6*var(--u));background:var(--green);z-index:2;
+  clip-path:polygon(100% 0,100% 100%,3.65% 100%,0 52.9%)}
+.tagline{position:absolute;right:calc(4*var(--u));top:calc(15.65*var(--u));z-index:3;font-family:HSGSerif,"Palatino Linotype",Palatino,serif;font-size:calc(1.39*var(--u));color:#fff}
+.tblock{position:absolute;left:calc(9*var(--u));top:calc(12*var(--u));width:calc(44*var(--u));height:calc(19.6*var(--u));z-index:2;display:flex;flex-direction:column;justify-content:flex-end}
+.kicker{font-size:var(--s-kick);line-height:1.2;color:var(--fg);margin-bottom:calc(2.2*var(--u))}
+h1{font-size:var(--s-h1);font-weight:300;line-height:1.08;letter-spacing:-.01em;color:var(--fg);text-wrap:balance}
+.tbody{position:absolute;left:calc(9*var(--u));top:calc(34.2*var(--u));width:calc(40*var(--u));z-index:2;font-size:calc(1.67*var(--u));line-height:1.3;color:var(--fg)}
+.tbody p+p{margin-top:calc(2.2*var(--u))}
+.l-section .tblock{top:calc(14*var(--u));height:calc(20*var(--u));width:calc(70*var(--u))}
+.l-section .wedge{left:calc(62*var(--u));width:calc(38*var(--u));top:calc(40.25*var(--u));height:calc(16*var(--u))}
+
+/* the controls: a pill that floats under the slide, as in the FuSo decks, in HSG green */
+.controls{position:fixed;left:0;right:0;bottom:0;height:var(--ctl);display:grid;place-items:center;z-index:7;pointer-events:none;
+  color:#111;font-family:system-ui,sans-serif;font-size:13px;font-weight:600}
+.pill{pointer-events:auto;display:flex;align-items:center;height:44px;padding:0 6px;border-radius:22px;background:#fff;
+  border:1px solid #ddd;box-shadow:0 4px 18px rgba(0,0,0,.1);transition:opacity .25s,transform .25s}
+.pill>div{display:flex;align-items:center;gap:2px}
+.pill .sep{width:1px;height:20px;background:#ddd;margin:0 8px}
+.controls button{border:0;background:transparent;color:inherit;font:inherit;height:34px;padding:0 12px;border-radius:17px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
+.controls [hidden]{display:none}
+.controls svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.controls button:hover,body.show-notes #notesBtn,body:has(.overview.open) #ovBtn{background:#f0f0f0}
+.controls button:focus-visible{outline:2px solid #00802F;outline-offset:2px}
+.controls .nav button{width:32px;height:32px;padding:0;background:#00802F;color:#fff}
+.controls .nav button:not(:disabled):hover{background:#0A5F2D}
+.controls .nav button:disabled{opacity:.3;cursor:default}
+.nav svg{stroke-width:2.25}
+.count{min-width:60px;text-align:center;font-variant-numeric:tabular-nums}
+:root:not(:fullscreen) .fs-on,:root:fullscreen .fs-off{display:none}
+.progress{position:fixed;left:0;right:0;bottom:0;height:3px;background:#ddd}
+.progress span{display:block;height:100%;width:0;background:#00802F;transition:width .3s}
+:root:fullscreen{--bar:0px}
+:root:fullscreen .progress{bottom:0;background:transparent}
+:root:fullscreen .pill{opacity:0;transform:translateY(10px);pointer-events:none}
+:root:fullscreen body.awake .pill,:root:fullscreen .pill:has(:focus-visible){opacity:1;transform:none;pointer-events:auto}
+:root:fullscreen body:not(.awake){cursor:none}
+
+.overview{position:fixed;inset:0;z-index:10;display:none;overflow:auto;padding:calc(5*var(--u)) calc(5*var(--u)) calc(8*var(--u));background:#fff}
+.overview.open{display:block}
+.overview h2{font-size:calc(3*var(--u))}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(20*var(--u)),1fr));gap:calc(1.4*var(--u));margin-top:calc(3*var(--u))}
+.ov-grid button{all:unset;cursor:pointer;box-sizing:border-box;min-height:calc(10*var(--u));padding:calc(1.6*var(--u));background:#f2f2f2;border-left:calc(.5*var(--u)) solid var(--green);
+  color:#111;font-size:calc(1.25*var(--u));line-height:1.25;display:flex;flex-direction:column;gap:calc(.6*var(--u))}
+.ov-grid button:focus-visible{outline:2px solid currentColor}
+.ov-grid small{font-size:calc(.9*var(--u));color:var(--quiet)}
+.notes-view{position:fixed;left:0;right:0;bottom:var(--bar);z-index:6;display:none;max-height:42%;overflow:auto;padding:calc(2*var(--u)) calc(5*var(--u));
+  background:#f2f2f2;color:#111;border-top:1px solid #ddd;font-size:calc(1.4*var(--u));line-height:1.45;white-space:pre-wrap}
+body.show-notes .notes-view{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+
+/* windows narrower than 1000px: still one slide at a time, but the slide fills the window and its content
+   reflows into one column; a slide taller than the window scrolls within itself */
+@media (max-width:999px),(max-height:480px){
+  :root{--u:8px;--s-h1:34px;--s-h2:25px;--s-kick:17px;--s-body:17px;--s-mid:16px;--s-sub:15px;--s-small:14px;--s-tiny:12px}
+  body{background:#fff}
+  .slide{left:0;top:0;width:100%;height:calc(100% - var(--bar));transform:none;overflow-y:auto}
+  .frame{height:auto;min-height:100%;display:block;padding:30px 20px 70px}
+  .headrow{display:block;min-height:0}
+  .callout{margin:16px 0 0;max-width:none}
+  .lead{margin-top:16px}
+  .main{display:block;padding:22px 0 0}
+  .split,.split.wide,.task,.qbody,.quiz,.gallery,.people,.l-questions .split{grid-template-columns:1fr;gap:24px}
+  .quiz .box,.quiz .box:nth-child(even){justify-self:stretch;max-width:none}
+  .after,.l-questions .after{padding-left:0}
+  .defs{grid-template-columns:1fr;gap:2px}.defs dd{padding-left:22px;margin-bottom:8px}
+  .menu{width:auto;padding:18px}
+  .pic img{max-height:none}
+  .figure img{width:150px}
+  .bulb{width:64px;top:16px;right:16px}
+  .l-study .headrow{padding-right:72px}
+  table.t{font-size:14px}.t th,.t td{padding:6px 7px}
+  .tablewrap{overflow-x:auto}
+  pre.code,pre.code.small{font-size:12px;overflow-x:auto}
+  .stamp{font-size:22px;transform:rotate(-5deg);margin:20px 0}
+  .task .go{position:static;display:block;margin-top:20px}
+  .plan{display:block}.legend{display:flex;gap:8px;margin-bottom:16px}.legend span{flex:1;height:30px;font-size:12px}
+  .rows{grid-template-columns:62px 1fr;row-gap:5px}.rows .date{font-size:10px}.rows .bar{height:26px;font-size:12px;white-space:normal}
+  .assign{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}.assign div{font-size:12px;padding:8px;margin:0}
+  .person img{width:120px;height:148px}
+  .l-quote h2{text-align:left}.attr{text-align:left}
+  .l-title .frame,.l-section .frame{display:flex;flex-direction:column;padding:24px 20px 0}
+  .logo,.tblock,.tbody,.tagline{position:static;width:auto;height:auto}
+  .logo{width:190px;margin-bottom:44px}
+  .tbody{margin:26px 0 30px;font-size:15px}
+  .gear{left:auto;right:-70px;top:-50px;width:210px;height:210px}
+  .l-title .frame,.l-section .frame{overflow:hidden}
+  .wedge{position:static;width:auto;height:auto;clip-path:none;margin:auto -20px 0;padding:26px 20px 18px;display:flex;justify-content:flex-end;
+    clip-path:polygon(100% 0,100% 100%,0 100%,0 40%)}
+  .tagline{font-size:15px}
+  .l-section .wedge{width:auto;height:90px;margin-top:40px}
+  .source,.dfoot{position:static;display:block;margin-top:24px}
+  .pn{position:absolute;top:auto;bottom:16px;right:16px;width:30px;height:33px;font-size:12px}
+  .pill{width:100%;height:100%;padding:3px 10px 0;border-radius:0;border:0;box-shadow:none;justify-content:space-between}
+  .pill .sep{display:none}
+  .tools button{flex-direction:column;gap:3px;height:48px;min-width:56px;padding:0 6px;border-radius:10px;font-size:10.5px}
+  .tools svg{width:20px;height:20px}
+  .controls .nav button{width:38px;height:38px}
+  .progress{bottom:calc(var(--ctl) - 3px)}
+}
+@media print{
+  @page{size:13.333in 7.5in;margin:0}
+  :root{--u:.13333in;--bar:0px}
+  html,body{height:auto}
+  body{overflow:visible;background:#fff}
+  .slide{position:relative;left:auto;top:auto;transform:none;visibility:visible;height:7.5in;width:100%;break-after:page}
+  .controls,.overview,.notes-view{display:none!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<main aria-label="Assembly Language">
+<section class="slide l-title active" id="s1" data-title="Assembly Language" aria-label="Slide 1 of 52"><div class="frame"><div class="art"><img class="gear" src="assets/title-gear.png" alt="Word cloud of research topics in the shape of a gear"><div class="veil"></div></div><img class="logo" src="assets/hsg_logo.png" alt="University of St.Gallen"><div class="tblock"><p class="kicker">Computersysteme</p><h1>Assembly Language</h1></div><div class="tbody"><p>Simon Mayer</p><p>University of St.Gallen<br>Bachelor in Computer Science<br><br>Computersysteme (1,904)</p></div><div class="wedge"><p class="tagline">From insight to impact.</p></div></div></section>
+<section class="slide l-syllabus" id="s2" data-title="Course Syllabus" aria-label="Slide 2 of 52"><div class="frame"><div class="headrow"><div><h2>Course Syllabus</h2></div></div><div class="main"><div class="plan"><div class="legend"><span class="lg-l">Lecture</span><span class="lg-e">Exercise</span><span class="lg-a">Assignment</span></div><div class="rows"><span class="date">16.09.2026</span><div class="bar">Information: Numbers, Bits, Bytes, Encodings</div><span class="date">23.09.2026</span><div class="bar ex">Bare Metal Programming</div><span class="date">30.09.2026</span><div class="bar">Computing on Bits: Circuits and Processors</div><span class="date">07.10.2026</span><div class="bar">Assembly Basics</div><span class="date">14.10.2026</span><div class="bar ex">Assembly Reverse-Engineering &amp; Assembly Bombs</div><span class="date">21.10.2026</span><div class="bar cur">Control Flow</div><span></span><div class="brk" aria-label="Break"></div><span class="date">11.11.2026</span><div class="bar">Memory Basics</div><span class="date">18.11.2026</span><div class="bar">Memory Hierarchy and Caches</div><span class="date">25.11.2026</span><div class="bar ex">Memory Experiments</div><span class="date">02.12.2026</span><div class="bar">Processor Architecture</div><span class="date">09.12.2026</span><div class="bar">Modern Processors</div><span class="date">16.12.2026</span><div class="bar">Multiprocessors, GPUs, Heterogeneous Manycore</div></div><div class="assign" style="grid-template-rows:repeat(13,auto)"><div style="grid-row:2/5">Bare Metal Programming</div><div style="grid-row:5/10">Assembly Reverse-Engineering</div><div style="grid-row:10/13">Memory Experiments</div></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>2</span></section>
+<section class="slide l-table" id="s3" data-title="Our Journey So Far…" aria-label="Slide 3 of 52"><div class="frame"><div class="headrow"><div><h2>Our Journey So Far…</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Step</th><th>Building blocks</th><th>Where</th></tr></thead><tbody><tr><td>Information</td><td>Binary digits + context: numbers, text, pixels and colors, instructions</td><td><a href="https://hyperdecks.github.io/computersystems/01-information/html/" target="_blank" rel="noopener">Lecture 1</a>: done!</td></tr><tr><td>Logic + arithmetic</td><td>School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)</td><td><a href="https://hyperdecks.github.io/computersystems/02-circuits/html/" target="_blank" rel="noopener">Lecture 2</a>: done!</td></tr><tr><td>Electronics</td><td>Logic gates from electronic components (today: transistors)</td><td><a href="https://hyperdecks.github.io/computersystems/02-circuits/html/" target="_blank" rel="noopener">Lecture 2</a>: done!</td></tr><tr><td>Calculator</td><td>Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!</td><td><a href="https://hyperdecks.github.io/computersystems/02-circuits/html/" target="_blank" rel="noopener">Lecture 2</a>: done!</td></tr><tr><td>Processor</td><td>Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!</td><td><a href="https://hyperdecks.github.io/computersystems/03-processors/html/" target="_blank" rel="noopener">Lecture 3</a>: done!</td></tr><tr><td>Programs</td><td>Instruction sets, machine code and assembly language</td><td><a href="https://hyperdecks.github.io/computersystems/03-processors/html/" target="_blank" rel="noopener">Lecture 3</a>, and <strong>today</strong></td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>3</span></section>
+<section class="slide l-menu" id="s4" data-title="Our Menu for Today" aria-label="Slide 4 of 52"><div class="frame"><div class="headrow"><div><h2>Our Menu for Today</h2></div></div><div class="main"><div class="menu"><p class=cur>Introduction to Assembly Language</p><p>Registers and Memory</p><p>Assembly Operands</p><p>Common Assembly Instructions</p><p>Conditionals and Loops</p><p>A simple Exploit</p></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>4</span></section>
+<section class="slide l-text" id="s5" data-title="Why do we look at Assembly Code?" aria-label="Slide 5 of 52"><div class="frame"><div class="headrow"><div><h2>Why do we look at Assembly Code?</h2></div></div><p class="lead">Examples you will see today and just after the break:</p><div class="main dense"><div class="copy"><ul class="dash"><li>Assembly code makes normally hidden processor state visible: it lets us look into the very essence of computing</li></ul><dl class="defs"><dt>Program counter (PC)</dt><dd>the memory address of the next instruction (like 0x100 to 0x108 in <a href="https://hyperdecks.github.io/computersystems/03-processors/html/#/33" target="_blank" rel="noopener">our small ISA</a>)</dd><dt>Register file</dt><dd>16 named locations for 64-bit values (addresses and data); some special-purpose, others general-purpose</dd><dt>Condition code registers</dt><dd>status of the most recent arithmetic or logical instruction (needed for if/else and loops!)</dd></dl></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>5</span></section>
+<section class="slide l-text" id="s6" data-title="Assembly Overview" aria-label="Slide 6 of 52"><div class="frame"><div class="headrow"><div><h2>Assembly Overview</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>From a given starting position, there is a unique encoding of bytes to machine instructions</li><li>More common instructions have shorter encodings</li><li>There are different ISAs for different architectures (lecture: x86-64; exercise: ARMv8)</li><li>There are different styles within one architecture (AT&amp;T vs. Intel)</li><li>Compiler optimizations have a large impact on the program!<ul><li>Rearrange execution order</li><li>Eliminate unneeded operations</li><li>Replace slow (machine) operations with faster ones</li></ul></li></ul></div><div><pre class="code outline">Intel syntax
+mov   eax,[ebx+20h]
+add   eax,[ebx+ecx*2h]
+lea   eax,[ebx+ecx]
+
+AT&amp;T syntax
+movl  0x20(%ebx),%eax
+addl  (%ebx,%ecx,0x2),%eax
+leal  (%ebx,%ecx),%eax</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>6</span></section>
+<section class="slide l-code" id="s7" data-title="Demo: Some Assembly Intuition" aria-label="Slide 7 of 52"><div class="frame"><div class="headrow"><div><h2>Demo: Some Assembly Intuition</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li><code>gcc -S prog.c</code> generates assembly, <code>gcc -c prog.c</code> generates object code, <code>objdump -d prog.o</code> disassembles the object</li><li>Try it with <code>doubleMe</code> from <a href="https://hyperdecks.github.io/computersystems/03-processors/html/#/46" target="_blank" rel="noopener">lecture 3</a>, or online: <a href="https://godbolt.org/" target="_blank" rel="noopener">godbolt.org</a> and the <a href="https://defuse.ca/online-x86-assembler.htm" target="_blank" rel="noopener">online x86 assembler</a></li><li>Look at both programs in the compiler explorer</li></ul></div><div><pre class="code outline">int main()
+{
+  int number = 3;
+  return number * 8;
+}
+
+int main()
+{
+  int number = 3;
+  return number * 9;
+}</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>7</span></section>
+<section class="slide l-image" id="s8" data-title="First: Pointer Fun with Binky! :-D" aria-label="Slide 8 of 52"><div class="frame"><div class="headrow"><div><h2>First: Pointer Fun with Binky! :-D</h2></div></div><div class="main"><figure class="pic shadow big"><img src="assets/binky.png" alt="Binky, a blue clay figure with big yellow eyes and a wide smile"><figcaption><a href="https://www.youtube.com/watch?v=5VnDaHBi8dM" target="_blank" rel="noopener">Pointer Fun with Binky</a></figcaption></figure></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>8</span></section>
+<section class="slide l-code" id="s9" data-title="Some Assembly Intuition" aria-label="Slide 9 of 52"><div class="frame"><div class="headrow"><div><h2>Some Assembly Intuition</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Look at both in the compiler explorer: <a href="https://godbolt.org/" target="_blank" rel="noopener">godbolt.org</a></li></ul></div><div><pre class="code outline small">int foo(int x, int y) {
+  return x * y;
+}
+int main()
+{
+  return foo(3, 8);
+}
+
+void swap(int* xp, int* yp)
+{
+  int t0 = *xp;
+  int t1 = *yp;
+  *xp = t1;
+  *yp = t0;
+}</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>9</span></section>
+<section class="slide l-menu" id="s10" data-title="Our Menu for Today" aria-label="Slide 10 of 52"><div class="frame"><div class="headrow"><div><h2>Our Menu for Today</h2></div></div><div class="main"><div class="menu"><p>Introduction to Assembly Language</p><p class=cur>Registers and Memory</p><p>Assembly Operands</p><p>Common Assembly Instructions</p><p>Conditionals and Loops</p><p>A simple Exploit</p></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>10</span></section>
+<section class="slide l-text" id="s11" data-title="Remember our small instruction set?" aria-label="Slide 11 of 52"><div class="frame"><div class="headrow"><div><h2>Remember our small instruction set?</h2></div></div><p class="lead">In <a href="https://hyperdecks.github.io/computersystems/03-processors/html/#/33" target="_blank" rel="noopener">lecture 3</a>, this program kept adding 8 to M[00]: 2 … 10 … 18 … 26 … 34 …</p><div class="main"><div class="split wide"><div class="copy"><p>Just 2 registers sounds a bit limiting…</p></div><div><pre class="code outline">0x100  100001000        Insert 2
+0x102  100100001        Insert 8
+0x104  000000           Load M[00]
+0x105  000011           Load M[01]
+0x106  0100             Add
+0x107  001000           Store to M[00]
+0x108  101000100000110  Jump to 0x106</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>11</span></section>
+<section class="slide l-text" id="s12" data-title="x86-64 Registers" aria-label="Slide 12 of 52"><div class="frame"><div class="headrow"><div><h2>x86-64 Registers</h2></div></div><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>x86-64 has 16 named registers</li><li>These can store 64 bits each</li><li>They are very close to the processor: it can access register values almost instantaneously (i.e., within one processor cycle, multiple billion times per second)</li><li>Very informative: <a href="https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture" target="_blank" rel="noopener">Wikibooks: x86 Architecture</a></li></ul></div><figure class="pic"><img src="assets/x86-registers.png" alt="Table of the 16 x86-64 integer registers and their usage: %rax return value, %rdi to %r9 arguments 1 to 6, %rsp stack pointer, others caller or callee saved"><figcaption>Source: Lora Charles, <a href="http://slideplayer.com/slide/9679824/" target="_blank" rel="noopener">slideplayer.com</a></figcaption></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>12</span></section>
+<section class="slide l-table" id="s13" data-title="x86-64 Registers: Naming" aria-label="Slide 13 of 52"><div class="frame"><div class="headrow"><div><h2>x86-64 Registers: Naming</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Architecture</th><th>Registers</th><th>Names</th></tr></thead><tbody><tr><td>8080 (1974)</td><td>six paired registers</td><td>(B,C), (D,E), (H,L)</td></tr><tr><td>8086 (1978)</td><td>8× 16-bit registers</td><td>%ax, %bx, … %si, %di, %bp</td></tr><tr><td>IA32 (1985)</td><td>8× 32-bit registers</td><td>%eax, %ebx, …, %ebp</td></tr><tr><td>x86-64 (2000)</td><td>16× 64-bit registers</td><td>%rax, %rbx, …, %r8 … %r15</td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>13</span></section>
+<section class="slide l-text" id="s14" data-title="x86-64 Registers: Names for Parts of a Register" aria-label="Slide 14 of 52"><div class="frame"><div class="headrow"><div><h2>x86-64 Registers: Names for Parts of a Register</h2></div></div><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>%rdi, %rax, %rbx, %rcx, etc. denote the entire 64 bits (i.e., the so-called quad-word) of a register</li><li>To address the other, low-order portions, other names are used:</li></ul><dl class="defs"><dt>%edi, %eax, etc.</dt><dd>32 bits, double-word («l» or «d»)</dd><dt>%di, %ax, etc.</dt><dd>16 bits, word («w»)</dd><dt>%dil, %al, etc.</dt><dd>8 bits, byte («b»)</dd></dl></div><figure class="pic"><img src="assets/register-names.png" alt="Table with the 64-bit register names and the names of their lower 32, 16 and 8 bits, from rax, eax, ax, al to r15, r15d, r15w, r15b"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>14</span></section>
+<section class="slide l-text" id="s15" data-title="x86-64 Registers: Who Saves What?" aria-label="Slide 15 of 52"><div class="frame"><div class="headrow"><div><h2>x86-64 Registers: Who Saves What?</h2></div><aside class="callout box teal">«Function calls are just an elaborate illusion»</aside></div><div class="main dense"><div class="split wide"><div class="copy"><dl class="defs"><dt>Caller saved</dt><dd>the caller of a procedure needs to take care of these registers, no guarantees: foo() may override %r10</dd><dt>Callee saved</dt><dd>the caller can trust that these hold the same value after a call: main can trust that %rbx is unchanged. If foo() uses that register, it needs to restore the value before returning to main()</dd><dt>Stack pointer</dt><dd>indicates the current position in the run-time stack (more on this next week)</dd></dl></div><div><pre class="code outline">main() {
+  int i = 2;
+  foo();
+  i = i + 1;
+}</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>15</span></section>
+<section class="slide l-menu" id="s16" data-title="Our Menu for Today" aria-label="Slide 16 of 52"><div class="frame"><div class="headrow"><div><h2>Our Menu for Today</h2></div></div><div class="main"><div class="menu"><p>Introduction to Assembly Language</p><p>Registers and Memory</p><p class=cur>Assembly Operands</p><p>Common Assembly Instructions</p><p>Conditionals and Loops</p><p>A simple Exploit</p></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>16</span></section>
+<section class="slide l-table" id="s17" data-title="Assembly Operands" aria-label="Slide 17 of 52"><div class="frame"><div class="headrow"><div><h2>Assembly Operands</h2></div></div><p class="lead">An x86-64 instruction has zero to three operands (<code>ret</code>, <code>notq %rax</code>, <code>addq %rdi, %rax</code>, <code>imulq $300, %rdi, %rax</code>). Operands are always one of three types:</p><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Type</th><th>Example</th><th>Means</th></tr></thead><tbody><tr><td>Immediate operand (prefixed with <code>$</code>)</td><td><code>addq $16, %rcx</code>, <code>subq $0x4050, %rax</code></td><td>the value itself</td></tr><tr><td>Register name (prefixed with <code>%</code>)</td><td><code>addq %rdx, %rcx</code></td><td>the content of the register</td></tr><tr><td>Absolute memory location (usually hex)</td><td><code>0x104</code></td><td>Mem[0x104]</td></tr><tr><td>Memory location</td><td><code>(%rax)</code></td><td>Mem[%rax]</td></tr><tr><td>Scaled indexed displaced memory location</td><td><code>0x14(%rax,%rdx,4)</code></td><td>Mem[0x14 + %rax + %rdx × 4]</td></tr><tr><td>In general</td><td><code>d(Rb,Ri,s)</code></td><td>Mem[d + Rb + Ri × s]</td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>17</span></section>
+<section class="slide l-text" id="s18" data-title="What&#x27;s the value and type of each of these operands?" aria-label="Slide 18 of 52"><div class="frame"><div class="headrow"><div><h2>What&#x27;s the value and type of each of these operands?</h2></div></div><div class="main"><div class="split wide"><div class="copy"><ul class="dash"><li><code>%rax</code></li><li><code>$0x108</code></li><li><code>0x104</code></li><li><code>(%rax)</code></li><li><code>4(%rax)</code></li><li><code>(%rax,%rdx,4)</code></li></ul></div><div><pre class="code outline">Given register contents
+%rax   0x100
+%rcx   0x1
+%rdx   0x3
+
+Given memory contents
+0x100  0xFF
+0x104  0xAB
+0x108  0x13
+0x10C  0x11</pre></div></div><p class="after">Memory is byte-addressable; the table simply shows one 4-byte word per row.</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>18</span></section>
+<section class="slide l-table" id="s19" data-title="Value and Type of Each Operand" aria-label="Slide 19 of 52"><div class="frame"><div class="headrow"><div><h2>Value and Type of Each Operand</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Operand</th><th>Value</th><th>Type</th></tr></thead><tbody><tr><td><code>%rax</code></td><td>0x100</td><td>register name</td></tr><tr><td><code>$0x108</code></td><td>0x108</td><td>immediate value</td></tr><tr><td><code>0x104</code></td><td>0xAB</td><td>absolute memory location</td></tr><tr><td><code>(%rax)</code></td><td>0xFF</td><td>memory location</td></tr><tr><td><code>4(%rax)</code></td><td>0xAB</td><td>memory location</td></tr><tr><td><code>(%rax,%rdx,4)</code></td><td>0x11</td><td>memory location</td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>19</span></section>
+<section class="slide l-text" id="s20" data-title="Why exactly 0x11?" aria-label="Slide 20 of 52"><div class="frame"><div class="headrow"><div><h2>Why exactly 0x11?</h2></div></div><div class="main"><div class="split wide"><div class="copy"><ul class="dash"><li>%rax contains 0x100 (a memory address, i.e., a pointer)</li><li>%rax + 4 × %rdx = 0x100 + 4 × 0x3 = 0x100 + 0xC = 0x10C</li><li>The parentheses ( ) tell us that we need to dereference 0x10C: Mem[0x10C] = 0x11</li></ul></div><div><pre class="code outline">(%rax,%rdx,4)
+= Mem[%rax + %rdx * 4]
+= Mem[0x100 + 0x3 * 4]
+= Mem[0x10C]
+= 0x11</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>20</span></section>
+<section class="slide l-menu" id="s21" data-title="Our Menu for Today" aria-label="Slide 21 of 52"><div class="frame"><div class="headrow"><div><h2>Our Menu for Today</h2></div></div><div class="main"><div class="menu"><p>Introduction to Assembly Language</p><p>Registers and Memory</p><p>Assembly Operands</p><p class=cur>Common Assembly Instructions</p><p>Conditionals and Loops</p><p>A simple Exploit</p></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>21</span></section>
+<section class="slide l-text" id="s22" data-title="Data Movement" aria-label="Slide 22 of 52"><div class="frame"><div class="headrow"><div><h2>Data Movement</h2></div></div><p class="lead">Data movement from source to destination.</p><div class="main"><div class="copy"><div class="groups"><div class="group"><h3>x86-64 data movement instructions (excerpt)</h3><ul class="dash"><li><code>mov(b/w/l/q)</code>: move byte/word/double-word/quad-word</li><li><code>movabsq</code>: move an absolute 64-bit immediate value</li></ul></div><div class="group"><h3>Observations</h3><ul class="dash"><li>We can move chunks of 8, 16, 32, and 64 bits</li><li>Movement from memory to memory is not permitted in general!</li></ul></div></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>22</span></section>
+<section class="slide l-table" id="s23" data-title="Moving Immediate Values" aria-label="Slide 23 of 52"><div class="frame"><div class="headrow"><div><h2>Moving Immediate Values</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Instruction</th><th>Contents of %rax afterwards</th></tr></thead><tbody><tr><td>1: <code>movabsq $0x0011223344556677, %rax</code></td><td>0x0011223344556677</td></tr><tr><td>2: <code>movb $-1, %al</code></td><td>0x00112233445566FF</td></tr><tr><td>3: <code>movw $-1, %ax</code></td><td>0x001122334455FFFF</td></tr><tr><td>4: <code>movl $-1, %eax</code></td><td><mark>0x00000000FFFFFFFF</mark></td></tr><tr><td>5: <code>movq $-1, %rax</code></td><td>0xFFFFFFFFFFFFFFFF</td></tr></tbody></table></div><p class="after" style="padding-left:0">Line 4 is not an error. It is due to the standard convention of how double-words are copied (it avoids partial-register dependencies)!</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>23</span></section>
+<section class="slide l-table" id="s24" data-title="Moving between Registers and Memory" aria-label="Slide 24 of 52"><div class="frame"><div class="headrow"><div><h2>Moving between Registers and Memory</h2></div></div><p class="lead">Remember: d(Rb,Ri,s) = Mem[d + Rb + Ri × s]</p><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Step</th><th>%rax</th><th>%rbx</th><th>Memory</th></tr></thead><tbody><tr><td>Start</td><td>0x?..?</td><td>0x?..?</td><td>0x0..00 to 0x0..0C: all 0x?..?</td></tr><tr><td>1: <code>movq $0x000000000000AFFE, %rax</code></td><td>0x0..AFFE</td><td>0x?..?</td><td>unchanged</td></tr><tr><td>2: <code>movq $0x0000000000000008, %rbx</code></td><td>0x0..AFFE</td><td>0x0..08</td><td>unchanged</td></tr><tr><td>3: <code>movq %rax, (%rbx)</code></td><td>0x0..AFFE</td><td>0x0..08</td><td>0x0..08: 0x0..AFFE</td></tr><tr><td>4: <code>movq %rax, -8(%rbx)</code></td><td>0x0..AFFE</td><td>0x0..08</td><td>0x0..00: 0x0..AFFE, and 0x0..08: 0x0..AFFE</td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>24</span></section>
+<section class="slide l-code" id="s25" data-title="Binky&#x27;s Data Movement Exercise" aria-label="Slide 25 of 52"><div class="frame"><div class="headrow"><div><h2>Binky&#x27;s Data Movement Exercise</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Compiled with the compiler explorer (optimization level <code>-O1</code>)</li><li>Observation: C pointers are simply addresses in memory</li><li>Arguments are assigned to registers in order: %rdi → %rsi → %rdx → %rcx → %r8 → %r9</li><li>In this example, <code>xpointer</code> goes into %rdi, <code>y</code> goes into %rsi</li></ul></div><div><pre class="code outline">long exchange(long* xpointer, long y) {
+  long x = *xpointer;
+  *xpointer = y;
+  return x;
+}
+
+exchange:
+  movq  (%rdi), %rax
+  movq  %rsi, (%rdi)
+  ret</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>25</span></section>
+<section class="slide l-text" id="s26" data-title="Sample Exam Question (6pt ~ 6min)" aria-label="Slide 26 of 52"><div class="frame"><div class="headrow"><div><h2>Sample Exam Question (6pt ~ 6min)</h2></div></div><p class="lead">(6pt) Complete the figure given the following information:</p><div class="main"><div class="split wide"><div class="copy"><ul class="dash"><li>Register RSI contains the value 12</li><li>Register RDX contains the value 0xFFFFFFFF</li><li>Register RAX represents a pointer to memory location 0xFFFF0000</li><li>What is the result of the processor executing the instruction <code>movq (%rax), %rsi</code>?</li><li>The memory location immediately below 0xFFFF0000 is called 0xFFFF0008. Why?</li></ul></div><div><pre class="code outline">Register file
+%rax   ?
+%rdx   ?
+%rsi   ?
+%rdi   0x0000FFFF
+
+Memory
+0x00000000
+0x0000FFFF   42
+0xFFFF0000   68
+0xFFFF0008  144
+0xFFFFFFFF</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>26</span></section>
+<section class="slide l-code" id="s27" data-title="Sample Exam Question: Solution" aria-label="Slide 27 of 52"><div class="frame"><div class="headrow"><div><h2>Sample Exam Question: Solution</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li><code>movq (%rax), %rsi</code> reads the quad-word at the address in %rax (0xFFFF0000) into %rsi: 12 becomes 68</li><li>A quad-word has 8 bytes, and memory is byte-addressable: the next quad-word starts at 0xFFFF0008</li></ul></div><div><pre class="code outline">Register file
+%rax   0xFFFF0000
+%rdx   0xFFFFFFFF
+%rsi   12  -&gt;  68
+%rdi   0x0000FFFF
+
+Memory
+0x00000000
+0x0000FFFF   42
+0xFFFF0000   68
+0xFFFF0008  144
+0xFFFFFFFF</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>27</span></section>
+<section class="slide l-table" id="s28" data-title="Arithmetic and Logic Operations" aria-label="Slide 28 of 52"><div class="frame"><div class="headrow"><div><h2>Arithmetic and Logic Operations</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Instructions</th><th>Example</th><th>Effect</th></tr></thead><tbody><tr><td><code>inc</code>, <code>dec</code>, <code>neg</code>, <code>not</code> (b/w/l/q)</td><td><code>incq (%rsp)</code></td><td>increments the value stored at the memory location pointed to by %rsp by $1</td></tr><tr><td><code>add</code>, <code>sub</code> (b/w/l/q); <code>imul</code> (w/l/q: 64b from 64b × 64b)</td><td><code>subq %rax, %rdx</code></td><td>reduces the value in %rdx by the value in %rax</td></tr><tr><td><code>xor</code>, <code>or</code>, <code>and</code> (b/w/l/q)</td><td><code>orq %rax, %rbx</code></td><td>binary OR, denoted using the pipe symbol: 001b | 100b = ???b</td></tr><tr><td><code>sal</code>, <code>shl</code> (same as sal), <code>sar</code>, <code>shr</code> (b/w/l/q)</td><td><code>salq $3, %rax</code></td><td>shifts the value in %rax left by 3 bits: multiplies it by 8</td></tr><tr><td><code>leaq S, D</code>: works like mov, but only computes the address and does not access memory at all</td><td><code>movq $5, %rdx</code><br><code>leaq 7(%rdx,%rdx,2), %rax</code></td><td>computes %rax as 7 + 5 + 5 × 2 = 22</td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>28</span></section>
+<section class="slide l-code" id="s29" data-title="Arithmetic and Logic Operations Exercise" aria-label="Slide 29 of 52"><div class="frame"><div class="headrow"><div><h2>Arithmetic and Logic Operations Exercise</h2></div><aside class="callout box green">Can you do it without using imulq?</aside></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Where do the arguments go? x → %rdi, y → %rsi</li><li>We compile this to assembly line by line…</li></ul></div><div><pre class="code outline">long arith(long x, long y) {
+  long t1 = x | y;
+  t1 = t1 - y;
+  t1 = t1 * 48;
+  return t1;
+}
+
+arith:
+  orq    %rsi, %rdi
+  subq   %rsi, %rdi
+  imulq  $48, %rdi
+  movq   %rdi, %rax</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>29</span></section>
+<section class="slide l-code" id="s30" data-title="Arithmetic and Logic Operations Exercise: Without imulq" aria-label="Slide 30 of 52"><div class="frame"><div class="headrow"><div><h2>Arithmetic and Logic Operations Exercise: Without imulq</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>%rax = t1, then t1 + t1 = 2 × t1, then + t1 = 3 × t1</li><li>Shifting left by 4 bits multiplies by 16: 3 × 16 = 48</li><li><a href="https://hyperdecks.github.io/computersystems/01-information/html/#/72" target="_blank" rel="noopener">Lecture 1: Shifting</a></li></ul></div><div><pre class="code outline">arith:
+  orq    %rsi, %rdi
+  subq   %rsi, %rdi
+  movq   %rdi, %rax
+  addq   %rax, %rax
+  addq   %rdi, %rax
+  salq   $4, %rax</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>30</span></section>
+<section class="slide l-quiz" id="s31" data-title="Potential Exam Question (5p)" aria-label="Slide 31 of 52"><div class="frame"><div class="headrow"><div><h2>Potential Exam Question (5p)</h2></div></div><p class="lead"><code>xorq %rcx, %rcx</code> computes a bit-by-bit xor of a register&#x27;s contents with the same register&#x27;s contents, and stores the result in that register.</p><div class="main"><div class="quiz n2"><div class="box green">What would be any alternative instruction to achieve the same result?</div><div class="box green">Can you speculate why the compiler typically chooses to use the xor option over this?</div></div></div></div><p class="source"><a href="https://defuse.ca/online-x86-assembler.htm" target="_blank" rel="noopener">defuse.ca/online-x86-assembler.htm</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>31</span><template class="notes">Alternative: movq $0, %rcx. The encoding of xorq %rcx, %rcx might be shorter than for the movq $0, %rcx operation.</template></section>
+<section class="slide l-menu" id="s32" data-title="Our Menu for Today" aria-label="Slide 32 of 52"><div class="frame"><div class="headrow"><div><h2>Our Menu for Today</h2></div></div><div class="main"><div class="menu"><p>Introduction to Assembly Language</p><p>Registers and Memory</p><p>Assembly Operands</p><p>Common Assembly Instructions</p><p class=cur>Conditionals and Loops</p><p>A simple Exploit</p></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>32</span></section>
+<section class="slide l-code" id="s33" data-title="Conditionals Intuition" aria-label="Slide 33 of 52"><div class="frame"><div class="headrow"><div><h2>Conditionals Intuition</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Same for both!</li><li>This also works for loops: we jump back, as in <a href="https://hyperdecks.github.io/computersystems/03-processors/html/#/33" target="_blank" rel="noopener">our small ISA</a></li></ul></div><div><pre class="code outline small">long conditionalsExample(long x) {
+  if (x &gt; 0) {
+    return 1;
+  } else {
+    return 0;
+  }
+}
+
+long conditionalsExample(long x) {
+    if (x &lt;= 0) goto mark;
+    return 1;
+mark:
+    return 0;
+}</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>33</span></section>
+<section class="slide l-code" id="s34" data-title="Conditionals Intuition: The Assembly" aria-label="Slide 34 of 52"><div class="frame"><div class="headrow"><div><h2>Conditionals Intuition: The Assembly</h2></div><aside class="callout box green">How exactly do cmpq and jle work?</aside></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Same for both C versions!</li><li>Variable x is located in %rdi</li></ul></div><div><pre class="code outline small">conditionalsExample(long):
+        pushq   %rbp
+        movq    %rsp, %rbp
+        movq    %rdi, -8(%rbp)
+        cmpq    $0, -8(%rbp)
+        jle     .L6
+        movl    $1, %eax
+        jmp     .L4
+.L6:
+        nop
+        movl    $0, %eax
+.L4:
+        popq    %rbp
+        ret</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>34</span></section>
+<section class="slide l-text" id="s35" data-title="Condition Code Registers" aria-label="Slide 35 of 52"><div class="frame"><div class="headrow"><div><h2>Condition Code Registers</h2></div></div><div class="main dense"><div class="copy"><ul class="dash"><li>Single-bit registers («flags») that hold attributes of the most recent arithmetic, logical or comparison operation</li><li>Logical operations always set CF and OF to zero (there cannot be an overflow)</li><li>Shift operations set CF to the last bit shifted out; OF is defined only for 1-bit shifts</li></ul><dl class="defs"><dt>CF</dt><dd>carry flag: set on a carry out</dd><dt>ZF</dt><dd>zero flag: set if the result is zero</dd><dt>SF</dt><dd>sign flag: set if the result is negative</dd><dt>OF</dt><dd>overflow flag: set on a <a href="https://hyperdecks.github.io/computersystems/01-information/html/#/68" target="_blank" rel="noopener">2&#x27;s complement overflow</a></dd></dl></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>35</span></section>
+<section class="slide l-text" id="s36" data-title="Condition Codes" aria-label="Slide 36 of 52"><div class="frame"><div class="headrow"><div><h2>Condition Codes</h2></div></div><p class="lead">We do not have to execute arithmetic or logic operations just to set condition codes. We can set them explicitly through cmp and test:</p><div class="main"><div class="split wide"><div class="copy"><ul class="dash"><li><code>cmp</code> does a <code>sub</code>, but without remembering the result. It just remembers the condition codes</li><li><code>test</code> does an <code>and</code>, but without remembering the result. It just remembers the condition codes</li></ul></div><div><pre class="code outline">cmp(b/w/l/q) A, B    # CCs from B - A
+test(b/w/l/q) A, B   # CCs from A &amp; B
+
+testq %rax, %rax
+# compare %rax to itself to see
+# whether its content is negative,
+# zero or positive</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>36</span></section>
+<section class="slide l-code" id="s37" data-title="Control Flow: Conditionals" aria-label="Slide 37 of 52"><div class="frame"><div class="headrow"><div><h2>Control Flow: Conditionals</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Logic, arithmetic and comparison instructions (testq and cmpq) set condition codes</li><li>Conditional jumps and conditional moves read them</li><li>These jumps and moves implement conditionals, switches and loops in a computer system</li></ul></div><div><pre class="code outline small">void loopToZero(long x) {
+  do {
+    x = x - 1;
+  } while (x &gt; 0);
+}
+// Same as:
+void loopToZero(long x) {
+myMark:
+  x = x - 1;
+  if (x &gt; 0) goto myMark;
+}
+// Compiled:
+loopToZero(long):
+.L2:
+  subq   $1, %rdi
+  testq  %rdi, %rdi
+  jg     .L2
+  ret</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>37</span></section>
+<section class="slide l-table" id="s38" data-title="Condition Codes to Conditionally Jump" aria-label="Slide 38 of 52"><div class="frame"><div class="headrow"><div><h2>Condition Codes to Conditionally Jump</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Instruction</th><th>Jump…</th></tr></thead><tbody><tr><td><code>jmp Label</code></td><td>unconditional jump: always jumps!</td></tr><tr><td><code>jmp *Operand</code></td><td>to the location read from memory</td></tr><tr><td><code>je Label</code></td><td>if equal (zero flag set)</td></tr><tr><td><code>jne Label</code></td><td>if not equal (zero flag not set)</td></tr><tr><td><code>js Label</code></td><td>if negative (sign flag set)</td></tr><tr><td><code>jns Label</code></td><td>if nonnegative (sign flag not set)</td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>38</span></section>
+<section class="slide l-table" id="s39" data-title="Condition Codes to Conditionally Jump: Signed and Unsigned" aria-label="Slide 39 of 52"><div class="frame"><div class="headrow"><div><h2>Condition Codes to Conditionally Jump: Signed and Unsigned</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Signed</th><th>Jump…</th><th>Unsigned</th><th>Jump…</th></tr></thead><tbody><tr><td><code>jg Label</code> (= jnle)</td><td>if greater / if not less or equal (&gt;)</td><td><code>ja Label</code> (= jnbe)</td><td>if above (&gt;)</td></tr><tr><td><code>jge Label</code> (= jnl)</td><td>if greater or equal / if not less (&gt;=)</td><td><code>jae Label</code> (= jnb)</td><td>if above or equal (&gt;=)</td></tr><tr><td><code>jl Label</code> (= jnge)</td><td>if less (&lt;)</td><td><code>jb Label</code> (= jnae)</td><td>if below (&lt;)</td></tr><tr><td><code>jle Label</code> (= jng)</td><td>if less or equal (&lt;=)</td><td><code>jbe Label</code> (= jna)</td><td>if below or equal (&lt;=)</td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>39</span></section>
+<section class="slide l-code" id="s40" data-title="Conditional Jumps Example" aria-label="Slide 40 of 52"><div class="frame"><div class="headrow"><div><h2>Conditional Jumps Example</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>C: <code>long checkEquals(long x, long y) { if (x == y) return 1; else return 0; }</code></li><li>Where do the arguments go? x → %rdi, y → %rsi</li></ul></div><div><pre class="code outline small">checkEquals(long, long):
+	pushq   %rbp
+	movq    %rsp, %rbp
+	movq    %rdi, -8(%rbp)
+	movq    %rsi, -16(%rbp)
+	movq    -8(%rbp), %rax
+	cmpq    -16(%rbp), %rax
+	jne     .L2
+	movl    $1, %eax
+	jmp     .L3
+.L2:
+	movl    $0, %eax
+.L3:
+	popq    %rbp
+	ret</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>40</span></section>
+<section class="slide l-code" id="s41" data-title="Loop Example" aria-label="Slide 41 of 52"><div class="frame"><div class="headrow"><div><h2>Loop Example</h2></div><aside class="callout box green">What goes in place of the ???</aside></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Argument x goes into register %rdi</li></ul></div><div><pre class="code outline small">long obscureCounter(long x) {
+  do {
+    ???
+  } while (???);
+}
+
+obscureCounter(long):
+        pushq   %rbp
+        movq    %rsp, %rbp
+        movq    %rdi, -8(%rbp)
+.L3:
+        subq    $3, -8(%rbp)
+        cmpq    $0, -8(%rbp)
+        jle     .L2
+        jmp     .L3
+.L2:
+        nop</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>41</span><template class="notes">do { x = x - 3; } while (x &gt; 0);</template></section>
+<section class="slide l-code" id="s42" data-title="Extensive Conditional Jumps Exercise" aria-label="Slide 42 of 52"><div class="frame"><div class="headrow"><div><h2>Extensive Conditional Jumps Exercise</h2></div><aside class="callout box green">Homework! Write the C code of inkognito</aside></div><p class="lead">This is NOT an example of a good exam question, but it&#x27;s good for training.</p><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li><code>long inkognito(long x, long y) { … }</code></li><li>Remember: arguments are assigned to registers in order: %rdi → %rsi → %rdx → %rcx → %r8 → %r9</li></ul></div><div><pre class="code outline small">inkognito(long, long):
+  pushq %rbp
+  movq  %rsp, %rbp
+  movq  $0, -8(%rbp)
+.L3:
+  cmpq  $0, %rdi
+  jle   .L2
+  movq  %rsi, %rax
+  addq  %rax, -8(%rbp)
+  subq  $1, %rdi
+  jmp   .L3
+.L2:
+  movq  -8(%rbp), %rax
+  popq  %rbp
+  ret</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>42</span></section>
+<section class="slide l-code" id="s43" data-title="Extensive Conditional Jumps Exercise: Step by Step" aria-label="Slide 43 of 52"><div class="frame"><div class="headrow"><div><h2>Extensive Conditional Jumps Exercise: Step by Step</h2></div></div><div class="main"><div><pre class="code outline small">inkognito(long, long):
+  pushq %rbp
+  movq  %rsp, %rbp
+  movq  $0, -8(%rbp)    # store a $0 in memory
+.L3:
+  cmpq  $0, %rdi        # CCs from (%rdi - $0)
+  jle   .L2             # jump if less or equal…
+  movq  %rsi, %rax      # %rax = y
+  addq  %rax, -8(%rbp)  # add %rax to the value in memory
+  subq  $1, %rdi        # %rdi = %rdi - 1
+  jmp   .L3             # jump!
+.L2:
+  movq  -8(%rbp), %rax  # move the value from memory to %rax
+  popq  %rbp
+  ret</pre></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>43</span></section>
+<section class="slide l-code" id="s44" data-title="Extensive Conditional Jumps Exercise: Cleaned Up…" aria-label="Slide 44 of 52"><div class="frame"><div class="headrow"><div><h2>Extensive Conditional Jumps Exercise: Cleaned Up…</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>For x &gt; 0, inkognito adds y to itself x times: it multiplies x and y</li><li>Remember: multiplying is just repeated adding (<a href="https://hyperdecks.github.io/computersystems/01-information/html/#/19" target="_blank" rel="noopener">lecture 1</a>)</li></ul></div><div><pre class="code outline">long inkognito(long x, long y) {
+  long val = 0;
+  while (x &gt; 0) {
+    val = val + y;
+    x = x - 1;
+  }
+  return val;
+}</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>44</span></section>
+<section class="slide l-questions" id="s45" data-title="Any Questions / Comments / Doubts / Concerns?" aria-label="Slide 45 of 52"><div class="frame"><div class="headrow"><div><h2>Any Questions / Comments / Doubts / Concerns?</h2></div></div><div class="main"><div class="split"><div><p class="takeh">Take-Homes</p><ul class="dash"><li>You have seen many frequently occurring assembly instructions in the x86-64 ISA</li><li>Conditionals and loops are simply implemented as «jumps» on the machine. In C, we call these «gotos»; the ARMv8 ISA calls them «branches»</li><li>Get a feeling for assembly by training, and by experimenting with the compiler explorer at <a href="https://godbolt.org/" target="_blank" rel="noopener">godbolt.org</a></li><li>Exercise 2 gives you an opportunity to train: among other tasks, you will reverse-engineer a program from assembly</li></ul></div><div class="figure"><img src="assets/questions.png" alt="A figure sits thinking on a large green question mark"></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>45</span></section>
+<section class="slide l-study" id="s46" data-title="How to Study this Material?" aria-label="Slide 46 of 52"><div class="frame"><img class="bulb" src="assets/lightbulb.jpg" alt="Drawing of a lit light bulb"><div class="headrow"><div><h2>How to Study this Material?</h2></div></div><div class="main dense"><div class="split"><div class="copy"><div class="groups"><div class="group"><h3>Basic Depth</h3><ul class="dash"><li>Read up on assembly in the Bryant and O&#x27;Hallaron book: chapter 3, from 3.0 to 3.6</li><li>Work diligently on Exercise 2</li><li>Go back over <a href="https://hyperdecks.github.io/computersystems/01-information/html/" target="_blank" rel="noopener">lecture 1</a>, <a href="https://hyperdecks.github.io/computersystems/02-circuits/html/" target="_blank" rel="noopener">lecture 2</a> and <a href="https://hyperdecks.github.io/computersystems/03-processors/html/" target="_blank" rel="noopener">lecture 3</a>: it all comes together here</li></ul></div><div class="group"><h3>Advanced Depth</h3><ul class="dash"><li>Really, it&#x27;s enough if you understand Bryant and O&#x27;Hallaron up to chapter 3.6 and all slide contents</li></ul></div></div></div><figure class="pic"><img src="assets/book-chapter3-toc.png" alt="Table of contents of chapter 3 of the book, sections 3.4 to 3.6: accessing information, arithmetic and logical operations, control"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>46</span></section>
+<section class="slide l-menu" id="s47" data-title="Our Menu for Today" aria-label="Slide 47 of 52"><div class="frame"><div class="headrow"><div><h2>Our Menu for Today</h2></div></div><div class="main"><div class="menu"><p>Introduction to Assembly Language</p><p>Registers and Memory</p><p>Assembly Operands</p><p>Common Assembly Instructions</p><p>Conditionals and Loops</p><p class=cur>A simple Exploit</p></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>47</span></section>
+<section class="slide l-code" id="s48" data-title="Demo: Read out lots of memory…" aria-label="Slide 48 of 52"><div class="frame"><div class="headrow"><div><h2>Demo: Read out lots of memory…</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Write «Hello World» to memory</li><li>Print the memory location of caArray[iIndex], and the memory contents at caArray[iIndex]</li><li>Increase the array index</li><li>Keep running forever (i.e., until you&#x27;re stopped…)</li></ul></div><div><pre class="code outline small">#include &lt;iostream&gt;
+using namespace std;
+int main() {
+  char caArray[] = &quot;Hello World&quot;;
+  int iIndex = 0;
+  while(true) {
+    cout &lt;&lt; &quot;Address: &quot;
+         &lt;&lt; (int*)(&amp;(caArray[iIndex]));
+    cout &lt;&lt; &quot;  Char: &quot; &lt;&lt; caArray[iIndex]
+         &lt;&lt; endl;
+    iIndex = iIndex + 1;
+  }
+  return 0;
+}</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>48</span></section>
+<section class="slide l-code" id="s49" data-title="Demo: Stack Exploit!" aria-label="Slide 49 of 52"><div class="frame"><div class="headrow"><div><h2>Demo: Stack Exploit!</h2></div></div><div class="main"><div><pre class="code outline">int bar() {
+  // Let&#x27;s try to find foo&#x27;s secret number...
+}
+
+int foo() {
+  int fooSecretNumber = 0xAFFE;
+  bar();
+  return 0;
+}
+
+int main() {
+  foo();
+}</pre></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>49</span></section>
+<section class="slide l-code" id="s50" data-title="For the Interested: Double-Pointer Example" aria-label="Slide 50 of 52"><div class="frame"><div class="headrow"><div><h2>For the Interested: Double-Pointer Example</h2></div><aside class="callout box green">How to put a 9 into the location that sPointer points at without using the sPointer variable?</aside></div><div class="main"><div><pre class="code outline">int* sPointer = (int*)0x100;
+int** fPointer = (int**)0x10c;
+*sPointer = 5;
+*fPointer = sPointer;
+
+fPointer = 0x100;
+*fPointer = 9;   // This would work!
+**fPointer = 9;</pre></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>50</span></section>
+<section class="slide l-text" id="s51" data-title="For the Interested: What happens for more than 6 arguments?" aria-label="Slide 51 of 52"><div class="frame"><div class="headrow"><div><h2>For the Interested: What happens for more than 6 arguments?</h2></div></div><div class="main"><div class="split"><div class="copy"><p><code>long myfunc(long a, long b, long c, long d, long e, long f, long g, long h)</code></p><ul class="dash"><li>Arguments are assigned to registers in order: %rdi → %rsi → %rdx → %rcx → %r8 → %r9</li><li>The remaining arguments g and h are on the stack, above the return address</li></ul></div><figure class="pic"><img src="assets/stack-frame.png" alt="Stack diagram from high to low addresses: h at RBP+24, g at RBP+16, return address at RBP+8, saved RBP, then the local variables xx, yy, zz and a red zone of 128 bytes; registers RDI to R9 hold a to f"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>51</span></section>
+<section class="slide l-questions bare" id="s52" data-title="Any Questions / Comments / Doubts / Concerns?" aria-label="Slide 52 of 52"><div class="frame"><div class="headrow"><div><h2>Any Questions / Comments / Doubts / Concerns?</h2></div></div><div class="main"><div class="figure"><img src="assets/questions.png" alt="A figure sits thinking on a large green question mark"></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>52</span></section>
+</main>
+<div class="controls" role="navigation" aria-label="Presentation controls"><div class="pill"><div class="nav"><button id="prev" title="Previous slide (←)" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="count" id="count">1 / 52</span><button id="next" title="Next slide (→)" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div><i class="sep"></i><div class="tools"><button id="ovBtn" title="All slides (O)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Overview</button><button id="notesBtn" title="Speaker notes (N)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M8 9h8M8 12.5h8M8 16h4"/></svg>Notes</button><button id="fsBtn" title="Full screen (F)"><svg class="fs-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="fs-off">Full screen</span><svg class="fs-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg><span class="fs-on">Exit</span></button></div></div><div class="progress" aria-label="Slide progress"><span id="progress"></span></div></div>
+<div class="overview" id="overview" role="dialog" aria-label="Slide overview"><h2>Assembly Language</h2><div class="ov-grid"></div></div>
+<div class="notes-view" id="notesView" aria-label="Speaker notes"></div>
+<script>
+(()=>{const slides=[...document.querySelectorAll('.slide')],root=document.documentElement,body=document.body,
+ ov=document.getElementById('overview'),nv=document.getElementById('notesView');
+const by=id=>document.getElementById(id);
+let cur=0;const m=location.hash.match(/(\d+)$/);if(m&&+m[1]>=1&&+m[1]<=slides.length)cur=+m[1]-1;
+function go(n){cur=Math.max(0,Math.min(slides.length-1,n));
+ slides.forEach((s,i)=>{s.classList.toggle('active',i===cur);s.setAttribute('aria-hidden',i!==cur)});
+ slides[cur].scrollTop=0;
+ by('count').textContent=(cur+1)+' / '+slides.length;by('prev').disabled=cur===0;by('next').disabled=cur===slides.length-1;
+ by('progress').style.width=((cur+1)/slides.length*100)+'%';
+ const t=slides[cur].querySelector('.notes');nv.textContent=t?t.textContent:'';
+ history.replaceState(null,'','#/'+(cur+1));ov.classList.remove('open');
+}
+by('prev').onclick=()=>go(cur-1);by('next').onclick=()=>go(cur+1);
+by('ovBtn').onclick=()=>ov.classList.toggle('open');
+const notes=()=>body.classList.toggle('show-notes');if(by('notesBtn'))by('notesBtn').onclick=notes;
+if(!document.fullscreenEnabled)by('fsBtn').hidden=true;
+let idle;const pill=document.querySelector('.pill'),wake=()=>{body.classList.add('awake');clearTimeout(idle);
+ idle=setTimeout(()=>{if(!pill.matches(':hover'))body.classList.remove('awake')},2500)};
+['mousemove','touchstart'].forEach(t=>document.addEventListener(t,wake,{passive:true}));
+by('fsBtn').onclick=()=>document.fullscreenElement?document.exitFullscreen():root.requestFullscreen();
+const grid=ov.querySelector('.ov-grid');
+slides.forEach((s,i)=>{const b=document.createElement('button'),sm=document.createElement('small');
+ sm.textContent=(i+1)+(s.dataset.time?'  ·  '+s.dataset.time:'');b.append(sm,s.dataset.title);b.onclick=()=>go(i);grid.append(b)});
+document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey)return;
+ const inCtl=e.target instanceof Element&&e.target.closest('a,button');const k=e.key;
+ if(['ArrowRight','PageDown'].includes(k)||(k===' '&&!inCtl)){e.preventDefault();go(cur+1)}
+ else if(['ArrowLeft','PageUp'].includes(k)){e.preventDefault();go(cur-1)}
+ else if(k==='Home')go(0);else if(k==='End')go(slides.length-1);
+ else if(k==='o'||k==='O')ov.classList.toggle('open');else if(k==='Escape')ov.classList.remove('open');
+ else if(k==='f'||k==='F')by('fsBtn').click();else if(k==='n'||k==='N')notes()});
+let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;x0=null;
+ if(Math.abs(d)>60)go(cur+(d<0?1:-1))},{passive:true});
+window.hsgDeck={go,count:slides.length};go(cur)})();
+</script>
+</body>
+</html>

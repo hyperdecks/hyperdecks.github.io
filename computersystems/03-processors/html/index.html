@@ -1,0 +1,508 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Processors and Assembly | University of St.Gallen</title>
+<style>@font-face{font-family:HSGSans;font-weight:300;font-style:normal;font-display:swap;src:local("Gill Sans MT Pro Light"),local("GillSansMTPro-Light"),local("Gill Sans Nova Light"),local("GillSansNova-Light"),local("Gill Sans Light"),local("GillSans-Light"),url(assets/GilliusADFNo2-Regular.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:300;font-style:italic;font-display:swap;src:local("Gill Sans MT Pro Light Italic"),local("GillSansMTPro-LightItalic"),local("Gill Sans Nova Light Italic"),local("GillSansNova-LightItalic"),local("Gill Sans Light Italic"),local("GillSans-LightItalic"),url(assets/GilliusADFNo2-Italic.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:600;font-style:normal;font-display:swap;src:local("Gill Sans MT Pro Medium"),local("GillSansMTPro-Medium"),local("Gill Sans Nova Medium"),local("GillSansNova-Medium"),local("Gill Sans SemiBold"),local("GillSans-SemiBold"),url(assets/GilliusADFNo2-Bold.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:600;font-style:italic;font-display:swap;src:local("Gill Sans MT Pro Medium Italic"),local("GillSansMTPro-MediumItalic"),local("Gill Sans Nova Medium Italic"),local("Gill Sans SemiBold Italic"),local("GillSans-SemiBoldItalic"),url(assets/GilliusADFNo2-BoldItalic.otf) format('opentype')}
+@font-face{font-family:HSGSerif;font-weight:400;font-style:normal;font-display:swap;src:local("Palatino Linotype"),local("PalatinoLinotype-Roman"),local("Palatino"),local("Palatino-Roman"),local("Book Antiqua"),url(assets/texgyrepagella-regular.otf) format('opentype')}
+@font-face{font-family:HSGSerif;font-weight:400;font-style:italic;font-display:swap;src:local("Palatino Linotype Italic"),local("PalatinoLinotype-Italic"),local("Palatino Italic"),local("Palatino-Italic"),url(assets/texgyrepagella-italic.otf) format('opentype')}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+/* One unit (U) is 1% of a 16:9 slide; the template slide is 13.33in wide, so calc(1*var(--u)) = 9.6pt.
+   Type scale of the HSG template, fixed for every deck: headline 32pt (calc(3.33*var(--u))), body 18.7pt (calc(1.94*var(--u))), sub-points 14pt (calc(1.46*var(--u))),
+   small 12pt (calc(1.25*var(--u))), source 8pt (calc(.83*var(--u))). Text is Gill Sans Light; bold is Gill Sans Medium. */
+:root{--ctl:60px;--bar:var(--ctl);--u:min(1vw,calc((100vh - var(--bar))/56.25));--u:min(1vw,calc((100dvh - var(--bar))/56.25));
+  --s-h1:calc(5.2*var(--u));--s-h2:calc(3.33*var(--u));--s-kick:calc(2.1*var(--u));--s-body:calc(1.94*var(--u));--s-mid:calc(1.6*var(--u));--s-sub:calc(1.46*var(--u));--s-small:calc(1.25*var(--u));--s-tiny:calc(.83*var(--u));
+  --green:#00802F;--dgreen:#0A5F2D;--salmon:#EB6969;--teal:#73A5AF;--row-a:#CBD8CD;--row-b:#E7EDE8;--yellow:#FFF04B;
+  --fg:#000000;--body:#1a1a1a;--quiet:#595959;--line:#d9d9d9;--k-stage:#e4e4e4}
+body{font-family:HSGSans,"Gill Sans MT Pro","Gill Sans MT","Gill Sans","Gill Sans Nova",Calibri,sans-serif;font-weight:300;
+  -webkit-font-smoothing:antialiased;overflow:hidden;background:var(--k-stage);color:var(--fg)}
+h1,h2,h3,p,ul,ol,dl,dd,figure,pre{margin:0;padding:0}
+b,strong,th{font-weight:600}
+a{color:var(--green);text-underline-offset:.15em}
+a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+code,pre{font-family:"Courier New",Courier,"Liberation Mono",monospace;font-weight:400}
+mark{background:var(--yellow);color:inherit;padding:0 .1em}
+sub,sup{font-size:.65em;line-height:0}
+
+.slide{position:absolute;left:50%;top:calc((100% - var(--bar))/2);width:calc(100*var(--u));height:calc(56.25*var(--u));transform:translate(-50%,-50%);
+  overflow:hidden;visibility:hidden;background:#fff;color:var(--fg)}
+.slide.active{visibility:visible}
+/* the title sits in the template's title box (calc(4.1*var(--u)) to calc(10.8*var(--u)), text on its bottom line); content starts at calc(14*var(--u)) */
+.frame{position:relative;z-index:1;width:100%;height:100%;padding:calc(4.1*var(--u)) calc(3.92*var(--u)) calc(5*var(--u));display:flex;flex-direction:column;min-width:0}
+.headrow{display:flex;justify-content:space-between;align-items:flex-end;gap:calc(3*var(--u));min-height:calc(6.7*var(--u));flex:none}
+h2{font-size:var(--s-h2);font-weight:300;line-height:1.08;letter-spacing:-.005em;color:var(--fg);max-width:calc(78*var(--u));text-wrap:balance}
+.lead{font-size:var(--s-body);line-height:1.25;margin-top:calc(3.2*var(--u));max-width:calc(86*var(--u));color:var(--body)}
+.main{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;padding:calc(3.2*var(--u)) 0 calc(.6*var(--u))}
+.l-menu .main,.l-quiz .main,.l-image .main,.l-gallery .main,.l-people .main,.l-syllabus .main{justify-content:safe center}
+.lead+.main{padding-top:calc(2.6*var(--u))}
+.source{position:absolute;left:calc(3.92*var(--u));bottom:calc(2.1*var(--u));max-width:calc(84*var(--u));font-size:var(--s-tiny);line-height:1.3;color:var(--quiet);z-index:2}
+.dfoot{position:absolute;left:calc(3.92*var(--u));bottom:calc(2.1*var(--u));font-size:var(--s-tiny);color:var(--quiet);z-index:2}
+.source~.dfoot{display:none}
+/* the slide number in the green HSG tab, bottom right */
+.pn{position:absolute;right:calc(3.94*var(--u));top:calc(51.41*var(--u));width:calc(2.33*var(--u));height:calc(2.56*var(--u));z-index:3;display:grid;place-items:center;padding:calc(.45*var(--u)) 0 0 calc(.45*var(--u));
+  font-size:calc(1.1*var(--u));font-weight:300;color:#fff;font-variant-numeric:tabular-nums}
+.pn svg{position:absolute;inset:0;width:100%;height:100%;fill:var(--green);z-index:-1}
+
+/* running text: paragraphs without a mark, points with a dash as on the template */
+.copy{display:grid;gap:calc(1.5*var(--u));align-content:start;min-width:0}
+.copy p{font-size:var(--s-body);line-height:1.25;color:var(--body)}
+ul.dash{list-style:none;display:grid;gap:calc(.9*var(--u))}
+ul.dash>li{position:relative;padding-left:calc(2.2*var(--u));font-size:var(--s-body);line-height:1.25;color:var(--body)}
+ul.dash>li::before{content:"-";position:absolute;left:calc(.1*var(--u))}
+ul.dash ul{list-style:none;display:grid;gap:calc(.25*var(--u));margin-top:calc(.35*var(--u))}
+ul.dash ul li{position:relative;padding-left:calc(1.8*var(--u));font-size:var(--s-sub);line-height:1.25;color:var(--body)}
+ul.dash ul li::before{content:"-";position:absolute;left:0}
+.dense ul.dash>li,.dense .copy p{font-size:var(--s-mid)}
+.dense ul.dash{gap:calc(.6*var(--u))}
+.group h3{font-size:calc(2.4*var(--u));font-weight:300;line-height:1.15;color:var(--fg);margin-bottom:calc(.5*var(--u))}
+.group ul.dash{gap:calc(.2*var(--u))}
+.dense .group ul.dash>li,.dense .group p{font-size:var(--s-mid)}
+.groups{display:grid;gap:calc(3*var(--u))}
+.defs{display:grid;grid-template-columns:auto 1fr;gap:calc(.45*var(--u)) calc(4*var(--u));font-size:var(--s-mid);line-height:1.25;color:var(--body)}
+.defs dt{position:relative;padding-left:calc(2.2*var(--u))}
+.defs dt::before{content:"-";position:absolute;left:calc(.1*var(--u))}
+.after{font-size:var(--s-body);line-height:1.3;color:var(--body);margin-top:calc(2.6*var(--u));padding-left:calc(24*var(--u))}
+
+/* copy on the left, picture, box or code on the right */
+.split{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:calc(4*var(--u));align-items:center}
+.split.wide{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.l-code .split{align-items:start}
+.pic{display:flex;flex-direction:column;align-items:center;min-height:0}
+.pic img{display:block;max-width:100%;max-height:calc(34*var(--u));width:auto;height:auto;object-fit:contain}
+.pic.shadow img{filter:drop-shadow(calc(.35*var(--u)) calc(.35*var(--u)) calc(.55*var(--u)) rgba(0,0,0,.38))}
+.pic figcaption{font-size:var(--s-tiny);color:var(--quiet);margin-top:calc(.9*var(--u));text-align:center;max-width:calc(44*var(--u))}
+
+/* boxes: green for a question to the room, an outline for an example or a note, teal for a remark */
+.box{border-radius:calc(.9*var(--u));padding:calc(1.3*var(--u)) calc(2*var(--u));font-size:var(--s-mid);line-height:1.25;text-wrap:balance}
+.box.green{background:var(--green);border:calc(.12*var(--u)) solid var(--dgreen);color:#fff;text-align:center}
+.box.outline{background:#fff;border:calc(.12*var(--u)) solid var(--green);color:var(--body);border-radius:0}
+.box.teal{background:var(--teal);border:calc(.12*var(--u)) solid #5d8f99;color:#fff;border-radius:0}
+.box h3{font-size:var(--s-mid);font-weight:600;margin-bottom:calc(.4*var(--u))}
+.box a{color:inherit}
+.callout{flex:none;max-width:calc(34*var(--u));margin-bottom:calc(-1*var(--u))}
+.callout.box{font-size:var(--s-sub)}
+
+pre.code{font-size:calc(1.3*var(--u));line-height:1.35;padding:calc(1.6*var(--u)) calc(2*var(--u));white-space:pre;overflow:hidden;tab-size:4}
+pre.code.small{font-size:calc(1.05*var(--u))}
+pre.code.outline{background:#fff;border:calc(.12*var(--u)) solid var(--green);color:#262626}
+pre.code.teal{background:var(--teal);border:calc(.12*var(--u)) solid #5d8f99;color:#fff}
+.codecap{font-size:var(--s-tiny);color:var(--quiet);margin-top:calc(.8*var(--u))}
+
+/* table: green header, rows in two green tints, white rules */
+table.t{width:100%;border-collapse:collapse;font-size:var(--s-mid);line-height:1.2}
+.t th{background:var(--green);color:#fff;text-align:left;padding:calc(.75*var(--u)) calc(1*var(--u))}
+.t td{padding:calc(.65*var(--u)) calc(1*var(--u));color:var(--body);vertical-align:top}
+.t tr:nth-child(odd) td{background:var(--row-a)}
+.t tr:nth-child(even) td{background:var(--row-b)}
+.t th+th,.t td+td{border-left:calc(.15*var(--u)) solid #fff}
+.t tr+tr td{border-top:calc(.15*var(--u)) solid #fff}
+.t td:first-child{font-weight:600;color:var(--fg)}
+.t.many{font-size:var(--s-sub)}
+.t.many td{padding:calc(.45*var(--u)) calc(1*var(--u))}
+
+/* menu: the topics of the day in a thin green frame */
+.menu{border:calc(.12*var(--u)) solid var(--green);padding:calc(2.6*var(--u)) calc(2.4*var(--u));width:calc(66*var(--u));display:grid;gap:calc(.35*var(--u))}
+.menu p{font-size:var(--s-sub);line-height:1.3;color:var(--body)}
+.menu p.cur{font-weight:600;color:var(--green)}
+
+/* quiz: questions in green boxes, staggered in two columns */
+.quiz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(2.6*var(--u)) calc(3*var(--u));align-items:center}
+.quiz .box{justify-self:start;max-width:calc(40*var(--u))}
+.quiz .box:nth-child(even){justify-self:end}
+.quiz.n3 .box:last-child{grid-column:1/-1;justify-self:center}
+
+/* task: a salmon label set at an angle, as on the template's homework slides */
+.task{position:relative;flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;gap:calc(4*var(--u))}
+.task .copy{align-self:start}
+.stamp{justify-self:center;background:var(--salmon);border:calc(.12*var(--u)) solid #d65b5b;border-radius:calc(1.1*var(--u));color:#fff;font-size:calc(3*var(--u));line-height:1.2;
+  padding:calc(1.7*var(--u)) calc(2.8*var(--u));transform:rotate(-9deg);text-align:center;max-width:calc(44*var(--u));text-wrap:balance}
+.task .go{position:absolute;right:calc(4*var(--u));bottom:calc(2*var(--u));font-size:var(--s-sub)}
+.task.solo{grid-template-columns:1fr}
+
+.gallery{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:calc(3*var(--u));align-items:end}
+.gallery .pic img{max-height:calc(30*var(--u))}
+.people{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:calc(3*var(--u));align-items:end;justify-items:center}
+.person{display:flex;flex-direction:column;align-items:center;text-align:center;gap:calc(1.4*var(--u))}
+.person img{width:calc(13*var(--u));height:calc(16*var(--u));object-fit:cover;display:block;filter:drop-shadow(calc(.35*var(--u)) calc(.35*var(--u)) calc(.55*var(--u)) rgba(0,0,0,.38))}
+.person .name{font-size:var(--s-small);line-height:1.25;color:var(--fg)}
+.person .role{font-size:var(--s-small);line-height:1.25;color:var(--body)}
+.people.n1 img,.people.n2 img{width:calc(17*var(--u));height:calc(21*var(--u))}
+
+/* quote: the quote is the headline, right aligned, the picture below on the left */
+.l-quote .headrow{justify-content:flex-end}
+.l-quote h2{text-align:right;max-width:calc(64*var(--u));line-height:1.15;text-wrap:balance}
+.attr{font-size:var(--s-mid);text-align:right;color:var(--body);margin-top:calc(1*var(--u))}
+.qbody{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:calc(4*var(--u));align-items:end;padding:calc(2*var(--u)) 0 calc(1*var(--u))}
+.qbody .pic{align-items:flex-start}
+.qbody .pic img{width:100%;max-height:calc(30*var(--u));object-position:left bottom}
+.qbody ul.dash>li{font-size:var(--s-sub)}
+
+/* questions and study slides carry the template's pictures: the figure on the question mark and the light bulb */
+.figure{display:flex;justify-content:center;align-items:center}
+.figure img{width:calc(22*var(--u));height:auto;display:block}
+.bulb{position:absolute;right:calc(4*var(--u));top:calc(2.2*var(--u));width:calc(10*var(--u));height:auto;z-index:2}
+.l-study .headrow{padding-right:calc(12*var(--u))}
+.l-questions .split{grid-template-columns:minmax(0,1fr) calc(24*var(--u))}
+.takeh{font-size:var(--s-mid);color:var(--body);margin-bottom:calc(1.6*var(--u))}
+.l-questions ul.dash{gap:calc(1.5*var(--u))}
+
+.l-questions .after{padding-left:calc(30*var(--u))}
+.l-questions.bare .main{justify-content:flex-end}
+.l-questions.bare .figure{justify-content:flex-end;padding-right:calc(2*var(--u))}
+.l-questions.bare .figure img{width:calc(24*var(--u))}
+
+/* syllabus: the course plan, one bar per session; the current one is teal; assignments in salmon on the right */
+.plan{display:grid;grid-template-columns:calc(11*var(--u)) calc(6*var(--u)) minmax(0,1fr) calc(23*var(--u));column-gap:calc(1.6*var(--u));align-items:center}
+.legend{grid-column:1;display:grid;gap:calc(1*var(--u));align-self:center}
+.legend span{display:grid;place-items:center;height:calc(3.4*var(--u));font-size:calc(1.05*var(--u));color:#fff}
+.lg-l{background:var(--green)}.lg-e{background:var(--dgreen)}.lg-a{background:var(--salmon)}
+.rows{grid-column:2/4;display:grid;grid-template-columns:calc(6*var(--u)) minmax(0,1fr);column-gap:calc(1.6*var(--u));row-gap:calc(.4*var(--u));align-items:center}
+.l-syllabus .main{padding-top:calc(1.4*var(--u))}
+.rows .date{font-size:calc(.72*var(--u));color:var(--quiet);text-align:right;font-variant-numeric:tabular-nums}
+.rows .bar{height:calc(2.15*var(--u));display:grid;place-items:center;font-size:calc(1.1*var(--u));color:#fff;background:var(--green);border-bottom:calc(.15*var(--u)) solid #00591f;padding:0 calc(1*var(--u));
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rows .bar.ex{background:var(--dgreen)}
+.rows .bar.cur{background:var(--teal);border-color:#5d8f99}
+.rows .brk{grid-column:2;height:calc(.45*var(--u));background:#111;margin:calc(.3*var(--u)) 0}
+.assign{grid-column:4;display:grid;row-gap:calc(.4*var(--u));align-self:stretch}
+.assign div{background:var(--salmon);color:#fff;font-size:calc(1.05*var(--u));display:grid;place-items:center;text-align:center;padding:calc(1*var(--u));margin:calc(.3*var(--u)) 0}
+
+/* title slide: logo, title and the course on the left, the gear on the right, the green wedge at the foot */
+.l-title .frame,.l-section .frame{padding:0;display:block}
+.logo{position:absolute;left:calc(3.9*var(--u));top:calc(3.4*var(--u));width:calc(24.3*var(--u));height:auto;z-index:2}
+.art{position:absolute;inset:0;overflow:hidden;z-index:0}
+.gear{position:absolute;left:calc(47.65*var(--u));top:calc(-1.9*var(--u));width:calc(53.2*var(--u));height:calc(53.2*var(--u));object-fit:contain}
+.veil{position:absolute;inset:0;z-index:1;background:linear-gradient(to top right,#fff 0%,rgba(255,255,255,.6) 50%,rgba(255,255,255,0) 100%)}
+.wedge{position:absolute;left:calc(50*var(--u));top:calc(34.65*var(--u));width:calc(50*var(--u));height:calc(21.6*var(--u));background:var(--green);z-index:2;
+  clip-path:polygon(100% 0,100% 100%,3.65% 100%,0 52.9%)}
+.tagline{position:absolute;right:calc(4*var(--u));top:calc(15.65*var(--u));z-index:3;font-family:HSGSerif,"Palatino Linotype",Palatino,serif;font-size:calc(1.39*var(--u));color:#fff}
+.tblock{position:absolute;left:calc(9*var(--u));top:calc(12*var(--u));width:calc(44*var(--u));height:calc(19.6*var(--u));z-index:2;display:flex;flex-direction:column;justify-content:flex-end}
+.kicker{font-size:var(--s-kick);line-height:1.2;color:var(--fg);margin-bottom:calc(2.2*var(--u))}
+h1{font-size:var(--s-h1);font-weight:300;line-height:1.08;letter-spacing:-.01em;color:var(--fg);text-wrap:balance}
+.tbody{position:absolute;left:calc(9*var(--u));top:calc(34.2*var(--u));width:calc(40*var(--u));z-index:2;font-size:calc(1.67*var(--u));line-height:1.3;color:var(--fg)}
+.tbody p+p{margin-top:calc(2.2*var(--u))}
+.l-section .tblock{top:calc(14*var(--u));height:calc(20*var(--u));width:calc(70*var(--u))}
+.l-section .wedge{left:calc(62*var(--u));width:calc(38*var(--u));top:calc(40.25*var(--u));height:calc(16*var(--u))}
+
+/* the controls: a pill that floats under the slide, as in the FuSo decks, in HSG green */
+.controls{position:fixed;left:0;right:0;bottom:0;height:var(--ctl);display:grid;place-items:center;z-index:7;pointer-events:none;
+  color:#111;font-family:system-ui,sans-serif;font-size:13px;font-weight:600}
+.pill{pointer-events:auto;display:flex;align-items:center;height:44px;padding:0 6px;border-radius:22px;background:#fff;
+  border:1px solid #ddd;box-shadow:0 4px 18px rgba(0,0,0,.1);transition:opacity .25s,transform .25s}
+.pill>div{display:flex;align-items:center;gap:2px}
+.pill .sep{width:1px;height:20px;background:#ddd;margin:0 8px}
+.controls button{border:0;background:transparent;color:inherit;font:inherit;height:34px;padding:0 12px;border-radius:17px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
+.controls [hidden]{display:none}
+.controls svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.controls button:hover,body.show-notes #notesBtn,body:has(.overview.open) #ovBtn{background:#f0f0f0}
+.controls button:focus-visible{outline:2px solid #00802F;outline-offset:2px}
+.controls .nav button{width:32px;height:32px;padding:0;background:#00802F;color:#fff}
+.controls .nav button:not(:disabled):hover{background:#0A5F2D}
+.controls .nav button:disabled{opacity:.3;cursor:default}
+.nav svg{stroke-width:2.25}
+.count{min-width:60px;text-align:center;font-variant-numeric:tabular-nums}
+:root:not(:fullscreen) .fs-on,:root:fullscreen .fs-off{display:none}
+.progress{position:fixed;left:0;right:0;bottom:0;height:3px;background:#ddd}
+.progress span{display:block;height:100%;width:0;background:#00802F;transition:width .3s}
+:root:fullscreen{--bar:0px}
+:root:fullscreen .progress{bottom:0;background:transparent}
+:root:fullscreen .pill{opacity:0;transform:translateY(10px);pointer-events:none}
+:root:fullscreen body.awake .pill,:root:fullscreen .pill:has(:focus-visible){opacity:1;transform:none;pointer-events:auto}
+:root:fullscreen body:not(.awake){cursor:none}
+
+.overview{position:fixed;inset:0;z-index:10;display:none;overflow:auto;padding:calc(5*var(--u)) calc(5*var(--u)) calc(8*var(--u));background:#fff}
+.overview.open{display:block}
+.overview h2{font-size:calc(3*var(--u))}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(20*var(--u)),1fr));gap:calc(1.4*var(--u));margin-top:calc(3*var(--u))}
+.ov-grid button{all:unset;cursor:pointer;box-sizing:border-box;min-height:calc(10*var(--u));padding:calc(1.6*var(--u));background:#f2f2f2;border-left:calc(.5*var(--u)) solid var(--green);
+  color:#111;font-size:calc(1.25*var(--u));line-height:1.25;display:flex;flex-direction:column;gap:calc(.6*var(--u))}
+.ov-grid button:focus-visible{outline:2px solid currentColor}
+.ov-grid small{font-size:calc(.9*var(--u));color:var(--quiet)}
+.notes-view{position:fixed;left:0;right:0;bottom:var(--bar);z-index:6;display:none;max-height:42%;overflow:auto;padding:calc(2*var(--u)) calc(5*var(--u));
+  background:#f2f2f2;color:#111;border-top:1px solid #ddd;font-size:calc(1.4*var(--u));line-height:1.45;white-space:pre-wrap}
+body.show-notes .notes-view{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+
+/* windows narrower than 1000px: still one slide at a time, but the slide fills the window and its content
+   reflows into one column; a slide taller than the window scrolls within itself */
+@media (max-width:999px),(max-height:480px){
+  :root{--u:8px;--s-h1:34px;--s-h2:25px;--s-kick:17px;--s-body:17px;--s-mid:16px;--s-sub:15px;--s-small:14px;--s-tiny:12px}
+  body{background:#fff}
+  .slide{left:0;top:0;width:100%;height:calc(100% - var(--bar));transform:none;overflow-y:auto}
+  .frame{height:auto;min-height:100%;display:block;padding:30px 20px 70px}
+  .headrow{display:block;min-height:0}
+  .callout{margin:16px 0 0;max-width:none}
+  .lead{margin-top:16px}
+  .main{display:block;padding:22px 0 0}
+  .split,.split.wide,.task,.qbody,.quiz,.gallery,.people,.l-questions .split{grid-template-columns:1fr;gap:24px}
+  .quiz .box,.quiz .box:nth-child(even){justify-self:stretch;max-width:none}
+  .after,.l-questions .after{padding-left:0}
+  .defs{grid-template-columns:1fr;gap:2px}.defs dd{padding-left:22px;margin-bottom:8px}
+  .menu{width:auto;padding:18px}
+  .pic img{max-height:none}
+  .figure img{width:150px}
+  .bulb{width:64px;top:16px;right:16px}
+  .l-study .headrow{padding-right:72px}
+  table.t{font-size:14px}.t th,.t td{padding:6px 7px}
+  .tablewrap{overflow-x:auto}
+  pre.code,pre.code.small{font-size:12px;overflow-x:auto}
+  .stamp{font-size:22px;transform:rotate(-5deg);margin:20px 0}
+  .task .go{position:static;display:block;margin-top:20px}
+  .plan{display:block}.legend{display:flex;gap:8px;margin-bottom:16px}.legend span{flex:1;height:30px;font-size:12px}
+  .rows{grid-template-columns:62px 1fr;row-gap:5px}.rows .date{font-size:10px}.rows .bar{height:26px;font-size:12px;white-space:normal}
+  .assign{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}.assign div{font-size:12px;padding:8px;margin:0}
+  .person img{width:120px;height:148px}
+  .l-quote h2{text-align:left}.attr{text-align:left}
+  .l-title .frame,.l-section .frame{display:flex;flex-direction:column;padding:24px 20px 0}
+  .logo,.tblock,.tbody,.tagline{position:static;width:auto;height:auto}
+  .logo{width:190px;margin-bottom:44px}
+  .tbody{margin:26px 0 30px;font-size:15px}
+  .gear{left:auto;right:-70px;top:-50px;width:210px;height:210px}
+  .l-title .frame,.l-section .frame{overflow:hidden}
+  .wedge{position:static;width:auto;height:auto;clip-path:none;margin:auto -20px 0;padding:26px 20px 18px;display:flex;justify-content:flex-end;
+    clip-path:polygon(100% 0,100% 100%,0 100%,0 40%)}
+  .tagline{font-size:15px}
+  .l-section .wedge{width:auto;height:90px;margin-top:40px}
+  .source,.dfoot{position:static;display:block;margin-top:24px}
+  .pn{position:absolute;top:auto;bottom:16px;right:16px;width:30px;height:33px;font-size:12px}
+  .pill{width:100%;height:100%;padding:3px 10px 0;border-radius:0;border:0;box-shadow:none;justify-content:space-between}
+  .pill .sep{display:none}
+  .tools button{flex-direction:column;gap:3px;height:48px;min-width:56px;padding:0 6px;border-radius:10px;font-size:10.5px}
+  .tools svg{width:20px;height:20px}
+  .controls .nav button{width:38px;height:38px}
+  .progress{bottom:calc(var(--ctl) - 3px)}
+}
+@media print{
+  @page{size:13.333in 7.5in;margin:0}
+  :root{--u:.13333in;--bar:0px}
+  html,body{height:auto}
+  body{overflow:visible;background:#fff}
+  .slide{position:relative;left:auto;top:auto;transform:none;visibility:visible;height:7.5in;width:100%;break-after:page}
+  .controls,.overview,.notes-view{display:none!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<main aria-label="Processors and Assembly">
+<section class="slide l-title active" id="s1" data-title="Processors and Assembly" aria-label="Slide 1 of 57"><div class="frame"><div class="art"><img class="gear" src="assets/title-gear.png" alt="Word cloud of research topics in the shape of a gear"><div class="veil"></div></div><img class="logo" src="assets/hsg_logo.png" alt="University of St.Gallen"><div class="tblock"><p class="kicker">Computersysteme</p><h1>Processors and Assembly</h1></div><div class="tbody"><p>Simon Mayer</p><p>University of St.Gallen<br>Bachelor in Computer Science<br><br>Computersysteme (1,904)</p></div><div class="wedge"><p class="tagline">From insight to impact.</p></div></div></section>
+<section class="slide l-syllabus" id="s2" data-title="Course Syllabus" aria-label="Slide 2 of 57"><div class="frame"><div class="headrow"><div><h2>Course Syllabus</h2></div></div><div class="main"><div class="plan"><div class="legend"><span class="lg-l">Lecture</span><span class="lg-e">Exercise</span><span class="lg-a">Assignment</span></div><div class="rows"><span class="date">16.09.2026</span><div class="bar">Information: Numbers, Bits, Bytes, Encodings</div><span class="date">23.09.2026</span><div class="bar ex">Bare Metal Programming</div><span class="date">30.09.2026</span><div class="bar">Computing on Bits: Circuits and Processors</div><span class="date">07.10.2026</span><div class="bar cur">Assembly Basics</div><span class="date">14.10.2026</span><div class="bar ex">Assembly Reverse-Engineering &amp; Assembly Bombs</div><span class="date">21.10.2026</span><div class="bar">Control Flow</div><span></span><div class="brk" aria-label="Break"></div><span class="date">11.11.2026</span><div class="bar">Memory Basics</div><span class="date">18.11.2026</span><div class="bar">Memory Hierarchy and Caches</div><span class="date">25.11.2026</span><div class="bar ex">Memory Experiments</div><span class="date">02.12.2026</span><div class="bar">Processor Architecture</div><span class="date">09.12.2026</span><div class="bar">Modern Processors</div><span class="date">16.12.2026</span><div class="bar">Multiprocessors, GPUs, Heterogeneous Manycore</div></div><div class="assign" style="grid-template-rows:repeat(13,auto)"><div style="grid-row:2/5">Bare Metal Programming</div><div style="grid-row:5/10">Assembly Reverse-Engineering</div><div style="grid-row:10/13">Memory Experiments</div></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>2</span></section>
+<section class="slide l-text" id="s3" data-title="Remember: We Built Adders" aria-label="Slide 3 of 57"><div class="frame"><div class="headrow"><div><h2>Remember: We Built Adders</h2></div></div><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>A half-adder adds two bits: the sum is an exclusive OR, the carry is an AND</li><li>1× 8-bit adder = 8× 1-bit adders that are connected properly: 40 gates, about 80 transistors</li><li>Arranged in a 3D grid, that&#x27;s a cube of about 125 nm × 125 nm × 125 nm</li></ul></div><figure class="pic"><img src="assets/half-adder.jpg" alt="Circuit of a half-adder: inputs A and B go to an XOR gate with output S and to an AND gate with output C"></figure></div></div></div><p class="source">Recap of <a href="https://hyperdecks.github.io/computersystems/02-circuits/html/#/27" target="_blank" rel="noopener">lecture 2</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>3</span></section>
+<section class="slide l-table" id="s4" data-title="Our Journey So Far…" aria-label="Slide 4 of 57"><div class="frame"><div class="headrow"><div><h2>Our Journey So Far…</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Step</th><th>Building blocks</th><th>Where</th></tr></thead><tbody><tr><td>Information</td><td>Binary digits + context: numbers, text, pixels and colors, instructions</td><td><a href="https://hyperdecks.github.io/computersystems/01-information/html/" target="_blank" rel="noopener">Lecture 1</a>: done!</td></tr><tr><td>Logic + arithmetic</td><td>School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)</td><td><a href="https://hyperdecks.github.io/computersystems/02-circuits/html/" target="_blank" rel="noopener">Lecture 2</a>: done!</td></tr><tr><td>Electronics</td><td>Logic gates from electronic components (today: transistors)</td><td><a href="https://hyperdecks.github.io/computersystems/02-circuits/html/" target="_blank" rel="noopener">Lecture 2</a>: done!</td></tr><tr><td>Calculator</td><td>Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!</td><td><a href="https://hyperdecks.github.io/computersystems/02-circuits/html/" target="_blank" rel="noopener">Lecture 2</a>: done!</td></tr><tr><td>Processor</td><td>Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!</td><td><strong>Today</strong></td></tr><tr><td>Programs</td><td>Instruction sets, machine code and assembly language</td><td><strong>Today</strong>, and <a href="https://hyperdecks.github.io/computersystems/04-assembly/html/" target="_blank" rel="noopener">lecture 4</a></td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>4</span></section>
+<section class="slide l-menu" id="s5" data-title="Our Menu for Today" aria-label="Slide 5 of 57"><div class="frame"><div class="headrow"><div><h2>Our Menu for Today</h2></div></div><div class="main"><div class="menu"><p class=cur>Building a Computer</p><p>Designing a simple Instruction Set</p><p>Introduction to Assembly Language</p><p>Basic Assembly Constructs</p></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>5</span></section>
+<section class="slide l-text" id="s6" data-title="Central Processing Units: A Story of Two (?) Enterprises" aria-label="Slide 6 of 57"><div class="frame"><div class="headrow"><div><h2>Central Processing Units: A Story of Two (?) Enterprises</h2></div></div><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>Intel («Team Blue»)</li><li>AMD («Team Red»)<ul><li>First to break the 1 GHz clock speed barrier for a mainstream processor</li><li>First to introduce x86-64 (most machines are still capable of executing IA32 in backwards-compatibility mode)</li></ul></li><li>Nvidia («Team Green»), focusing on graphics processing units (GPUs)</li><li>ARM, focusing on mobile, power-efficient processors, often within mobile SoCs</li></ul></div><figure class="pic"><img src="assets/epyc-vs-xeon.jpg" alt="An AMD EPYC processor and an Intel Xeon Platinum processor side by side with VS between them"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>6</span></section>
+<section class="slide l-gallery" id="s7" data-title="Intel, AMD, Nvidia" aria-label="Slide 7 of 57"><div class="frame"><div class="headrow"><div><h2>Intel, AMD, Nvidia</h2></div></div><div class="main"><div class="gallery" style="--n:3"><figure class="pic shadow"><img src="assets/intel-stock.png" alt="Share price chart of Intel since 1991, at 37.17 USD"><figcaption>Intel</figcaption></figure><figure class="pic shadow"><img src="assets/amd-stock.png" alt="Share price chart of AMD since 1991, at 211.51 USD"><figcaption>AMD</figcaption></figure><figure class="pic shadow"><img src="assets/nvidia-stock.png" alt="Share price chart of Nvidia since 2002, at 185.04 USD, rising steeply in recent years"><figcaption>Nvidia</figcaption></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>7</span></section>
+<section class="slide l-text" id="s8" data-title="Who Manufactures Integrated Circuits?" aria-label="Slide 8 of 57"><div class="frame"><div class="headrow"><div><h2>Who Manufactures Integrated Circuits?</h2></div></div><div class="main dense"><div class="split"><div class="copy"><ul class="dash"><li>Integrated device manufacturers design and manufacture the circuits<ul><li>Intel, Samsung, Texas Instruments, Infineon (Intel now also runs a pure-play foundry business)</li></ul></li><li>Pure-play foundries manufacture the designs of fabless (= non-fabricating) companies<ul><li>TSMC, GlobalFoundries, UMC</li></ul></li><li>Fabless companies outsource production to such a fabrication company<ul><li>AMD, Nvidia, Qualcomm, Zhaoxin, Apple</li><li>ARM is different again: it licenses IP and does not sell chips at all</li></ul></li></ul></div><figure class="pic shadow"><img src="assets/broadcom-soc.jpg" alt="Close-up of a Broadcom system-on-chip on the green circuit board of a Raspberry Pi"></figure></div></div></div><p class="source"><a href="https://en.wikipedia.org/wiki/TSMC" target="_blank" rel="noopener">Wikipedia: TSMC</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>8</span></section>
+<section class="slide l-text" id="s9" data-title="CPU Architectures Work with Two Main Illusions" aria-label="Slide 9 of 57"><div class="frame"><div class="headrow"><div><h2>CPU Architectures Work with Two Main Illusions</h2></div></div><div class="main dense"><div class="copy"><div class="groups"><div class="group"><h3>Instruction set architecture</h3><ul class="dash"><li>ISAs assume that instructions are executed in sequence</li><li>Processor hardware is more elaborate, but ensures that the overall behavior matches sequential execution</li></ul></div><div class="group"><h3>Linear memory model</h3><ul class="dash"><li>We assume that memory is simply a very large byte array</li><li>Hardware is much more elaborate, but makes sure that its outside behavior matches the linear memory model</li></ul></div></div></div><p class="after">In the lectures, you will see x86-64; in the second exercise, you apply the concepts to ARMv8.</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>9</span></section>
+<section class="slide l-text" id="s10" data-title="Let&#x27;s build a simple CPU that works on 4-bit numbers" aria-label="Slide 10 of 57"><div class="frame"><div class="headrow"><div><h2>Let&#x27;s build a simple CPU that works on 4-bit numbers</h2></div></div><p class="lead">Computing is just mathematics (that&#x27;s what Leibniz said already!). Simple idea, in principle…</p><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>Construct an adding circuit</li><li>Construct multiplier, subtractor, divider circuits: let&#x27;s say we have 4 such units!</li><li>Add memory for inputs and outputs</li><li>Wire all these components together…</li></ul></div><figure class="pic"><img src="assets/74ls83.gif" alt="Block diagram of the 74LS83 4-bit full adder with inputs A3 to A0, B3 to B0 and carry-in, outputs S3 to S0 and carry-out"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>10</span></section>
+<section class="slide l-text" id="s11" data-title="We also want to select which of these four functions to perform!" aria-label="Slide 11 of 57"><div class="frame"><div class="headrow"><div><h2>We also want to select which of these four functions to perform!</h2></div><aside class="callout box teal">In modern processors, we call this an Arithmetic/Logic Unit (ALU)</aside></div><p class="lead">Introduce two «function select» bits:</p><div class="main"><div class="split wide"><div class="copy"><dl class="defs"><dt>00</dt><dd>activate the add unit</dd><dt>01</dt><dd>activate the multiply unit</dd><dt>10</dt><dd>activate the subtract unit</dd><dt>11</dt><dd>activate the divide unit</dd></dl></div><div><pre class="code outline">first 4-bit number   second 4-bit number
+        |                   |
+  +-----+------+------+-----+
+  | add | mult | sub  | div | &lt;- function
+  +-----+------+------+-----+    select
+               |                 (2 bits)
+         output / result</pre></div></div><p class="after">Done! Here&#x27;s a general-purpose calculator. The function select bits are instructions for a «control unit».</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>11</span></section>
+<section class="slide l-text" id="s12" data-title="Putting It Together" aria-label="Slide 12 of 57"><div class="frame"><div class="headrow"><div><h2>Putting It Together</h2></div></div><div class="main"><div class="split"><div class="copy"><dl class="defs"><dt>ALU</dt><dd>you&#x27;ve designed this ;-)</dd><dt>Control unit</dt><dd>which instruction is executed next?</dd><dt>Registers</dt><dd>very small, extremely fast memory (e.g., 16× 64-bit general-purpose registers): data that the ALU can directly compute on</dd><dt>Memory («RAM»)</dt><dd>holds more data</dd><dt>Persistent storage (e.g., SSD)</dt><dd>holds even more data</dd></dl></div><figure class="pic"><img src="assets/cpu-diagram.jpg" alt="Block diagram: input device, central processing unit with control unit, arithmetic/logic unit and registers, output device, and a memory unit below"><figcaption>Diagram: computerscience.gcse.guru</figcaption></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>12</span></section>
+<section class="slide l-gallery" id="s13" data-title="Putting It Together: The Real Parts" aria-label="Slide 13 of 57"><div class="frame"><div class="headrow"><div><h2>Putting It Together: The Real Parts</h2></div></div><div class="main"><div class="gallery" style="--n:4"><figure class="pic"><img src="assets/core-i7.png" alt="An Intel Core i7 processor"><figcaption>Central processing unit</figcaption></figure><figure class="pic"><img src="assets/ram.png" alt="Two black DDR4 memory modules"><figcaption>Memory («RAM»)</figcaption></figure><figure class="pic"><img src="assets/ssd.jpg" alt="Solid state drives of different sizes"><figcaption>Persistent storage (SSD)</figcaption></figure><figure class="pic"><img src="assets/keyboard.png" alt="A black computer keyboard"><figcaption>Input device</figcaption></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>13</span></section>
+<section class="slide l-image" id="s14" data-title="Remember miniaturization…?" aria-label="Slide 14 of 57"><div class="frame"><div class="headrow"><div><h2>Remember miniaturization…?</h2></div></div><div class="main"><figure class="pic shadow big"><img src="assets/blood-cell.png" alt="Illustration: a red blood cell of 0.008 mm beside a transistor of 0.00009 mm"><figcaption><a href="https://hyperdecks.github.io/computersystems/02-circuits/html/#/34" target="_blank" rel="noopener">Lecture 2: Thank you, Moore!</a></figcaption></figure></div></div><p class="source"><a href="https://cogentlegal.com/2013/11/understand-spatial-relationships/" target="_blank" rel="noopener">cogentlegal.com</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>14</span></section>
+<section class="slide l-gallery" id="s15" data-title="Intel 8008 (1972)" aria-label="Slide 15 of 57"><div class="frame"><div class="headrow"><div><h2>Intel 8008 (1972)</h2></div></div><div class="main"><div class="gallery" style="--n:2"><figure class="pic"><img src="assets/intel-8008-chip.png" alt="An Intel C8008-1 chip in a ceramic package with gold pins"></figure><figure class="pic"><img src="assets/intel-8008-die.png" alt="Die photo of the Intel 8008 with labelled regions: instruction register, instruction decode, ALU registers, carry, ALU, registers and PC/stack"></figure></div></div></div><p class="source"><a href="http://www.righto.com/2016/12/die-photos-and-analysis-of_24.html" target="_blank" rel="noopener">righto.com: Die photos and analysis of the 8008</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>15</span></section>
+<section class="slide l-image" id="s16" data-title="Intel Core i7 Haswell Refresh (2014)" aria-label="Slide 16 of 57"><div class="frame"><div class="headrow"><div><h2>Intel Core i7 Haswell Refresh (2014)</h2></div></div><div class="main"><figure class="pic shadow big"><img src="assets/haswell-die.jpg" alt="Die photo of an Intel Core i7 with four cores, processor graphics, a shared L3 cache, the system agent and the memory controller"></figure></div></div><p class="source"><a href="https://www.guru3d.com/articles-pages/core-i7-4790-processor-review,3.html" target="_blank" rel="noopener">guru3d.com: Core i7 4790 processor review</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>16</span></section>
+<section class="slide l-text" id="s17" data-title="Apple M1 System-on-Chip (2020)" aria-label="Slide 17 of 57"><div class="frame"><div class="headrow"><div><h2>Apple M1 System-on-Chip (2020)</h2></div></div><div class="main"><div class="split"><div class="copy"><dl class="defs"><dt>CPU</dt><dd>Central Processing Unit</dd><dt>GPU</dt><dd>Graphics Processing Unit</dd><dt>NPU</dt><dd>Neural (Network) Processing Unit</dd><dt>SLC</dt><dd>System-Level Cache</dd></dl></div><figure class="pic"><img src="assets/m1-die.png" alt="Annotated die photo of the Apple M1 with marked regions for GPU cores, CPU clusters, system-level cache and the neural engine"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>17</span></section>
+<section class="slide l-menu" id="s18" data-title="Our Menu for Today" aria-label="Slide 18 of 57"><div class="frame"><div class="headrow"><div><h2>Our Menu for Today</h2></div></div><div class="main"><div class="menu"><p>Building a Computer</p><p class=cur>Designing a simple Instruction Set</p><p>Introduction to Assembly Language</p><p>Basic Assembly Constructs</p></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>18</span></section>
+<section class="slide l-quiz" id="s19" data-title="Designing a Simple Instruction Set Architecture" aria-label="Slide 19 of 57"><div class="frame"><div class="headrow"><div><h2>Designing a Simple Instruction Set Architecture</h2></div></div><p class="lead">Here&#x27;s the CPU hardware we have: 4 memory slots and 2 data registers of 4 bits each, and an ALU that can add and subtract.</p><div class="main"><div class="quiz n3"><div class="box green">How many bits do we need to address four memory slots?</div><div class="box green">How many bits do we need to address two registers?</div><div class="box green">How many bits do we need to encode five instructions?</div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>19</span></section>
+<section class="slide l-table" id="s20" data-title="Our Instruction Set: 5 Instructions" aria-label="Slide 20 of 57"><div class="frame"><div class="headrow"><div><h2>Our Instruction Set: 5 Instructions</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Instruction</th><th>Encoding</th></tr></thead><tbody><tr><td>Load from memory address xx (M[xx]) into register y (R[y])</td><td><code>000 xx y</code></td></tr><tr><td>Store from R[x] into M[yy]</td><td><code>001 x yy</code></td></tr><tr><td>Add the contents of R[0] and R[1] and store the result in R[x]</td><td><code>010 x</code></td></tr><tr><td>Subtract the contents of R[0] from R[1] and store the result in R[x]</td><td><code>011 x</code></td></tr><tr><td>Insert the 4-bit number n into M[xx]</td><td><code>100 nnnn xx</code></td></tr></tbody></table></div><p class="after" style="padding-left:0">Memory: addresses 00, 01, 10, 11. Registers: addresses 0 and 1.</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>20</span></section>
+<section class="slide l-code" id="s21" data-title="Writing a Program for our ISA" aria-label="Slide 21 of 57"><div class="frame"><div class="headrow"><div><h2>Writing a Program for our ISA</h2></div><aside class="callout box green">2-min teamwork!</aside></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>7 = 0 × 8 + 1 × 4 + 1 × 2 + 1 × 1 = 0111<sub>2</sub></li><li>Insert (<code>100</code>) 7 (<code>0111</code>) into M[00] (<code>00</code>): <code>100 0111 00</code></li></ul></div><div><pre class="code outline">// Machine-level program that adds 7 and 8
+Insert 7 into M[00]:      100 0111 00
+Insert 8 into M[01]:      ?
+Load from M[00] to R[0]:  ?
+Load from M[01] to R[1]:  ?
+Add registers into R[0]:  ?
+Store R[0] into M[10]:    ?</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>21</span></section>
+<section class="slide l-code" id="s22" data-title="Writing a Program for our ISA: Done!" aria-label="Slide 22 of 57"><div class="frame"><div class="headrow"><div><h2>Writing a Program for our ISA: Done!</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Memory afterwards: M[00] = 7, M[01] = 8, M[10] = 15</li><li>Registers afterwards: R[0] = 15 (it held 7 before the add), R[1] = 8</li></ul></div><div><pre class="code outline">// Machine-level program that adds 7 and 8
+Insert 7 into M[00]:      100 0111 00
+Insert 8 into M[01]:      100 1000 01
+Load from M[00] to R[0]:  000 00 0
+Load from M[01] to R[1]:  000 01 1
+Add registers into R[0]:  010 0
+Store R[0] into M[10]:    001 0 10</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>22</span></section>
+<section class="slide l-text" id="s23" data-title="What if we write the program in this way?" aria-label="Slide 23 of 57"><div class="frame"><div class="headrow"><div><h2>What if we write the program in this way?</h2></div></div><div class="main"><div class="split wide"><div class="copy"><ul class="dash"><li>The encoding of this machine-level program is unique!</li><li>We could say that this is the 611&#x27;097&#x27;513&#x27;226th program of our ISA</li><li>So this means that programs themselves are just numbers…</li></ul></div><div><pre class="code outline">1000111001001000010000000000110100001010
+
+100 0111 00   Insert 7 into M[00]
+100 1000 01   Insert 8 into M[01]
+000 00 0      Load M[00] to R[0]
+000 01 1      Load M[01] to R[1]
+010 0         Add into R[0]
+001 0 10      Store R[0] into M[10]</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>23</span></section>
+<section class="slide l-text" id="s24" data-title="Reading the Bits: One by One" aria-label="Slide 24 of 57"><div class="frame"><div class="headrow"><div><h2>Reading the Bits: One by One</h2></div></div><p class="lead">Let&#x27;s read machine code one bit at a time…</p><div class="main dense"><div class="split"><div class="copy"><dl class="defs"><dt><code>0</code></dt><dd>could be load, store, add or subtract. Let&#x27;s see the next bit.</dd><dt><code>0 0</code></dt><dd>could be load or store. Let&#x27;s see the next bit.</dd><dt><code>0 0 0</code></dt><dd>ah, this must be load. Expecting 3 more bits to complete the instruction.</dd><dt><code>000 01 1</code></dt><dd>aha! This is a load from M[01] to R[1]. Done. Next instruction please!</dd></dl></div><figure class="pic shadow"><img src="assets/diver-ok.png" alt="A scuba diver under water makes the OK sign with one hand"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>24</span><template class="notes">Demo</template></section>
+<section class="slide l-text" id="s25" data-title="Another Computer Program" aria-label="Slide 25 of 57"><div class="frame"><div class="headrow"><div><h2>Another Computer Program</h2></div><aside class="callout box green">What does this program do?</aside></div><div class="main"><div class="split wide"><div class="copy"><p><code>1000010001001000</code><br><code>0100000000001101</code><br><code>10001000</code></p><ul class="dash"><li>Note that everything here is again just binary. So we can use our digital circuits to actually process all of this!</li></ul></div><div><pre class="code outline">Load   M[xx] -&gt; R[y]         000 xx y
+Store  R[x] -&gt; M[yy]         001 x yy
+Add    R[0] + R[1] -&gt; R[x]   010 x
+Sub    R[1] - R[0] -&gt; R[x]   011 x
+Insert n -&gt; M[xx]            100 nnnn xx</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>25</span></section>
+<section class="slide l-code" id="s26" data-title="Another Computer Program: Decoded" aria-label="Slide 26 of 57"><div class="frame"><div class="headrow"><div><h2>Another Computer Program: Decoded</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Memory afterwards: M[00] = 6 (it held 2 before), M[01] = 8</li><li>Registers afterwards: R[0] = 6, R[1] = 8</li></ul></div><div><pre class="code outline">100 0010 00   Insert 2 into M[00]
+100 1000 01   Insert 8 into M[01]
+000 00 0      Load M[00] into R[0]
+000 01 1      Load M[01] into R[1]
+011 0         R[0] = R[1] - R[0]
+001 0 00      Store R[0] into M[00]</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>26</span></section>
+<section class="slide l-text" id="s27" data-title="Self-Test: Write a Multiplier Using Our ISA" aria-label="Slide 27 of 57"><div class="frame"><div class="headrow"><div><h2>Self-Test: Write a Multiplier Using Our ISA</h2></div></div><div class="main"><div class="split wide"><div class="copy"><p>For example, a «multiply-by-4».</p></div><div><pre class="code outline">Load   M[xx] -&gt; R[y]         000 xx y
+Store  R[x] -&gt; M[yy]         001 x yy
+Add    R[0] + R[1] -&gt; R[x]   010 x
+Sub    R[1] - R[0] -&gt; R[x]   011 x
+Insert n -&gt; M[xx]            100 nnnn xx</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>27</span></section>
+<section class="slide l-text" id="s28" data-title="Putting Everything Together" aria-label="Slide 28 of 57"><div class="frame"><div class="headrow"><div><h2>Putting Everything Together</h2></div><aside class="callout box green">How do these components together «run» a computer program?</aside></div><p class="lead">Memory holds program data and instructions. The CPU runs in a loop; in each cycle:</p><div class="main dense"><div class="split"><div class="copy"><dl class="defs"><dt>Fetch</dt><dd>the control unit decides which instruction is next and fetches it from memory</dd><dt>Decode</dt><dd>the CPU finds out what data the instruction needs, and what to do with it</dd><dt>Load</dt><dd>the required data is loaded into the CPU registers</dd><dt>Execute</dt><dd>the ALU computes the result of the instruction</dd><dt>Store</dt><dd>the result is sent back and stored in memory</dd></dl></div><figure class="pic"><img src="assets/cpu-diagram.jpg" alt="Block diagram of a computer: CPU with control unit, ALU and registers, connected to a memory unit"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>28</span></section>
+<section class="slide l-text" id="s29" data-title="The CPU Clock" aria-label="Slide 29 of 57"><div class="frame"><div class="headrow"><div><h2>The CPU Clock</h2></div><aside class="callout box green">What are typical CPU clock frequencies?</aside></div><div class="main dense"><div class="copy"><ul class="dash"><li>How often this cycle is executed per second is determined by the CPU clock</li><li>However, only few instructions take exactly one clock cycle to execute<ul><li>Example: on a modern Intel/AMD core, an integer multiplication has a latency of about 3 cycles (on the 2004 Intel Nocona, it was 10)</li></ul></li><li>We&#x27;ll talk more about this when we go into processors after the semester break</li></ul></div><p class="after">All of this is (of course) just bits in context…</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>29</span></section>
+<section class="slide l-table" id="s30" data-title="Let&#x27;s add instruction memory!" aria-label="Slide 30 of 57"><div class="frame"><div class="headrow"><div><h2>Let&#x27;s add instruction memory!</h2></div><aside class="callout box green">Why 0x102?</aside></div><p class="lead">«The instruction 100001000b (insert 0010b at memory 00b) is located at memory address 0x100.»</p><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Address</th><th>Instruction</th><th>Meaning</th></tr></thead><tbody><tr><td>0x100</td><td><code>100001000</code></td><td>Insert 2 in M[00]</td></tr><tr><td>0x102</td><td><code>100100001</code></td><td>Insert 8 in M[01]</td></tr><tr><td>0x104</td><td><code>000000</code></td><td>Load M[00] into R[0]</td></tr><tr><td>0x105</td><td><code>000011</code></td><td>Load M[01] into R[1]</td></tr><tr><td>0x106</td><td><code>0100</code></td><td>Add into R[0]</td></tr><tr><td>0x107</td><td><code>001000</code></td><td>Store R[0] into M[00]</td></tr></tbody></table></div><p class="after" style="padding-left:0">We address memory in bytes (0x100 = 256). A 9-bit instruction is rounded up to the next byte: 2 bytes.</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>30</span><template class="notes">Why 0x102? Because we count the bits in the instruction (9 bits) and round up to the next byte (2 bytes).</template></section>
+<section class="slide l-code" id="s31" data-title="This will become boring fast…" aria-label="Slide 31 of 57"><div class="frame"><div class="headrow"><div><h2>This will become boring fast…</h2></div></div><div class="main"><div><pre class="code outline small">def annoying_question():
+    print(&quot;Welcome to the *Annoying Input Machine*!&quot;)
+    while True:
+        answer = input(&quot;Quick! Tell me your deepest secret &quot;
+                       &quot;(or type &#x27;stop&#x27; to escape)&quot;)
+        if answer == &quot;stop&quot;:
+            print(&quot;But I do want to know your secret…!&quot;)
+        else:
+            print(f&quot;&#x27;{answer}&#x27;? Interesting choice...&quot;)</pre></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>31</span></section>
+<section class="slide l-text" id="s32" data-title="Let&#x27;s add control flow" aria-label="Slide 32 of 57"><div class="frame"><div class="headrow"><div><h2>Let&#x27;s add control flow</h2></div></div><p class="lead">A sixth instruction: «continue executing with the instruction at hexadecimal address HHH».</p><div class="main"><div class="split wide"><div class="copy"><ul class="dash"><li>Encoding: <code>101 HHH</code></li><li>e.g., <code>101 100</code> to continue at 0x100. But this would mix binary and hex! Context confusion!!</li><li>Better in binary: <code>101 000100000000</code></li></ul></div><div><pre class="code outline">Load   M[xx] -&gt; R[y]         000 xx y
+Store  R[x] -&gt; M[yy]         001 x yy
+Add    R[0] + R[1] -&gt; R[x]   010 x
+Sub    R[1] - R[0] -&gt; R[x]   011 x
+Insert n -&gt; M[xx]            100 nnnn xx
+Jump   to address HHH        101 HHH</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>32</span></section>
+<section class="slide l-code" id="s33" data-title="What does this program do?" aria-label="Slide 33 of 57"><div class="frame"><div class="headrow"><div><h2>What does this program do?</h2></div><aside class="callout box green">What&#x27;s the content of M[00]?</aside></div><div class="main"><div><pre class="code outline">0x100  100001000        Insert 2 in M[00]
+0x102  100100001        Insert 8 in M[01]
+0x104  000000           Load M[00] into R[0]
+0x105  000011           Load M[01] into R[1]
+0x106  0100             Add into R[0]
+0x107  001000           Store R[0] into M[00]
+0x108  101000100000110  Jump to 0x106…</pre></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>33</span><template class="notes">M[00]: 2 … 10 … 18 … 26 … 34 …</template></section>
+<section class="slide l-questions" id="s34" data-title="Any Questions / Comments / Doubts / Concerns?" aria-label="Slide 34 of 57"><div class="frame"><div class="headrow"><div><h2>Any Questions / Comments / Doubts / Concerns?</h2></div></div><div class="main"><div class="split"><div><p class="takeh">Take-Homes</p><ul class="dash"><li>We can selectively switch on our adding circuit, or other types of circuits</li><li>The instructions that switch them on or off are binary as well: they are what the processor executes</li><li>The processor works with memory that holds instructions and data, and runs in a cycle through all instructions</li><li>Very basic control flow can be realized through instruction jumps</li></ul></div><div class="figure"><img src="assets/questions.png" alt="A figure sits thinking on a large green question mark"></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>34</span></section>
+<section class="slide l-study" id="s35" data-title="How to Study this Material?" aria-label="Slide 35 of 57"><div class="frame"><img class="bulb" src="assets/lightbulb.jpg" alt="Drawing of a lit light bulb"><div class="headrow"><div><h2>How to Study this Material?</h2></div></div><div class="main dense"><div class="copy"><div class="groups"><div class="group"><h3>Basic Depth</h3><ul class="dash"><li>On this topic, the slides are self-contained! Go through the examples, create your own ISA, write your own programs in it</li><li>Start reading the chapter «Machine-Level Representation of Programs» of Bryant &amp; O&#x27;Hallaron</li><li>Consider <a href="https://www.geeksforgeeks.org/microarchitecture-and-instruction-set-architecture/" target="_blank" rel="noopener">Microarchitecture and Instruction Set Architecture</a> (GeeksforGeeks), a great overview</li><li>And <a href="https://en.wikipedia.org/wiki/Instruction_set_architecture" target="_blank" rel="noopener">Instruction set architecture</a> (Wikipedia): its section on instruction encoding aligns directly with today</li></ul></div><div class="group"><h3>Advanced Depth</h3><ul class="dash"><li>An interesting technical read: the <a href="https://community.arm.com/cfs-file/__key/telligent-evolution-components-attachments/01-2142-00-00-00-00-66-90/Whitepaper-_2D00_-ARMv8_2D00_M-Architecture-Technical-Overview.pdf" target="_blank" rel="noopener">ARMv8-M architecture</a>. See if you like it!</li><li>You might already want to have a look at the <a href="https://azeria.gumroad.com/l/Arm-cheatsheet-2020-version" target="_blank" rel="noopener">ARM Assembly Cheat Sheet</a></li></ul></div></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>35</span></section>
+<section class="slide l-table" id="s36" data-title="Our Journey So Far…" aria-label="Slide 36 of 57"><div class="frame"><div class="headrow"><div><h2>Our Journey So Far…</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Step</th><th>Building blocks</th><th>Where</th></tr></thead><tbody><tr><td>Information</td><td>Binary digits + context: numbers, text, pixels and colors, instructions</td><td><a href="https://hyperdecks.github.io/computersystems/01-information/html/" target="_blank" rel="noopener">Lecture 1</a>: done!</td></tr><tr><td>Logic + arithmetic</td><td>School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)</td><td><a href="https://hyperdecks.github.io/computersystems/02-circuits/html/" target="_blank" rel="noopener">Lecture 2</a>: done!</td></tr><tr><td>Electronics</td><td>Logic gates from electronic components (today: transistors)</td><td><a href="https://hyperdecks.github.io/computersystems/02-circuits/html/" target="_blank" rel="noopener">Lecture 2</a>: done!</td></tr><tr><td>Calculator</td><td>Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!</td><td><a href="https://hyperdecks.github.io/computersystems/02-circuits/html/" target="_blank" rel="noopener">Lecture 2</a>: done!</td></tr><tr><td>Processor</td><td>Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!</td><td><strong>Done!</strong></td></tr><tr><td>Programs</td><td>Instruction sets, machine code and assembly language</td><td><strong>Today</strong>, and <a href="https://hyperdecks.github.io/computersystems/04-assembly/html/" target="_blank" rel="noopener">lecture 4</a></td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>36</span></section>
+<section class="slide l-text" id="s37" data-title="Putting Everything Together: From Program to Processor" aria-label="Slide 37 of 57"><div class="frame"><div class="headrow"><div><h2>Putting Everything Together: From Program to Processor</h2></div></div><p class="lead"><a href="https://hyperdecks.github.io/computersystems/01-information/html/#/45" target="_blank" rel="noopener">Remember the bit string</a> <code>11111111 00111111 11111111 00111111</code>? Bits can also be a machine-level instruction in an x86 processor.</p><div class="main"><div class="copy"><ul class="dash"><li>e.g., <code>addq %rax,%rbx</code>: «Add the two numbers stored in registers %rax and %rbx and store the result in register %rbx.»</li><li>Demo: high-level program code to assembly code with <a href="https://godbolt.org/" target="_blank" rel="noopener">godbolt.org</a></li><li>Demo: assembly code to bits with the <a href="https://defuse.ca/online-x86-assembler.htm#disassembly" target="_blank" rel="noopener">online x86 assembler</a></li></ul></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>37</span></section>
+<section class="slide l-code" id="s38" data-title="Putting Everything Together" aria-label="Slide 38 of 57"><div class="frame"><div class="headrow"><div><h2>Putting Everything Together</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>High-level programming language (e.g., C, C#, Go): <code>long doubleMe(long number) { return number + number; }</code></li><li>Assembly code (ASM): on the left</li><li>Executable machine code, as hex numbers: on the right</li><li>…as one hex number: 55 48 89 E5 48 89 7D E8 48 8B 45 E8 48 01 C0 48 89 45 F8 48 8B 45 F8 5D C3</li><li>…and as one (long) binary number</li></ul></div><div><pre class="code outline">push rbp                    0:  55
+mov rbp, rsp                1:  48 89 e5
+mov QWORD PTR [rbp-24], rdi 4:  48 89 7d e8
+mov rax, QWORD PTR [rbp-24] 8:  48 8b 45 e8
+add rax, rax                c:  48 01 c0
+mov QWORD PTR [rbp-8], rax  f:  48 89 45 f8
+mov rax, QWORD PTR [rbp-8]  13: 48 8b 45 f8
+pop rbp                     17: 5d
+ret                         18: c3</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>38</span></section>
+<section class="slide l-text" id="s39" data-title="Teams of 2, take 2" aria-label="Slide 39 of 57"><div class="frame"><div class="headrow"><div><h2>Teams of 2, take 2</h2></div><aside class="callout box green">What&#x27;s the basic problem in this encoding? How would you fix that problem?</aside></div><p class="lead">An example ISA:</p><div class="main"><div class="split wide"><div class="copy"><dl class="defs"><dt>Jump</dt><dd><code>00</code></dd><dt>Run</dt><dd><code>001</code></dd><dt>Stop</dt><dd><code>10</code></dd><dt>Hit</dt><dd><code>01</code></dd></dl></div><div><pre class="code outline">00100001
+
+might be  001 00 001
+          Run-Jump-Run
+
+might be  00 10 00 01
+          Jump-Stop-Jump-Hit</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>39</span></section>
+<section class="slide l-text" id="s40" data-title="Observations" aria-label="Slide 40 of 57"><div class="frame"><div class="headrow"><div><h2>Observations</h2></div></div><div class="main"><div class="copy"><ul class="dash"><li>More common instructions have shorter encodings</li><li>From a given starting position, the decoding of bits to machine instructions is unique</li><li>Core issue of the example: the encoding of «Jump» (00) is a prefix of the encoding of «Run» (001)</li><li>We say that such codes break the Fano condition</li></ul></div></div></div><p class="source"><a href="https://godbolt.org/" target="_blank" rel="noopener">godbolt.org</a> · <a href="https://defuse.ca/online-x86-assembler.htm" target="_blank" rel="noopener">defuse.ca/online-x86-assembler.htm</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>40</span></section>
+<section class="slide l-quiz" id="s41" data-title="Leibniz would say: «Computer programs are very large numbers!»" aria-label="Slide 41 of 57"><div class="frame"><div class="headrow"><div><h2>Leibniz would say: «Computer programs are very large numbers!»</h2></div></div><p class="lead">Each computer program is a binary number, interpreted as executable instructions!</p><div class="main"><div class="split wide"><div class="quiz n2"><div class="box green">How many programs are there?</div><div class="box green">How many problems are there?</div></div><figure class="pic shadow"><img src="assets/leibniz.jpg" alt="Painted portrait of Gottfried Wilhelm Leibniz with a long curly wig"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>41</span><template class="notes">This implies that there are (very many) problems for which no algorithm exists to solve them. Classic example: the Halting Problem.</template></section>
+<section class="slide l-text" id="s42" data-title="Problems Without Algorithms" aria-label="Slide 42 of 57"><div class="frame"><div class="headrow"><div><h2>Problems Without Algorithms</h2></div></div><p class="lead">Our <code>doubleMe</code> program, as one binary number:</p><div class="main"><div class="split wide"><div class="copy"><ul class="dash"><li>This implies that there are (very many) problems for which no algorithm exists to solve them</li><li>Classic example: the <a href="https://en.wikipedia.org/wiki/Halting_problem" target="_blank" rel="noopener">Halting Problem</a></li></ul></div><div><pre class="code outline">01010101 01001000 10001001 11100101
+01001000 10001001 01111101 11101000
+01001000 10001011 01000101 11101000
+01001000 00000001 11000000 01001000
+10001001 01000101 11111000 01001000
+10001011 01000101 11111000 01011101
+11000011   </pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>42</span></section>
+<section class="slide l-questions" id="s43" data-title="Any Questions / Comments / Doubts / Concerns?" aria-label="Slide 43 of 57"><div class="frame"><div class="headrow"><div><h2>Any Questions / Comments / Doubts / Concerns?</h2></div></div><div class="main"><div class="split"><div><p class="takeh">Take-Homes</p><ul class="dash"><li>Not only data is binary, programs are too</li><li>Processors run binary code, and compilers translate programs to binary machine code</li><li>This translation requires a specification of the instruction set architecture of the target system</li><li>This is why you needed to set up the arm-none-eabi toolchain: you compile for a different ISA!</li></ul></div><div class="figure"><img src="assets/questions.png" alt="A figure sits thinking on a large green question mark"></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>43</span></section>
+<section class="slide l-text" id="s44" data-title="Now Let&#x27;s Switch to Real ISAs" aria-label="Slide 44 of 57"><div class="frame"><div class="headrow"><div><h2>Now Let&#x27;s Switch to Real ISAs</h2></div></div><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>Our instruction set: 5 instructions (load, store, add, subtract, insert)</li><li>Intel x86-64: 981-3683 instructions, depending on what is counted as an instruction… (<a href="https://cdrdv2.intel.com/v1/dl/getContent/671200" target="_blank" rel="noopener">Intel manual</a>)</li><li>ARMv8: ~1000 instructions, again depending on what is counted… (<a href="https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Learn%20the%20Architecture/Armv8-A%20Instruction%20Set%20Architecture.pdf?revision=ebf53406-04fd-4c67-a485-1b329febfb3e" target="_blank" rel="noopener">ARMv8-A ISA</a>)</li></ul></div><figure class="pic"><img src="assets/x86-opcodes.jpg" alt="Colorful chart titled x86 Opcode Structure and Instruction Overview, with a grid of opcodes 0 to F"><figcaption>Source: Fraunhofer FKIE</figcaption></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>44</span></section>
+<section class="slide l-menu" id="s45" data-title="Our Menu for Today" aria-label="Slide 45 of 57"><div class="frame"><div class="headrow"><div><h2>Our Menu for Today</h2></div></div><div class="main"><div class="menu"><p>Building a Computer</p><p>Designing a simple Instruction Set</p><p class=cur>Introduction to Assembly Language</p><p>Basic Assembly Constructs</p></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>45</span></section>
+<section class="slide l-text" id="s46" data-title="Program Compilation and Execution" aria-label="Slide 46 of 57"><div class="frame"><div class="headrow"><div><h2>Program Compilation and Execution</h2></div></div><div class="main"><div class="split wide"><div class="copy"><ul class="dash"><li><strong>High-level programming language</strong>: productivity features to simplify writing code; rather generic!</li><li><strong>Assembly code</strong>: textual representation of the machine code with individual instructions; machine-specific!</li><li><strong>Executable machine code</strong>: binary code that is generated from the assembly code and additional data</li></ul></div><div><pre class="code outline">long doubleMe(long number) {
+  long doubleNumber = number + number;
+  return doubleNumber;
+}</pre></div></div></div></div><p class="source"><a href="https://godbolt.org/" target="_blank" rel="noopener">godbolt.org</a> · <a href="https://defuse.ca/online-x86-assembler.htm" target="_blank" rel="noopener">defuse.ca/online-x86-assembler.htm</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>46</span></section>
+<section class="slide l-code" id="s47" data-title="Remember Shifting?" aria-label="Slide 47 of 57"><div class="frame"><div class="headrow"><div><h2>Remember Shifting?</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>The compiler replaces the division by 8 with a shift by 3 bits</li><li>It uses a logical shift for unsigned numbers</li><li><a href="https://hyperdecks.github.io/computersystems/01-information/html/#/72" target="_blank" rel="noopener">Lecture 1: Shifting</a></li></ul></div><div><pre class="code outline">unsigned udiv8(unsigned x)
+{
+  return x/8;
+}
+
+// Compiled arithmetic operations
+shrl $3, %eax   # logical shift: x &gt;&gt; 3</pre><p class="codecap">Try it: <a href="https://godbolt.org/" target="_blank" rel="noopener">godbolt.org</a></p></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>47</span></section>
+<section class="slide l-code" id="s48" data-title="Exercise… and Lecture" aria-label="Slide 48 of 57"><div class="frame"><div class="headrow"><div><h2>Exercise… and Lecture</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>It compiles the C code in <code>power_blink.c</code> (which can be understood by humans) into the file <code>kernel.elf</code> (which can be understood by machines)</li><li>Actually, you already know that <code>kernel.elf</code> can only be understood by one specific type of machine!</li></ul></div><div><pre class="code outline">arm-none-eabi-gcc -g -nostartfiles \
+  -mfloat-abi=hard -O0 -DRPI4 \
+  -mfpu=crypto-neon-fp-armv8 \
+  -march=armv8-a+crc -mcpu=cortex-a72 \
+  power_blink.c -o kernel.elf</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>48</span></section>
+<section class="slide l-code" id="s49" data-title="Let&#x27;s see it!" aria-label="Slide 49 of 57"><div class="frame"><div class="headrow"><div><h2>Let&#x27;s see it!</h2></div><aside class="callout box green">Why am I not using arm-none-eabi-objdump for notepad.exe?</aside></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li><code>-d</code> disassembles the compiled program: instead of translating from human to machine, we translate back to human…</li><li>Adding <code>-S</code> preserves the structure of the original C code (if this information is available)</li><li>With a compiler installed, you can also do this with code compiled for your machine (most probably x86-64), e.g., system programs</li></ul></div><div><pre class="code outline">arm-none-eabi-objdump -d kernel.elf
+arm-none-eabi-objdump -d -S kernel.elf
+
+objdump -d C:\Windows\System32\notepad.exe</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>49</span></section>
+<section class="slide l-text" id="s50" data-title="What are we seeing here?" aria-label="Slide 50 of 57"><div class="frame"><div class="headrow"><div><h2>What are we seeing here?</h2></div></div><div class="main"><div class="split"><div class="copy"><dl class="defs"><dt><code>8000:</code></dt><dd>the memory offset («memory address») of the instruction; 0x8000 is the default load address of 32-bit Raspberry Pi kernels (0x80000 in 64-bit mode), where your program starts</dd><dt><code>e308210c</code></dt><dd>the instruction itself as a hexadecimal number</dd><dt><code>movw</code></dt><dd>the mnemonic: a symbolic, human-readable name</dd><dt><code>r2, #33036</code></dt><dd>the parameters of the instruction</dd></dl></div><figure class="pic shadow"><img src="assets/objdump-gpio.png" alt="Disassembly in a blue terminal: C comments for the GPIO peripheral address, then addresses 8000 to 8010 with hex instructions movw, movt, mov, movt and str"></figure></div><p class="after">Together, all of this is assembly language: a thin layer just above the processing of 0s and 1s.</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>50</span></section>
+<section class="slide l-code" id="s51" data-title="Let&#x27;s see what this does!" aria-label="Slide 51 of 57"><div class="frame"><div class="headrow"><div><h2>Let&#x27;s see what this does!</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Remember the definition: <code>#define GPIO_BASE 0xFE200000UL</code></li><li>r3 is 32 bits wide, so r3 contains 8 hex digits: 0x?? 0x?? 0x?? 0x??</li><li>In bits: ???????? ???????? ???????? ????????</li></ul></div><div><pre class="code outline">8000:  e308210c  movw  r2, #33036  ; 0x810c
+8004:  e3402001  movt  r2, #1
+8008:  e3a03000  mov   r3, #0
+800c:  e34f3e20  movt  r3, #65056  ; 0xfe20
+8010:  e5823000  str   r3, [r2]</pre><p class="codecap"><a href="https://developer.arm.com/documentation/dui0552/a/the-cortex-m3-instruction-set/" target="_blank" rel="noopener">ARM documentation: the Cortex-M3 instruction set</a></p></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>51</span></section>
+<section class="slide l-code" id="s52" data-title="Let&#x27;s see what this does!" aria-label="Slide 52 of 57"><div class="frame"><div class="headrow"><div><h2>Let&#x27;s see what this does!</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li><code>MOVW Rd, #imm16</code> copies the value of Operand2 (an «immediate 16-bit value») into register Rd</li><li>After <code>mov r3, #0</code>: r3 = 0x00 0x00 0x00 0x00</li><li>In bits: 00000000 00000000 00000000 00000000</li></ul></div><div><pre class="code outline">8000:  e308210c  movw  r2, #33036  ; 0x810c
+8004:  e3402001  movt  r2, #1
+8008:  e3a03000  mov   r3, #0
+800c:  e34f3e20  movt  r3, #65056  ; 0xfe20
+8010:  e5823000  str   r3, [r2]</pre><p class="codecap"><a href="https://developer.arm.com/documentation/dui0552/a/the-cortex-m3-instruction-set/" target="_blank" rel="noopener">ARM documentation: the Cortex-M3 instruction set</a></p></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>52</span></section>
+<section class="slide l-code" id="s53" data-title="Let&#x27;s see what this does!" aria-label="Slide 53 of 57"><div class="frame"><div class="headrow"><div><h2>Let&#x27;s see what this does!</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li><code>MOVT Rd, #imm16</code> («move top») writes a 16-bit immediate value to the top halfword, Rd[31:16]; it does not affect Rd[15:0]</li><li>After <code>movt r3, #65056</code>: r3 = 0xFE 0x20 0x00 0x00</li><li>In bits: 11111110 00100000 00000000 00000000. That&#x27;s GPIO_BASE!</li></ul></div><div><pre class="code outline">8000:  e308210c  movw  r2, #33036  ; 0x810c
+8004:  e3402001  movt  r2, #1
+8008:  e3a03000  mov   r3, #0
+800c:  e34f3e20  movt  r3, #65056  ; 0xfe20
+8010:  e5823000  str   r3, [r2]</pre><p class="codecap"><a href="https://developer.arm.com/documentation/dui0552/a/the-cortex-m3-instruction-set/" target="_blank" rel="noopener">ARM documentation: the Cortex-M3 instruction set</a></p></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>53</span></section>
+<section class="slide l-table" id="s54" data-title="Assembly language is (has to be!) simple" aria-label="Slide 54 of 57"><div class="frame"><div class="headrow"><div><h2>Assembly language is (has to be!) simple</h2></div></div><p class="lead">There are only few types of constructs:</p><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Construct</th><th>Instructions</th></tr></thead><tbody><tr><td>Loading and storing of data from/to memory and registers</td><td><code>mov</code> etc.</td></tr><tr><td>Execution of basic logic and arithmetic operations</td><td><code>add</code>, <code>sub</code>, <code>imul</code>, <code>shr</code> …</td></tr><tr><td>Testing of conditions (e.g., x &gt; 0; y &lt;= 0)</td><td><code>cmp</code> and <code>test</code></td></tr><tr><td>Jumping (branching) to other addresses to control program flow</td><td><code>b</code> and <code>jmp</code></td></tr></tbody></table></div><p class="after" style="padding-left:0">All high-level constructs (conditionals, loops, function calls, recursion, variables, …) only help programmers write code efficiently. On the machine level, none of them exist directly: machine code is merely sequences of instructions in memory.</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>54</span></section>
+<section class="slide l-code" id="s55" data-title="Exercise… another particularly interesting line…" aria-label="Slide 55 of 57"><div class="frame"><div class="headrow"><div><h2>Exercise… another particularly interesting line…</h2></div></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>Objdump shows us the machine code (so-called «assembly instructions») of the <code>kernel.elf</code> file</li></ul></div><div><pre class="code outline">// To emulate a &quot;timer&quot;, we keep the
+// processor busy counting to 500000
+for(timer = 0; timer &lt; 500000; timer++) {
+  ;
+}
+
+// arm-none-eabi-objdump -D kernel.elf
+80dc:  e5932000  ldr   r2, [r3]
+80e0:  e30a311f  movw  r3, #41247  ; 0xa11f
+80e4:  e3403007  movt  r3, #7
+80e8:  e1520003  cmp   r2, r3</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>55</span><template class="notes">movw and movt put 0x0007A11F = 499&#x27;999 into r3: the loop bound.</template></section>
+<section class="slide l-study" id="s56" data-title="How to Study this Material?" aria-label="Slide 56 of 57"><div class="frame"><img class="bulb" src="assets/lightbulb.jpg" alt="Drawing of a lit light bulb"><div class="headrow"><div><h2>How to Study this Material?</h2></div></div><div class="main dense"><div class="copy"><div class="groups"><div class="group"><h3>Basic Depth</h3><ul class="dash"><li>Play with programs in your ARM toolchain and with a gcc toolchain on your computer!</li><li>Write small programs, compile them, disassemble them, look at the assembly</li><li>Then, Exercise 2 will give you a large training opportunity</li><li>Continue with <a href="https://hyperdecks.github.io/computersystems/04-assembly/html/" target="_blank" rel="noopener">lecture 4, Assembly Language</a></li></ul></div><div class="group"><h3>Advanced Depth</h3><ul class="dash"><li>A <a href="https://www.youtube.com/watch?v=Wz_xJPN7lAY" target="_blank" rel="noopener">video on interesting assembly instructions</a> in the x86-64 ISA</li><li>Its PCMPxSTRx (pairwise comparison between strings, with several options) is useful for string search and shows why some ISAs are so large (<a href="https://stackoverflow.com/questions/30041045/what-is-an-efficient-way-to-search-a-string-for-the-first-of-a-set-of-delimiters" target="_blank" rel="noopener">discussion</a>)</li></ul></div></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>56</span></section>
+<section class="slide l-questions bare" id="s57" data-title="Any Questions / Comments / Doubts / Concerns?" aria-label="Slide 57 of 57"><div class="frame"><div class="headrow"><div><h2>Any Questions / Comments / Doubts / Concerns?</h2></div></div><div class="main"><div class="figure"><img src="assets/questions.png" alt="A figure sits thinking on a large green question mark"></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>57</span></section>
+</main>
+<div class="controls" role="navigation" aria-label="Presentation controls"><div class="pill"><div class="nav"><button id="prev" title="Previous slide (←)" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="count" id="count">1 / 57</span><button id="next" title="Next slide (→)" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div><i class="sep"></i><div class="tools"><button id="ovBtn" title="All slides (O)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Overview</button><button id="notesBtn" title="Speaker notes (N)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M8 9h8M8 12.5h8M8 16h4"/></svg>Notes</button><button id="fsBtn" title="Full screen (F)"><svg class="fs-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="fs-off">Full screen</span><svg class="fs-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg><span class="fs-on">Exit</span></button></div></div><div class="progress" aria-label="Slide progress"><span id="progress"></span></div></div>
+<div class="overview" id="overview" role="dialog" aria-label="Slide overview"><h2>Processors and Assembly</h2><div class="ov-grid"></div></div>
+<div class="notes-view" id="notesView" aria-label="Speaker notes"></div>
+<script>
+(()=>{const slides=[...document.querySelectorAll('.slide')],root=document.documentElement,body=document.body,
+ ov=document.getElementById('overview'),nv=document.getElementById('notesView');
+const by=id=>document.getElementById(id);
+let cur=0;const m=location.hash.match(/(\d+)$/);if(m&&+m[1]>=1&&+m[1]<=slides.length)cur=+m[1]-1;
+function go(n){cur=Math.max(0,Math.min(slides.length-1,n));
+ slides.forEach((s,i)=>{s.classList.toggle('active',i===cur);s.setAttribute('aria-hidden',i!==cur)});
+ slides[cur].scrollTop=0;
+ by('count').textContent=(cur+1)+' / '+slides.length;by('prev').disabled=cur===0;by('next').disabled=cur===slides.length-1;
+ by('progress').style.width=((cur+1)/slides.length*100)+'%';
+ const t=slides[cur].querySelector('.notes');nv.textContent=t?t.textContent:'';
+ history.replaceState(null,'','#/'+(cur+1));ov.classList.remove('open');
+}
+by('prev').onclick=()=>go(cur-1);by('next').onclick=()=>go(cur+1);
+by('ovBtn').onclick=()=>ov.classList.toggle('open');
+const notes=()=>body.classList.toggle('show-notes');if(by('notesBtn'))by('notesBtn').onclick=notes;
+if(!document.fullscreenEnabled)by('fsBtn').hidden=true;
+let idle;const pill=document.querySelector('.pill'),wake=()=>{body.classList.add('awake');clearTimeout(idle);
+ idle=setTimeout(()=>{if(!pill.matches(':hover'))body.classList.remove('awake')},2500)};
+['mousemove','touchstart'].forEach(t=>document.addEventListener(t,wake,{passive:true}));
+by('fsBtn').onclick=()=>document.fullscreenElement?document.exitFullscreen():root.requestFullscreen();
+const grid=ov.querySelector('.ov-grid');
+slides.forEach((s,i)=>{const b=document.createElement('button'),sm=document.createElement('small');
+ sm.textContent=(i+1)+(s.dataset.time?'  ·  '+s.dataset.time:'');b.append(sm,s.dataset.title);b.onclick=()=>go(i);grid.append(b)});
+document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey)return;
+ const inCtl=e.target instanceof Element&&e.target.closest('a,button');const k=e.key;
+ if(['ArrowRight','PageDown'].includes(k)||(k===' '&&!inCtl)){e.preventDefault();go(cur+1)}
+ else if(['ArrowLeft','PageUp'].includes(k)){e.preventDefault();go(cur-1)}
+ else if(k==='Home')go(0);else if(k==='End')go(slides.length-1);
+ else if(k==='o'||k==='O')ov.classList.toggle('open');else if(k==='Escape')ov.classList.remove('open');
+ else if(k==='f'||k==='F')by('fsBtn').click();else if(k==='n'||k==='N')notes()});
+let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;x0=null;
+ if(Math.abs(d)>60)go(cur+(d<0?1:-1))},{passive:true});
+window.hsgDeck={go,count:slides.length};go(cur)})();
+</script>
+</body>
+</html>

@@ -1,0 +1,1681 @@
+{
+ "title": "Welcome and Introduction | Information = Bits and Bytes",
+ "lang": "en",
+ "footer": "Computersysteme | Institute of Computer Science | University of St.Gallen",
+ "slides": [
+  {
+   "layout": "title",
+   "kicker": "Computersysteme",
+   "title": "Welcome and Introduction",
+   "presenters": [
+    "Simon Mayer",
+    "Karim Khamaisi",
+    "Luka Bekavac"
+   ],
+   "meta": [
+    "University of St.Gallen",
+    "Bachelor in Computer Science",
+    "",
+    "Computersysteme (1,904)"
+   ],
+   "notes": "Who? What? Why? How?"
+  },
+  {
+   "layout": "people",
+   "title": "Course Team",
+   "items": [
+    {
+     "name": "Prof. Dr. Simon Mayer",
+     "role": "Chair for Interaction- and\nCommunication-based Systems",
+     "photo": "img/simon-mayer.jpg",
+     "alt": "Portrait of Simon Mayer"
+    },
+    {
+     "name": "Luka Bekavac, MSc",
+     "role": "Doctoral student on systemic risks\nin very large online platforms",
+     "photo": "img/luka-bekavac.png",
+     "alt": "Portrait of Luka Bekavac"
+    },
+    {
+     "name": "Karim Khamaisi, MSc",
+     "role": "Doctoral student on\nembedded sensing systems",
+     "photo": "img/karim-khamaisi.png",
+     "alt": "Portrait of Karim Khamaisi"
+    }
+   ]
+  },
+  {
+   "layout": "image",
+   "title": "What would you have studied if not CS?",
+   "image": "img/wordcloud-languages.jpg",
+   "alt": "Word cloud of language names such as English, Spanish, French, Chinese, German, Italian and Arabic",
+   "shadow": false
+  },
+  {
+   "layout": "text",
+   "title": "Simon",
+   "points": [
+    "PhD in Computer Science, ETH Zurich (2010-2014)",
+    "Siemens Corporate Technology, Berkeley (2014-2017); Pro²Future and TU Graz (2017-2018); ETH Zurich (2018-2020)",
+    "Professor for Interaction- and Communication-based Systems, University of St.Gallen (since 2018)",
+    "Director, Institute of Computer Science (since 2019); Dean, School of Computer Science (2024-2026)",
+    "Lecturer at ETH Zurich, MIT, UC Berkeley, TU Graz, University of Zurich and University of Bologna",
+    "3 children, backcountry snowboarding"
+   ],
+   "aside": {
+    "image": "img/snowboard-line.jpg",
+    "alt": "A single snowboard track curving down a slope of fresh powder snow"
+   }
+  },
+  {
+   "layout": "image",
+   "title": "Our Research Group",
+   "image": "img/research-group.png",
+   "alt": "Group photo of about fifteen members of the research group standing on a lawn",
+   "caption": "Topics include gaze, explainable cyber-physical systems, hyperagents, autonomous buildings, sustainable intelligence and systemic risks in very large online platforms"
+  },
+  {
+   "layout": "image",
+   "title": "Open Your Eyes!",
+   "callout": {
+    "text": "How fast is a blink?"
+   },
+   "lead": "A text on a screen changes while the reader's eyes are closed. Which changes do readers notice? This is *blink-induced change blindness*.",
+   "image": "img/blink-sequence.png",
+   "alt": "Three screens in a row: eye open, eye closed, eye open again, with one word of the text changed on the third screen",
+   "shadow": false,
+   "source": "Schultz, Bektas, Strecker-Bischoff, Mayer: Open your Eyes: Blink-induced Change Blindness while Reading. UbiComp 2025. [Paper](https://dl.acm.org/doi/pdf/10.1145/3714394.3754398)"
+  },
+  {
+   "layout": "image",
+   "title": "Turning this into BlinkArt ;-)",
+   "image": "img/blinkart-sequence.png",
+   "alt": "Three pictures of a city skyline in a row; between blinks, a tower in the picture changes",
+   "shadow": false,
+   "source": "Steinmann, Strecker-Bischoff, Bektas, Williams, Mayer: BlinkArt: Using Change Blindness For AI-Generated Image Modifications in Artworks. UbiComp 2026"
+  },
+  {
+   "layout": "gallery",
+   "title": "Introducing: The «For You» Portrait",
+   "items": [
+    {
+     "image": "img/foryou-visitor.png",
+     "alt": "A visitor sits on a stool in front of a tall screen that shows a portrait",
+     "caption": "A visitor in front of the portrait"
+    },
+    {
+     "image": "img/foryou-portraits.png",
+     "alt": "Two versions of the same portrait of a man in a black T-shirt, with small differences",
+     "caption": "The portrait changes while the visitor blinks"
+    }
+   ],
+   "source": "Steinmann, Strecker-Bischoff, Bektas, Williams, Mayer: BlinkArt: Using Change Blindness For AI-Generated Image Modifications in Artworks. UbiComp 2026"
+  },
+  {
+   "layout": "text",
+   "title": "Interactions: QR Codes That React to Touch",
+   "points": [
+    "A standard QR code with 3 standard ArUco markers",
+    "The markers are embedded with a thermoresponsive material, which changes its color with temperature",
+    "So the QR code reacts when you touch it"
+   ],
+   "aside": {
+    "image": "img/qruco-thumb.png",
+    "alt": "A thumb touches a QR code that contains black ArUco marker squares; a thermometer drawing beside it",
+    "shadow": false
+   },
+   "source": "Jenss, Mayer: QRUco: Interactive QR Codes Through Thermoresponsive Embeddings. CHI 2023. [Paper & video](https://dl.acm.org/doi/10.1145/3544549.3583923)"
+  },
+  {
+   "layout": "gallery",
+   "title": "Interactions: Identifying Objects in Mixed Reality",
+   "callout": {
+    "text": "Reverse beamforming + visual object recognition = ?"
+   },
+   "items": [
+    {
+     "image": "img/mr-headset.jpg",
+     "alt": "A person wears a mixed reality headset with an antenna board mounted on it"
+    },
+    {
+     "image": "img/beamforming.jpg",
+     "alt": "Four plots of 3D directivity patterns for antenna arrays of 8x8, 16x16, 32x32 and 64x64 elements",
+     "shadow": false
+    },
+    {
+     "image": "img/mr-robot-arm.png",
+     "alt": "A robot arm in a lab, with virtual labels floating above it in the headset view"
+    }
+   ],
+   "source": "Strecker, Akhunov, Carbone, Garcia, Bektas, Gomez, Mayer, Yildirim: MR Object Identification and Interaction: Fusing Object Situation Information from Heterogeneous Sources. IMWUT 2024"
+  },
+  {
+   "layout": "quote",
+   "title": "“Any sufficiently advanced technology is indistinguishable from magic.”",
+   "attribution": "Arthur C. Clarke",
+   "picture": {
+    "image": "img/arthur-c-clarke.jpg",
+    "alt": "Black-and-white photo of Arthur C. Clarke in glasses and a suit, in front of a large machine"
+   },
+   "points": [
+    "One of the “Big Three” of English science fiction (with Asimov and Heinlein)",
+    "*2001: A Space Odyssey*",
+    "*2010: The Year We Make Contact*"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Look: «AI»",
+   "points": [
+    "This works with an «Artificial Neural Network» (ANN)",
+    "ANNs are also the core of current language models"
+   ],
+   "aside": {
+    "image": "img/rock-paper-scissors.png",
+    "alt": "Diagram of rock, paper and scissors hands in a circle with arrows: rock beats scissors, scissors beats paper, paper beats rock",
+    "shadow": false
+   },
+   "notes": "Demo: the rock-paper-scissors AI."
+  },
+  {
+   "layout": "quiz",
+   "title": "From “this” AI to “real” AI…",
+   "items": [
+    "Our rock-paper-scissors AI has 108 weights (edges). How many does a typical “large” neural network (e.g., GPT-5) have today?",
+    "If our model was a grain of rice (6 mm), how large would GPT-5 be?"
+   ],
+   "notes": "Millions (small test applications) to billions (bachelor student projects) to trillions (GPT-5).",
+   "aside": {
+    "image": "img/rock-paper-scissors.png",
+    "alt": "Diagram of rock, paper and scissors hands in a circle with arrows",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "text",
+   "title": "How exactly does it work?",
+   "points": [
+    "I'm showing this for a different reason, though…",
+    "The code: `01-rock-paper-scissors` in your lecture materials on Canvas",
+    "One level deeper: [the chip under the microscope](https://www.youtube.com/watch?v=odx5NLbYz8g)"
+   ],
+   "aside": {
+    "image": "img/chip-magnified.png",
+    "alt": "A computer chip seen through a round magnifying lens, glowing blue"
+   }
+  },
+  {
+   "layout": "image",
+   "title": "Inside a Chip",
+   "image": "img/chip-die.png",
+   "alt": "Electron microscope view of a chip surface with dense wiring; a scale bar reads 60 microns",
+   "caption": "Scale: 60 microns"
+  },
+  {
+   "layout": "text",
+   "title": "This part computes logical operations on input signals…",
+   "lead": "Example: 2 inputs, A and B; 2 outputs, C and S.",
+   "defs": [
+    [
+     "S",
+     "1 if A is different from B, 0 otherwise"
+    ],
+    [
+     "C",
+     "1 if A and B are both 1, 0 otherwise"
+    ]
+   ],
+   "aside": {
+    "image": "img/chip-die-detail.png",
+    "alt": "Close-up of a small region of the chip surface with crossing wires"
+   }
+  },
+  {
+   "layout": "text",
+   "title": "What do we call this operation since primary school?",
+   "defs": [
+    [
+     "0_{2} ? 0_{2}",
+     "= 0 0_{2}"
+    ],
+    [
+     "1_{2} ? 0_{2}",
+     "= 0 1_{2}"
+    ],
+    [
+     "0_{2} ? 1_{2}",
+     "= 0 1_{2}"
+    ],
+    [
+     "1_{2} ? 1_{2}",
+     "= 1 0_{2}"
+    ]
+   ],
+   "lead": "Inputs A and B; outputs C and S:",
+   "aside": {
+    "image": "img/chip-die-detail.png",
+    "alt": "Close-up of a small region of the chip surface with crossing wires"
+   }
+  },
+  {
+   "layout": "text",
+   "title": "It's called Addition",
+   "defs": [
+    [
+     "0_{2} + 0_{2}",
+     "= 0 0_{2}"
+    ],
+    [
+     "1_{2} + 0_{2}",
+     "= 0 1_{2}"
+    ],
+    [
+     "0_{2} + 1_{2}",
+     "= 0 1_{2}"
+    ],
+    [
+     "1_{2} + 1_{2}",
+     "= 1 0_{2}"
+    ]
+   ],
+   "lead": "Inputs A and B; outputs C and S:",
+   "aside": {
+    "image": "img/chip-die-detail.png",
+    "alt": "Close-up of a small region of the chip surface with crossing wires"
+   },
+   "after": "C is the carry and S is the sum: 1_{2} + 1_{2} = 10_{2}."
+  },
+  {
+   "layout": "text",
+   "title": "If we are able to automatically add numbers, we can also…",
+   "points": [
+    "Subtract (that's just adding the negative inverse)",
+    "Multiply (that's just repeated adding)",
+    "Divide (that's just multiplying with the multiplicative inverse)",
+    "Draw roots (that's just smart adding and dividing)",
+    "Render animation movies (that's mostly a ton of matrix multiplications)",
+    "Do machine learning and build «Artificial Intelligence» (that's just a smart combination of the above)"
+   ],
+   "aside": {
+    "image": "img/grinning-face.png",
+    "alt": "Drawing of a broadly grinning face",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "text",
+   "title": "Course Purpose: Get Rid of the Magic!",
+   "points": [
+    "How do we encode information for them to “process” it?",
+    "What do they do while “processing” it?",
+    "How do they interact with memory while processing it?",
+    "What have been the major advancements in processor design?"
+   ],
+   "aside": {
+    "image": "img/m1-die.png",
+    "alt": "Annotated die photo of the Apple M1 chip with marked regions for GPU cores, CPU cores, caches and the neural engine",
+    "shadow": false
+   },
+   "paragraphs": [
+    "Understand how processors work:"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Abstract Course Learning Goals",
+   "points": [
+    "You can explain to anyone (kids, experts, the uninterested) how an algorithm in a high-level language becomes executable instructions, and how a processor executes them",
+    "You can use the tools to compile and disassemble programs, and analyze assembly code",
+    "You know memory, processors and their architecture, and the main steps towards modern processors",
+    "You understand deeply that programs are simply instruction sequences that can be executed automatically",
+    "You can place the ways of programming computers, from machine code to AI coding assistants, in their historical context"
+   ],
+   "aside": {
+    "image": "img/magnifier.png",
+    "alt": "A magnifying glass",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "table",
+   "title": "Detailed Course Learning Goals",
+   "lead": "Weeks 1 to 6: information representation and processing. Weeks 7 to 12: processors and memory.",
+   "columns": [
+    "Topic",
+    "You can explain…",
+    "…and you can"
+   ],
+   "rows": [
+    [
+     "Data",
+     "how different types of data are represented in binary",
+     "represent simple data in binary"
+    ],
+    [
+     "Circuits",
+     "how electric circuits process binary data",
+     "simulate this processing by hand"
+    ],
+    [
+     "Compilation",
+     "how high-level program code becomes assembly instructions",
+     "reverse-engineer a compiled program and purposefully change its behavior"
+    ],
+    [
+     "Instruction sets",
+     "how a realistic instruction set architecture executes assembly instructions",
+     "simulate the execution of an assembly program on a given instruction set"
+    ],
+    [
+     "Memory",
+     "how memory is organized, including the memory hierarchy and caching",
+     "reason about the memory architecture from the data of a memory-intensive program"
+    ],
+    [
+     "Processors",
+     "the main advancements that led to modern processors, and their limits",
+     ""
+    ]
+   ]
+  },
+  {
+   "layout": "syllabus",
+   "title": "Course Syllabus",
+   "items": [
+    {
+     "date": "16.09.2026",
+     "title": "Information: Numbers, Bits, Bytes, Encodings"
+    },
+    {
+     "date": "23.09.2026",
+     "title": "Bare Metal Programming",
+     "kind": "exercise"
+    },
+    {
+     "date": "30.09.2026",
+     "title": "Computing on Bits: Circuits and Processors"
+    },
+    {
+     "date": "07.10.2026",
+     "title": "Assembly Basics"
+    },
+    {
+     "date": "14.10.2026",
+     "title": "Assembly Reverse-Engineering & Assembly Bombs",
+     "kind": "exercise"
+    },
+    {
+     "date": "21.10.2026",
+     "title": "Control Flow"
+    },
+    {
+     "date": "11.11.2026",
+     "title": "Memory Basics"
+    },
+    {
+     "date": "18.11.2026",
+     "title": "Memory Hierarchy and Caches"
+    },
+    {
+     "date": "25.11.2026",
+     "title": "Memory Experiments",
+     "kind": "exercise"
+    },
+    {
+     "date": "02.12.2026",
+     "title": "Processor Architecture"
+    },
+    {
+     "date": "09.12.2026",
+     "title": "Modern Processors"
+    },
+    {
+     "date": "16.12.2026",
+     "title": "Multiprocessors, GPUs, Heterogeneous Manycore"
+    }
+   ],
+   "current": 1,
+   "break_after": 6,
+   "assignments": [
+    {
+     "title": "Bare Metal Programming",
+     "from": 2,
+     "to": 4
+    },
+    {
+     "title": "Assembly Reverse-Engineering",
+     "from": 5,
+     "to": 8
+    },
+    {
+     "title": "Memory Experiments",
+     "from": 9,
+     "to": 11
+    }
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Lectures and Tuesday Slots",
+   "callout": {
+    "text": "If you need support in your exercise, don't wait for the next Tuesday! Get in touch ;-)",
+    "style": "teal"
+   },
+   "points": [
+    "The main lectures take place on Wednesdays (10-12) in room 61-152",
+    {
+     "text": "We make flexible use of the Tuesday slots (9-10, room 61-152):",
+     "sub": [
+      "Continuation or repetition of the lecture (core content): come here, especially if you're not sure about everything yet!",
+      "Exercise introduction, support and discussion: come here!",
+      "Deepening of the lecture (additional content, not exam-relevant): come if interested"
+     ]
+    },
+    "I'll announce the Tuesday slot during the lecture the week before"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Exercises and Assignments",
+   "points": [
+    {
+     "text": "Are carried out on loaned RPi 400 hardware",
+     "sub": [
+      "In this way, you all work on the same system"
+     ]
+    },
+    {
+     "text": "Will be puzzle-like",
+     "sub": [
+      "Integrate what you know from the lecture with additional sources (and your own creativity)"
+     ]
+    },
+    {
+     "text": "Count for 20% of the final course grade",
+     "sub": [
+      "Don't work on them because of these 20%…"
+     ]
+    },
+    {
+     "text": "Are done in teams of two",
+     "sub": [
+      "Form your teams in the first week",
+      "Send both names and a group name to luka.bekavac@unisg.ch"
+     ]
+    }
+   ],
+   "aside": {
+    "image": "img/raspberry-pi-400.jpg",
+    "alt": "A Raspberry Pi 400 keyboard computer in white and red, next to its green circuit board"
+   }
+  },
+  {
+   "layout": "text",
+   "title": "Final Exam",
+   "callout": {
+    "text": "Study to understand the course content, don't study to pass the exam",
+    "style": "teal"
+   },
+   "points": [
+    "Takes place after the winter holidays and counts for 80% of the final course grade",
+    "Focuses on lecture contents, but also contains exercise contents",
+    "Is not multiple-choice and contains puzzle-like elements",
+    "Lasts 60 minutes, closed book (only TI-30-series calculators are permitted)",
+    "Last year's exams are online for you on Canvas"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "How to Study (and Pass)?",
+   "groups": [
+    {
+     "heading": "Roles",
+     "points": [
+      "Lecture: highlight and motivate the material",
+      "Exercise: introduce and bootstrap the assignment",
+      "Assignment: gain experience"
+     ]
+    },
+    {
+     "heading": "Each week's lecture comes with",
+     "points": [
+      "Slides: to remember what we talked about",
+      "Study guide (in the slides): what to read and do when studying",
+      "Demos and a quiz on Canvas: run what I show, and get a feeling for what might be asked"
+     ]
+    }
+   ],
+   "aside": {
+    "image": "img/lightbulb.jpg",
+    "alt": "Drawing of a lit light bulb",
+    "caption": "Look for this symbol!",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "text",
+   "title": "Feedback and Backfeed",
+   "points": [
+    {
+     "text": "Solve and understand the assignments",
+     "sub": [
+      "They are structured the way they are on purpose",
+      "They cannot be done in passing but require long commitment",
+      "You need to structure the contents yourselves: think «puzzle»"
+     ]
+    },
+    "Start working on them much, much earlier",
+    "Understand the lecture contents",
+    "We're here to support you! Send us your questions or make an appointment with us"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Course Context: The Book",
+   "paragraphs": [
+    "I'll use the textbook *Computer Systems: A Programmer's Perspective* (3rd edition) by Bryant & O'Hallaron.",
+    "It goes much beyond this course, and it is available free as an e-book from the HSG library. Read it!",
+    "[Get the book here](https://slsp-hsg.primo.exlibrisgroup.com/permalink/41SLSP_HSG/1h7ra77/alma9911316172005506)"
+   ],
+   "aside": {
+    "image": "img/book-cover.jpg",
+    "alt": "Cover of Computer Systems: A Programmer's Perspective, third edition, by Bryant and O'Hallaron"
+   }
+  },
+  {
+   "layout": "text",
+   "title": "Course Context: Where This Course Comes From",
+   "callout": {
+    "text": "If you get bored, tell us. Or build your own computer at [nandgame.com](https://www.nandgame.com/)",
+    "style": "teal"
+   },
+   "lead": "Parts of this course are based on my own and colleagues' former courses:",
+   "points": [
+    "S. Mayer: ICT Computer Architectures, TU Graz",
+    "S. Mayer and F. Michahelles: IoT: Foundations and Applications, UC Berkeley",
+    "T. Roscoe: Computer Architecture and Systems Programming, ETH Zurich",
+    "S. Mayer: Fundamentals of Computer Science; Introduction to Computer Systems and Networks, University of St.Gallen"
+   ],
+   "after": "The follow-on courses Computer Networks and Distributed Systems build on this course!"
+  },
+  {
+   "layout": "text",
+   "title": "Course Context: Programming",
+   "points": [
+    "We directly interface with *Grundlagen der Informatik* and *Introduction to Programming*",
+    "You will mostly program in C and C++: we are very close to the processor, and these languages let us exploit this closeness",
+    "You will program in this course, but it is not a programming-focused course",
+    "You will (slowly) develop an intuitive understanding of the code you work with"
+   ],
+   "aside": {
+    "image": "img/course-list.png",
+    "alt": "Screenshot of a course list with Analysis, Computersysteme, Introduction to Programming, Grundlagen der Informatik and Linear Algebra"
+   }
+  },
+  {
+   "layout": "questions",
+   "title": "Any Questions / Comments / Doubts / Concerns?"
+  },
+  {
+   "layout": "section",
+   "kicker": "Computersysteme",
+   "title": "Information = Bits and Bytes"
+  },
+  {
+   "layout": "menu",
+   "title": "Our Menu",
+   "items": [
+    "Information Basics: Numbers, Bits, Bytes, Encodings",
+    "Computing Basics: Transistors and Circuits",
+    "Processor Basics"
+   ],
+   "current": 1
+  },
+  {
+   "layout": "code",
+   "title": "Good Questions…",
+   "callout": {
+    "text": "Why is 50000² negative?"
+   },
+   "code": "int x;\nfloat a = 3.1415;\nint b = 30000;\nint c = 50000;\n\ncin >> x; // Wait for user input\ncout << \"Example [x^2 >= 0], x = \"\n     << c << \" : \" << c*c << endl;",
+   "points": [
+    "Example [x² ≥ 0], x = 3.1415: **9.86902**",
+    "Example [x² ≥ 0], x = 30000: **900000000**",
+    "Example [x² ≥ 0], x = 50000: **−1794967296**"
+   ],
+   "notes": "2^32 = 4'294'967'296 (show it on the calculator). 50000² = 2'500'000'000; 2'500'000'000 − 4'294'967'296 = −1'794'967'296."
+  },
+  {
+   "layout": "image",
+   "title": "Yes, you can store data on a bird",
+   "image": "img/bird-spectrogram.png",
+   "alt": "Spectrogram of a sound recording in which the sound forms the shape of a bird",
+   "caption": "An enthusiast converts a PNG to a bird-shaped waveform and teaches a young starling to recall the file",
+   "source": "[Tom's Hardware](https://www.tomshardware.com/pc-components/storage/yes-you-can-store-data-on-a-bird-enthusiast-converts-png-to-bird-shaped-waveform-teaches-young-starling-to-recall-file-at-up-to-2mb-s)"
+  },
+  {
+   "layout": "text",
+   "title": "Magic & Quiz",
+   "paragraphs": [
+    "“Think of a number. Hand me all cards that contain this number. I'll tell you your number in almost no time.”"
+   ],
+   "points": [
+    {
+     "text": "Teams of 2, take 5 min:",
+     "sub": [
+      "Find the pattern",
+      "Replicate the trick",
+      "Build a “Magic Computer” for the numbers 0-13"
+     ]
+    }
+   ],
+   "aside": {
+    "image": "img/magic-computer-box.png",
+    "alt": "A small box of cards labelled Der magische Computer, with numbers printed around its edge"
+   }
+  },
+  {
+   "layout": "quiz",
+   "title": "Magic & Quiz: Questions",
+   "items": [
+    "Does the trick also work for the number 0?",
+    "How many cards would be required for a “Magic Computer” that works for the numbers 0-20?"
+   ],
+   "aside": {
+    "image": "img/magic-cards.png",
+    "alt": "Six cards with numbers; the first numbers on the cards are 1, 2, 4, 8, 16 and 32",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "text",
+   "title": "Magic & Quiz: Observations",
+   "points": [
+    "(Not) handing over one of the cards is a binary decision",
+    "The volunteer makes six such decisions",
+    "Thereby, they encode one out of 2^{6} (= 64) states",
+    "That state is the number the volunteer was thinking of"
+   ],
+   "aside": {
+    "code": "card:  1  2  4  8 16 32\n\"4\"    0  0  1  0  0  0\n\"7\"    1  1  1  0  0  0\n\"63\"   1  1  1  1  1  1\n\"0\"    0  0  0  0  0  0"
+   }
+  },
+  {
+   "layout": "gallery",
+   "title": "Why Computers?",
+   "items": [
+    {
+     "image": "img/antikythera.jpg",
+     "alt": "A reconstruction of the Antikythera mechanism: bronze gears in a transparent case",
+     "caption": "Predicting the future! ~200 B.C.E. ([video](https://www.bbc.com/reel/video/p09pcwnz/unlocking-the-secrets-of-the-world-s-oldest-computer))"
+    },
+    {
+     "image": "img/fire-control-film.png",
+     "alt": "Still from a film: a shell trajectory from own ship to a target, with an arrow for the wind",
+     "caption": "Making war! ~1953 C.E. ([video](https://www.youtube.com/watch?v=lr1uK24SND8))"
+    },
+    {
+     "image": "img/computer-process-film.png",
+     "alt": "Still from a 1962 film titled The Computer Process: problem data, program, input medium, computer, output medium, solution",
+     "caption": "Doing… anything? ~Today ([video, 4:15-6:16](https://www.youtube.com/watch?v=hTJi7Ct6MfY))"
+    }
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "A Tour of Computer Systems…",
+   "columns": [
+    "Step",
+    "Building blocks",
+    "Where"
+   ],
+   "rows": [
+    [
+     "Information",
+     "Binary digits + context: numbers, text, pixels and colors, instructions",
+     "Today"
+    ],
+    [
+     "Logic + arithmetic",
+     "School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/)"
+    ],
+    [
+     "Electronics",
+     "Logic gates from electronic components (today: transistors)",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/)"
+    ],
+    [
+     "Calculator",
+     "Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/)"
+    ],
+    [
+     "Processor",
+     "Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!",
+     "[Lecture 3](https://hyperdecks.github.io/computersystems/03-processors/html/)"
+    ],
+    [
+     "Programs",
+     "Instruction sets, machine code and assembly language",
+     "[Lectures 3](https://hyperdecks.github.io/computersystems/03-processors/html/) and [4](https://hyperdecks.github.io/computersystems/04-assembly/html/)"
+    ]
+   ]
+  },
+  {
+   "layout": "image",
+   "title": "Counting Sheep in 16 Bits",
+   "image": "img/xkcd-cant-sleep.png",
+   "alt": "Four-panel comic: a person counts sheep, reaches 32,767 and continues with −32,768",
+   "shadow": false,
+   "source": "[xkcd 571: Can't Sleep](https://xkcd.com/571/)"
+  },
+  {
+   "layout": "text",
+   "title": "Stripping Away the “Magic”",
+   "points": [
+    "Goal: understand the inner workings of a computer system",
+    "We'll start with the simple (?) concept of information and build upon this foundation"
+   ],
+   "aside": {
+    "image": "img/pioneer-plaque.png",
+    "alt": "The Pioneer plaque: a man and a woman, a pulsar map and a diagram of the solar system",
+    "caption": "[The Pioneer plaque](https://en.wikipedia.org/wiki/Pioneer_plaque)",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "text",
+   "title": "What's “Information” in Computer Science?",
+   "lead": "In CS, all information = bits + context.",
+   "points": [
+    {
+     "text": "Example: `img.jpg`",
+     "sub": [
+      "Display as text (ANSI encoding)",
+      "Display as hexadecimal numbers (in the demo, I use the HxD program)",
+      "Display as binary code, i.e., as bits ([mothereff.in/binary-ascii](https://mothereff.in/binary-ascii))"
+     ]
+    }
+   ],
+   "aside": {
+    "image": "img/information-cartoon.jpg",
+    "alt": "Cartoon of a city tourism center with an Information window and a Misinformation window"
+   }
+  },
+  {
+   "layout": "text",
+   "title": "In CS, All Information = Bits + Context",
+   "lead": "Interpret the bit string `11111111 00111111 11111111 00111111` (4 × 8 = 32 bits)!",
+   "defs": [
+    [
+     "Hexadecimal number",
+     "FF 3F FF 3F"
+    ],
+    [
+     "Unsigned decimal number",
+     "4'282'384'191"
+    ],
+    [
+     "Signed decimal number (2's complement, 32 bits)",
+     "−12'583'105"
+    ],
+    [
+     "Floating-point number (IEEE 754)",
+     "−2.5520786 × 10^{38}"
+    ],
+    [
+     "Text in ANSI encoding",
+     "ÿ?ÿ?"
+    ],
+    [
+     "Also",
+     "a pixel at 32-bit color depth, or an x86 instruction such as `addq %rax,%rbx`"
+    ]
+   ],
+   "after": "You'll understand better in a week, and much better in 6 weeks!",
+   "source": "Try it: [2's complement](https://www.exploringbinary.com/twos-complement-converter/) · [IEEE 754](https://www.h-schmidt.net/FloatConverter/IEEE754.html) · [binary to ASCII](https://mothereff.in/binary-ascii)",
+   "notes": "addq %rax,%rbx: “Add the two numbers stored at locations %rax and %rbx, and store the result in location %rbx.”"
+  },
+  {
+   "layout": "text",
+   "title": "Bits and Programs: An Instruction Set for This Room",
+   "callout": {
+    "text": "Run this program: `001001110001`"
+   },
+   "lead": "An instruction set architecture (ISA) says which bits mean which instruction. Our instruction set:",
+   "defs": [
+    [
+     "`00`",
+     "Clap"
+    ],
+    [
+     "`01`",
+     "Shout"
+    ],
+    [
+     "`10`",
+     "Silence"
+    ],
+    [
+     "`11`",
+     "Stamp"
+    ]
+   ],
+   "notes": "00 10 01 11 00 01: clap, silence, shout, stamp, clap, shout."
+  },
+  {
+   "layout": "text",
+   "title": "Bits: Binary Digits",
+   "points": [
+    "Logic: basic representation of the logical values True and False",
+    "Practicality: many easily feasible physical representations"
+   ],
+   "defs": [
+    [
+     "Punched card",
+     "hole vs. no hole"
+    ],
+    [
+     "Electrical switch",
+     "on vs. off"
+    ],
+    [
+     "SSD",
+     "high vs. low electrical charge"
+    ],
+    [
+     "Fibre optics",
+     "light vs. no light"
+    ],
+    [
+     "Credit card",
+     "polarity of magnetization"
+    ],
+    [
+     "Bar code",
+     "thick line vs. narrow line"
+    ],
+    [
+     "Station clock",
+     "light vs. no light"
+    ]
+   ],
+   "aside": {
+    "image": "img/punched-card.jpg",
+    "alt": "A punched card with a printed grid of digits and rectangular holes"
+   }
+  },
+  {
+   "layout": "gallery",
+   "title": "Using Binary, Arithmetic and Logic Can Be Combined!",
+   "items": [
+    {
+     "image": "img/leibniz.jpg",
+     "alt": "Painted portrait of Gottfried Wilhelm Leibniz with a long curly wig",
+     "caption": "G.W. Leibniz"
+    },
+    {
+     "image": "img/mattern-1966.png",
+     "alt": "Pages of handwritten school exercises with binary numbers, additions and multiplications",
+     "caption": "At school, in 1966 (courtesy of F. Mattern)",
+     "shadow": false
+    }
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Bits + Context: A Clock",
+   "callout": {
+    "text": "What are the current hour, minute, and second?"
+   },
+   "lead": "Bits that represent three numbers… in this context, that's a clock!",
+   "points": [
+    "First number: 5 bits",
+    "Second number: 6 bits",
+    "Third number: 6 bits"
+   ],
+   "aside": {
+    "image": "img/station-clock.jpg",
+    "alt": "A station clock made of three rows of lit and unlit squares, circles and crosses on a building facade"
+   }
+  },
+  {
+   "layout": "table",
+   "title": "A Decimal Clock and a Binary Clock",
+   "columns": [
+    "",
+    "Decimal clock (base 10)",
+    "Binary clock (base 2)"
+   ],
+   "rows": [
+    [
+     "Hour",
+     "20 = 2 × 10^{1} + 0 × 10^{0}",
+     "10100b = 1 × 2^{4} + 0 × 2^{3} + 1 × 2^{2} + 0 × 2^{1} + 0 × 2^{0} = 16 + 4 = 20"
+    ],
+    [
+     "Minute",
+     "55 = 5 × 10^{1} + 5 × 10^{0}",
+     "110111b = 32 + 16 + 0 + 4 + 2 + 1 = 55"
+    ],
+    [
+     "Second",
+     "59 = 5 × 10^{1} + 9 × 10^{0}",
+     "111011b = 32 + 16 + 8 + 0 + 2 + 1 = 59"
+    ]
+   ],
+   "after": "Convention: we write decimals as we are used to (20); binary values get a trailing lower-case `b` (10100b, i.e., decimal 20 as well)."
+  },
+  {
+   "layout": "gallery",
+   "title": "Jokes?!",
+   "items": [
+    {
+     "image": "img/binary-joke-shirt.jpg",
+     "alt": "Black T-shirt: There are only 10 types of people in this world: those who understand binary and those who don't",
+     "caption": "Strictly, this should be 10b or 10_{2} to show that it's binary!"
+    },
+    {
+     "image": "img/ternary-joke.png",
+     "alt": "Text on black: There are only 10 types of people in the world: those who understand binary, those who don't, and those who will hate you if you don't properly denote the base when trying to be clever",
+     "shadow": false
+    }
+   ],
+   "after": "Make sure you fully understand both these jokes!"
+  },
+  {
+   "layout": "table",
+   "title": "Hexadecimal numbers work in the same way!",
+   "callout": {
+    "text": "Why hexadecimal? Convenience, a compact format and simple conversion!",
+    "style": "teal"
+   },
+   "lead": "Digits: decimal 0-9, binary 0-1, hexadecimal 0-9 and A-F. A hexadecimal clock shows 12 : 2A : 1F.",
+   "columns": [
+    "",
+    "Hexadecimal (base 16)",
+    "Decimal"
+   ],
+   "rows": [
+    [
+     "Hour",
+     "0x12 = 1 × 16^{1} + 2 × 16^{0} = 16 + 2",
+     "18"
+    ],
+    [
+     "Minute",
+     "0x2A = 2 × 16^{1} + 10 × 16^{0} = 32 + 10",
+     "42"
+    ],
+    [
+     "Second",
+     "0x1F = 1 × 16^{1} + 15 × 16^{0} = 16 + 15",
+     "31"
+    ]
+   ],
+   "after": "Convention: hexadecimal values get a leading `0x`. So 18 = 10010b = 0x12."
+  },
+  {
+   "layout": "quiz",
+   "title": "Quick Exercises",
+   "items": [
+    "What are the current hour, minute, and second?",
+    "Represent the time 10:20:30 in binary!",
+    "What's the binary representation of the largest hour (i.e., 23)?",
+    "What number range can be represented using 1 bit? 2 bits? 3 bits? n bits?"
+   ],
+   "aside": {
+    "image": "img/station-clock.jpg",
+    "alt": "The binary station clock with lit and unlit squares, circles and crosses"
+   }
+  },
+  {
+   "layout": "image",
+   "title": "Look! Some More Binary",
+   "image": "img/tiktok-timestamp.png",
+   "alt": "A TikTok video ID written in binary; its first 32 bits, read as a Unix timestamp, give the date 2020-07-29 02:06:13",
+   "shadow": false,
+   "source": "[Tinkering with TikTok Timestamps](https://dfir.blog/tinkering-with-tiktok-timestamps/)"
+  },
+  {
+   "layout": "text",
+   "title": "Not Just Numbers: Encodings!",
+   "points": [
+    "For data, we talk about bytes rather than bits",
+    "1 byte = historically, the number of bits used to encode a single character; today, 8 bits by de-facto standard",
+    "8 bits encode the values 0…255 (from 2^{0} − 1 to 2^{8} − 1)",
+    "Anything can be represented in binary; we've already seen colors in hexadecimal",
+    "Example: Windows-1252, typically given in hexadecimal; the most widespread legacy single-byte encoding (today, UTF-8 dominates)"
+   ],
+   "aside": {
+    "image": "img/hex-color.png",
+    "alt": "The color code #12AF30 with arrows: 12 is how much red, AF how much green, 30 how much blue",
+    "shadow": false
+   },
+   "source": "An easy-to-read history of encodings: [gammon.com.au/unicode](https://www.gammon.com.au/unicode/)"
+  },
+  {
+   "layout": "quiz",
+   "title": "Encoding Questions",
+   "items": [
+    "How is “©” encoded in hexadecimal and in binary?",
+    "What happens when we send a smiley by phone?"
+   ],
+   "source": "[Full emoji list of the Unicode Consortium](https://www.unicode.org/emoji/charts/full-emoji-list.html)",
+   "aside": {
+    "image": "img/windows-1252.png",
+    "alt": "Code table of the Windows-1252 encoding with rows and columns 0x0 to 0xF",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "text",
+   "title": "Information Representation in Computers",
+   "callout": {
+    "text": "What happens when π is represented (e.g., stored) in a computer system?"
+   },
+   "paragraphs": [
+    "As you know, the accurate representation of the number π (3.1415…) is infinitely long.",
+    "Numbers that do not have infinite representations are affected as well!",
+    "Machine representations of numbers are finite approximations, and they can behave in unexpected ways."
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Some Surprises",
+   "callout": {
+    "text": "Solve the puzzle by finding the number for which this is violated!"
+   },
+   "code": "float a = 3.1415;\nint b = 30000;\nint c = 50000;\n\nfloat d, e, f;\nd = 1e20; e = -1e20; f = 3.1415;\n\nint puzzle = ?;",
+   "points": [
+    "x² ≥ 0?",
+    "(d + e) + f == d + (e + f)?",
+    "(x + 1) > x?"
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "How finite are typical data types (in C)?",
+   "callout": {
+    "text": "Set `puzzle` so that `puzzle + 1` is smaller than `puzzle`. And if it was unsigned?"
+   },
+   "columns": [
+    "C data type",
+    "Size (x86-64)",
+    "Lowest value",
+    "Highest value"
+   ],
+   "rows": [
+    [
+     "char",
+     "8 bits",
+     "−128",
+     "127"
+    ],
+    [
+     "short",
+     "16 bits",
+     "−32'768",
+     "32'767"
+    ],
+    [
+     "int",
+     "32 bits",
+     "−2'147'483'648",
+     "2'147'483'647"
+    ],
+    [
+     "unsigned int (similar: unsigned char, short, long)",
+     "32 bits",
+     "0",
+     "4'294'967'295"
+    ],
+    [
+     "long",
+     "64 bits",
+     "−9'223'372'036'854'775'808",
+     "9'223'372'036'854'775'807"
+    ],
+    [
+     "float",
+     "32 bits",
+     "−3.4 × 10^{38}",
+     "3.4 × 10^{38}"
+    ],
+    [
+     "double",
+     "64 bits",
+     "−1.7 × 10^{308}",
+     "1.7 × 10^{308}"
+    ],
+    [
+     "long double",
+     "128 bits",
+     "−3.4 × 10^{4932}",
+     "3.4 × 10^{4932}"
+    ],
+    [
+     "pointer (memory address)",
+     "64 bits",
+     "0",
+     "18'446'744'073'709'551'615"
+    ]
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Real Issues!",
+   "code": "declare\n  v_veloc_sensor: float;  -- 64 bit\n  h_veloc_sensor: float;  -- 64 bit\n  v_veloc_bias: integer;  -- 16 bit\n  h_veloc_bias: integer;  -- 16 bit\nbegin\n  sensor_get(v_veloc_sensor);\n  sensor_get(h_veloc_sensor);\n  v_veloc_bias := integer(v_veloc_sensor);\n  h_veloc_bias := integer(h_veloc_sensor);\n  decide_bias(v_veloc_bias, h_veloc_bias);",
+   "paragraphs": [
+    "“The internal SRI software exception was caused during execution of a data conversion from 64-bit floating point to 16-bit signed integer value. The floating point number which was converted had a value greater than what could be represented by a 16-bit signed integer.”"
+   ],
+   "caption": "Code courtesy of Dr. Peter Tröger, TU Chemnitz"
+  },
+  {
+   "layout": "image",
+   "title": "Ariane 5, Flight 501",
+   "image": "img/ariane-501.jpg",
+   "alt": "A rocket's smoke trail in a grey sky, ending in a cloud of burning debris"
+  },
+  {
+   "layout": "table",
+   "title": "Why does this happen?",
+   "callout": {
+    "text": "Compare int and float: how can float cover a much broader range with the same number of bits?"
+   },
+   "columns": [
+    "C data type",
+    "Size (x86-64)",
+    "Lowest value",
+    "Highest value"
+   ],
+   "rows": [
+    [
+     "int",
+     "32 bits",
+     "−2'147'483'648",
+     "2'147'483'647"
+    ],
+    [
+     "unsigned int",
+     "32 bits",
+     "0",
+     "4'294'967'295"
+    ],
+    [
+     "float",
+     "32 bits",
+     "−3.4 × 10^{38}",
+     "3.4 × 10^{38}"
+    ]
+   ],
+   "after": "Floating-point numbers are most precise very close to zero. Their density decreases with distance to zero."
+  },
+  {
+   "layout": "image",
+   "title": "The Precision of Floating-Point Numbers",
+   "image": "img/float-precision.png",
+   "alt": "Log-log plot of floating-point precision over value for IEEE 754 single and double precision; both lines rise steadily",
+   "shadow": false,
+   "caption": "Around a value of 10'000'000'000 (x-axis), the precision of 32-bit single-precision numbers is around ±1000 (y-axis)"
+  },
+  {
+   "layout": "text",
+   "title": "Excursion: Representing Integers",
+   "groups": [
+    {
+     "heading": "Unsigned ints",
+     "points": [
+      "Every bit counts with its positive weight 2^{i}"
+     ]
+    },
+    {
+     "heading": "Signed ints: 2's complement",
+     "points": [
+      "First bit: sign bit, with the negative weight −2^{w−1}",
+      "(Asymmetric) range: |TMin| = TMax + 1",
+      "UMax = 2 × TMax + 1"
+     ]
+    }
+   ],
+   "aside": {
+    "image": "img/integer-formulas.png",
+    "alt": "Two formulas: B2U of X is the sum of x i times 2 to the i; B2T of X is minus x w minus 1 times 2 to the w minus 1, plus the sum of the remaining bits times their weights",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "quiz",
+   "title": "You know this already! ;-)",
+   "items": [
+    "What's the value of the 4-bit unsigned integer 1001?",
+    "What are the highest and lowest values of a 4-bit 2's complement integer?",
+    "What's the value of the 4-bit 2's complement integer 1001?",
+    "Why 2's complement?"
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "How do we represent negative numbers?",
+   "lead": "Three ways to read 4 bits:",
+   "columns": [
+    "Representation",
+    "Range",
+    "Note"
+   ],
+   "rows": [
+    [
+     "Unsigned",
+     "0000b (0) … 1111b (15)",
+     "No negative numbers"
+    ],
+    [
+     "Sign bit + number",
+     "1111b (−7) … 1000b (−0), 0000b (+0) … 0111b (+7)",
+     "First bit = sign bit, remaining bits = the number itself. Two zeros! This is **not** 2's complement"
+    ],
+    [
+     "2's complement",
+     "1000b (−8) … 0000b (0) … 0111b (+7)",
+     "Weights −2^{3}, 2^{2}, 2^{1}, 2^{0}"
+    ]
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "2's Complement Examples",
+   "lead": "Word size: 4 bits (−8…7)",
+   "columns": [
+    "Bits",
+    "Calculation",
+    "Value"
+   ],
+   "rows": [
+    [
+     "0000_{2}",
+     "0",
+     "0"
+    ],
+    [
+     "0101_{2}",
+     "4 + 1",
+     "5"
+    ],
+    [
+     "0111_{2}",
+     "4 + 2 + 1",
+     "7"
+    ],
+    [
+     "1000_{2}",
+     "−8",
+     "−8"
+    ],
+    [
+     "1001_{2}",
+     "1 × (−2^{3}) + 0 × 2^{2} + 0 × 2^{1} + 1 × 2^{0}",
+     "−7"
+    ],
+    [
+     "1111_{2}",
+     "−8 + 4 + 2 + 1",
+     "−1"
+    ]
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Overflow!",
+   "lead": "Calculating 2'147'483'647 + 1 in 2's complement on 32 bits:",
+   "points": [
+    "`0111 1111 … 1111`b = 2'147'483'647, the largest int",
+    "`+ 0000 0000 … 0001`b = 1",
+    "`= 1000 0000 … 0000`b = −2'147'483'648, the smallest int!"
+   ],
+   "aside": {
+    "image": "img/odometer.jpg",
+    "alt": "Three photos of a car odometer rolling over from 99999 to 00000"
+   }
+  },
+  {
+   "layout": "text",
+   "title": "Arithmetic",
+   "callout": {
+    "text": "If two x-bit numbers are added, how many bits are needed to represent the result accurately?"
+   },
+   "groups": [
+    {
+     "heading": "2's complement negation",
+     "points": [
+      "Flip all bits, then add one: ~x + 1 = −x"
+     ]
+    },
+    {
+     "heading": "Unsigned addition",
+     "points": [
+      "Standard addition",
+      "Ignores the last carry: positive overflow"
+     ]
+    },
+    {
+     "heading": "2's complement addition",
+     "points": [
+      "Identical bit-level behavior; the remaining bits are read as 2's complement",
+      "Positive and negative overflow may occur"
+     ]
+    }
+   ],
+   "aside": {
+    "image": "img/addition-formulas.png",
+    "alt": "Two formulas: unsigned addition UAdd is u plus v modulo 2 to the w; 2's complement addition TAdd adds or subtracts 2 to the w on negative or positive overflow",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "table",
+   "title": "2's Complement Addition Example",
+   "lead": "Word size: 4 bits (−8…7)",
+   "columns": [
+    "Decimal",
+    "Binary",
+    "Result",
+    ""
+   ],
+   "rows": [
+    [
+     "−8 + −8",
+     "1000_{2} + 1000_{2} = (1)0000_{2}",
+     "0",
+     "negative overflow"
+    ],
+    [
+     "−8 + −1",
+     "1000_{2} + 1111_{2} = (1)0111_{2}",
+     "7",
+     "negative overflow"
+    ],
+    [
+     "3 + 3",
+     "0011_{2} + 0011_{2} = 0110_{2}",
+     "6",
+     ""
+    ],
+    [
+     "3 + 5",
+     "0011_{2} + 0101_{2} = 1000_{2}",
+     "−8",
+     "positive overflow"
+    ],
+    [
+     "7 + 7",
+     "0111_{2} + 0111_{2} = 1110_{2}",
+     "−2",
+     "positive overflow"
+    ]
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Unsigned Addition and Negation",
+   "code": "  1010b    (10)\n+ 1011b    (11)\n= 0101b    ( 5)\n\n  0101b    ( 5)\n ~0101b =  1010b  (-6)\n -0101b =  1011b  (-5)",
+   "points": [
+    "Unsigned addition: 0010b + 0010b = 0100b is correct",
+    "1010b + 1011b = 0101b is an overflow: 10 + 11 − 16 = 5",
+    "Why 16? 16 = 2^{4}, i.e., 2^{word size}",
+    "2's complement negation: flip the bits (~), then add one"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Multiplication and Shifting",
+   "points": [
+    "Multiplication (signed and unsigned): standard, ignoring the overflow bits",
+    "(x << k) multiplies by 2^{k}, both for signed and unsigned!",
+    {
+     "text": "(x >> k) divides by 2^{k} and rounds down",
+     "sub": [
+      "Unsigned: «logical shift» (shift in 0s)",
+      "Signed: «arithmetic shift» (shift in copies of the most significant bit)",
+      "Careful: for x < 0, this rounds towards minus infinity, but C integer division truncates towards zero"
+     ]
+    },
+    "The compiler replaces multiplications and divisions by powers of two with (much faster) shift-and-add operations; for signed division, it first adds a bias"
+   ]
+  },
+  {
+   "layout": "quiz",
+   "title": "Multiplication and Shifting Questions",
+   "items": [
+    "If two x-bit numbers are multiplied, how many bits are needed to represent the result?",
+    "If an x-bit number is multiplied with a y-bit number, how many bits are needed to represent the result?",
+    "What's (−7)/2? And (1001_{2} >> 1)?",
+    "What's (+7)/2? And (0111_{2} >> 1)?"
+   ],
+   "source": "Demo: [godbolt.org](https://godbolt.org/)",
+   "notes": "(−7)/2 = −3 in C, but 1001 >> 1 = 1100 = −4. (+7)/2 = 3 and 0111 >> 1 = 0011 = 3."
+  },
+  {
+   "layout": "text",
+   "title": "Expanding, Truncating, Casting",
+   "callout": {
+    "text": "What happens if we cast the largest possible unsigned int to a signed int?"
+   },
+   "groups": [
+    {
+     "heading": "Expanding (e.g., short → int)",
+     "points": [
+      "Unsigned: add zeros",
+      "Signed: sign extension"
+     ]
+    },
+    {
+     "heading": "Truncating (e.g., unsigned int → unsigned short)",
+     "points": [
+      "Simple bit truncation and re-interpretation",
+      "Expected behavior for small enough numbers"
+     ]
+    },
+    {
+     "heading": "Casting (signed ↔ unsigned)",
+     "points": [
+      "Keeps the bit pattern: a change of context, not of bits",
+      "Can invert the order; take care with implicit casts in assignments and procedure calls"
+     ]
+    }
+   ],
+   "aside": {
+    "image": "img/casting-diagram.png",
+    "alt": "Diagram mapping signed values from TMin to TMax onto unsigned values from 0 to UMax; negative values map to the top of the unsigned range",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "code",
+   "title": "Take extreme care with mixed expressions",
+   "callout": {
+    "text": "Do you understand what is happening here?"
+   },
+   "code": "#include <stdio.h>\nint main(void)\n{\n  unsigned int plus_one = 1;\n  int minus_one = -1;\n  if(plus_one < minus_one)\n    printf(\"1 < -1\");\n  else\n    printf(\"boring\");\n  return 0;\n}",
+   "caption": "Run it: [codepad.org/yPhYCMFO](http://codepad.org/yPhYCMFO)"
+  },
+  {
+   "layout": "code",
+   "title": "Solution: Look at the Bits!",
+   "code": "#include <stdio.h>\nint main(void)\n{\n  unsigned int plus_one = 1;\n  int minus_one = -1;\n  if(plus_one < minus_one)\n    printf(\"1 < -1\");\n  else\n    printf(\"boring\");\n  return 0;\n}",
+   "points": [
+    "What is the binary representation of the unsigned int 1?",
+    "What is the binary representation of the int −1?",
+    "In CS, all information = bits + context. But here, we change the context!"
+   ],
+   "notes": "In the comparison, minus_one is converted to unsigned: 0xFFFFFFFF = 4'294'967'295, so the program prints 1 < -1."
+  },
+  {
+   "layout": "code",
+   "title": "Homework",
+   "callout": {
+    "text": "How can you make this code copy much more than `maxlen` bytes?"
+   },
+   "code": "/* Kernel memory, user-accessible data */\n#define KSIZE 1024\nchar kbuf[KSIZE];\n\n/* Copy at most maxlen bytes to user */\nint copy_from_kernel(void *user_dest,\n                     int maxlen) {\n  /* len = min(buffer size, maxlen) */\n  int len = KSIZE<maxlen ? KSIZE : maxlen;\n  memcpy(user_dest, kbuf, len);\n  return len;\n}",
+   "points": [
+    "Specification: copy bytes from the kernel to `user_dest`, but never copy more than `maxlen` bytes",
+    "`len` is KSIZE if KSIZE < maxlen, otherwise maxlen",
+    "What happens for a negative `maxlen`?",
+    "This is the `getpeername` library function of FreeBSD"
+   ]
+  },
+  {
+   "layout": "image",
+   "title": "This happens in real software",
+   "image": "img/whatsapp-article.png",
+   "alt": "News article: WhatsApp fixes exploit that allows hackers to takeover app when answering a video call",
+   "source": "[exploit-db.com/exploits/45579](https://www.exploit-db.com/exploits/45579/)"
+  },
+  {
+   "layout": "table",
+   "title": "Our Journey So Far…",
+   "columns": [
+    "Step",
+    "Building blocks",
+    "Where"
+   ],
+   "rows": [
+    [
+     "Information",
+     "Binary digits + context: numbers, text, pixels and colors, instructions",
+     "**Today: done!**"
+    ],
+    [
+     "Logic + arithmetic",
+     "School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/)"
+    ],
+    [
+     "Electronics",
+     "Logic gates from electronic components (today: transistors)",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/)"
+    ],
+    [
+     "Calculator",
+     "Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/)"
+    ],
+    [
+     "Processor",
+     "Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!",
+     "[Lecture 3](https://hyperdecks.github.io/computersystems/03-processors/html/)"
+    ],
+    [
+     "Programs",
+     "Instruction sets, machine code and assembly language",
+     "[Lectures 3](https://hyperdecks.github.io/computersystems/03-processors/html/) and [4](https://hyperdecks.github.io/computersystems/04-assembly/html/)"
+    ]
+   ]
+  },
+  {
+   "layout": "questions",
+   "title": "Any Questions / Comments / Doubts / Concerns?",
+   "heading": "Take-Homes",
+   "points": [
+    "Computers represent all information as finite sequences of bits, interpreted in context",
+    "Number representations (and all other data types) are necessarily finite",
+    "Programming languages use a fixed number of bits per instance (e.g., 32 bits for a C int)",
+    "Standards give the context: IEEE 754 (floating point), ISO 10646 «Unicode» (text), ISO 10918-1 (JPEG)",
+    "You can create your own mapping (but is it useful?)"
+   ],
+   "after": "Next: [Computing on Bits](https://hyperdecks.github.io/computersystems/02-circuits/html/)"
+  },
+  {
+   "layout": "study",
+   "title": "How to Study this Material?",
+   "groups": [
+    {
+     "heading": "Basic Depth",
+     "points": [
+      "Read chapters 1 (A Tour of Computer Systems) and 2 (Representing and Manipulating Information; we covered about a third) of Bryant & O'Hallaron",
+      "Look up all technical terms of the syllabus; do use Wikipedia, e.g. [Two's complement](https://en.wikipedia.org/wiki/Two%27s_complement)",
+      "Internalize bit-level representations of numbers: everything depends on them!",
+      "Watch the rest of the historical videos and play with the examples"
+     ]
+    },
+    {
+     "heading": "Advanced Depth",
+     "points": [
+      "Read chapters 1 & 2 in depth and solve the book's practice problems",
+      "Find the connections between our course and Anna-Lena's course yourselves",
+      "How about a look at our research? ;-)"
+     ]
+    }
+   ],
+   "aside": {
+    "image": "img/book-chapter2-toc.png",
+    "alt": "Table of contents of chapter 2 of the book, from Boolean algebra to floating point",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "task",
+   "title": "Preparing for the next lecture…",
+   "stamp": "Solve the first five levels of the NAND Game!",
+   "paragraphs": [
+    "We'll build on it in [Lecture 2, Computing on Bits](https://hyperdecks.github.io/computersystems/02-circuits/html/)."
+   ],
+   "url": "https://www.nandgame.com/",
+   "label": "nandgame.com"
+  },
+  {
+   "layout": "text",
+   "title": "Preparing for the First Exercise: The Shell",
+   "lead": "Verify that you can run the command line (shell, terminal) on your machine: PowerShell on Windows, Terminal on Mac, whatever you have on Linux.",
+   "defs": [
+    [
+     "Navigation",
+     "`cd` (change directory)"
+    ],
+    [
+     "Inspecting",
+     "`ls` (list)"
+    ],
+    [
+     "Printing a file's content",
+     "`cat <filename>` (concatenate)"
+    ],
+    [
+     "Compiling (with g++)",
+     "`g++ <filename> -o program`"
+    ],
+    [
+     "Running a program",
+     "`./program`"
+    ],
+    [
+     "Deleting a file",
+     "`rm` (remove)"
+    ],
+    [
+     "Autocompletion",
+     "`<Tab>`"
+    ]
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Preparing for the First Exercise: A C Compiler",
+   "points": [
+    {
+     "text": "From now on, you need a computer set up to compile C code (with gcc/g++):",
+     "sub": [
+      "Windows: set up the [Windows Subsystem for Linux](https://learn.microsoft.com/en-us/windows/wsl/about)",
+      "Mac: follow [this guide](https://www.mkyong.com/mac/how-to-install-gcc-compiler-on-mac-os-x/)",
+      "Linux: run `sudo apt install gcc`"
+     ]
+    },
+    "Try the compiler on `calculate_pi.cpp` (in the zip file on Canvas): go to its folder, compile it, run it and look at its output"
+   ],
+   "aside": {
+    "image": "img/powershell-calculate-pi.png",
+    "alt": "PowerShell window: cd to the user folder, g++ compiles calculate_pi.cpp, the program prints PI 3.14159 and an elapsed time of 72 ms"
+   }
+  }
+ ]
+}

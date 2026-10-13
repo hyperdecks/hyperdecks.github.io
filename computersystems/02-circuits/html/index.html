@@ -1,0 +1,394 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Computing on Bits | University of St.Gallen</title>
+<style>@font-face{font-family:HSGSans;font-weight:300;font-style:normal;font-display:swap;src:local("Gill Sans MT Pro Light"),local("GillSansMTPro-Light"),local("Gill Sans Nova Light"),local("GillSansNova-Light"),local("Gill Sans Light"),local("GillSans-Light"),url(assets/GilliusADFNo2-Regular.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:300;font-style:italic;font-display:swap;src:local("Gill Sans MT Pro Light Italic"),local("GillSansMTPro-LightItalic"),local("Gill Sans Nova Light Italic"),local("GillSansNova-LightItalic"),local("Gill Sans Light Italic"),local("GillSans-LightItalic"),url(assets/GilliusADFNo2-Italic.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:600;font-style:normal;font-display:swap;src:local("Gill Sans MT Pro Medium"),local("GillSansMTPro-Medium"),local("Gill Sans Nova Medium"),local("GillSansNova-Medium"),local("Gill Sans SemiBold"),local("GillSans-SemiBold"),url(assets/GilliusADFNo2-Bold.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:600;font-style:italic;font-display:swap;src:local("Gill Sans MT Pro Medium Italic"),local("GillSansMTPro-MediumItalic"),local("Gill Sans Nova Medium Italic"),local("Gill Sans SemiBold Italic"),local("GillSans-SemiBoldItalic"),url(assets/GilliusADFNo2-BoldItalic.otf) format('opentype')}
+@font-face{font-family:HSGSerif;font-weight:400;font-style:normal;font-display:swap;src:local("Palatino Linotype"),local("PalatinoLinotype-Roman"),local("Palatino"),local("Palatino-Roman"),local("Book Antiqua"),url(assets/texgyrepagella-regular.otf) format('opentype')}
+@font-face{font-family:HSGSerif;font-weight:400;font-style:italic;font-display:swap;src:local("Palatino Linotype Italic"),local("PalatinoLinotype-Italic"),local("Palatino Italic"),local("Palatino-Italic"),url(assets/texgyrepagella-italic.otf) format('opentype')}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+/* One unit (U) is 1% of a 16:9 slide; the template slide is 13.33in wide, so calc(1*var(--u)) = 9.6pt.
+   Type scale of the HSG template, fixed for every deck: headline 32pt (calc(3.33*var(--u))), body 18.7pt (calc(1.94*var(--u))), sub-points 14pt (calc(1.46*var(--u))),
+   small 12pt (calc(1.25*var(--u))), source 8pt (calc(.83*var(--u))). Text is Gill Sans Light; bold is Gill Sans Medium. */
+:root{--ctl:60px;--bar:var(--ctl);--u:min(1vw,calc((100vh - var(--bar))/56.25));--u:min(1vw,calc((100dvh - var(--bar))/56.25));
+  --s-h1:calc(5.2*var(--u));--s-h2:calc(3.33*var(--u));--s-kick:calc(2.1*var(--u));--s-body:calc(1.94*var(--u));--s-mid:calc(1.6*var(--u));--s-sub:calc(1.46*var(--u));--s-small:calc(1.25*var(--u));--s-tiny:calc(.83*var(--u));
+  --green:#00802F;--dgreen:#0A5F2D;--salmon:#EB6969;--teal:#73A5AF;--row-a:#CBD8CD;--row-b:#E7EDE8;--yellow:#FFF04B;
+  --fg:#000000;--body:#1a1a1a;--quiet:#595959;--line:#d9d9d9;--k-stage:#e4e4e4}
+body{font-family:HSGSans,"Gill Sans MT Pro","Gill Sans MT","Gill Sans","Gill Sans Nova",Calibri,sans-serif;font-weight:300;
+  -webkit-font-smoothing:antialiased;overflow:hidden;background:var(--k-stage);color:var(--fg)}
+h1,h2,h3,p,ul,ol,dl,dd,figure,pre{margin:0;padding:0}
+b,strong,th{font-weight:600}
+a{color:var(--green);text-underline-offset:.15em}
+a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+code,pre{font-family:"Courier New",Courier,"Liberation Mono",monospace;font-weight:400}
+mark{background:var(--yellow);color:inherit;padding:0 .1em}
+sub,sup{font-size:.65em;line-height:0}
+
+.slide{position:absolute;left:50%;top:calc((100% - var(--bar))/2);width:calc(100*var(--u));height:calc(56.25*var(--u));transform:translate(-50%,-50%);
+  overflow:hidden;visibility:hidden;background:#fff;color:var(--fg)}
+.slide.active{visibility:visible}
+/* the title sits in the template's title box (calc(4.1*var(--u)) to calc(10.8*var(--u)), text on its bottom line); content starts at calc(14*var(--u)) */
+.frame{position:relative;z-index:1;width:100%;height:100%;padding:calc(4.1*var(--u)) calc(3.92*var(--u)) calc(5*var(--u));display:flex;flex-direction:column;min-width:0}
+.headrow{display:flex;justify-content:space-between;align-items:flex-end;gap:calc(3*var(--u));min-height:calc(6.7*var(--u));flex:none}
+h2{font-size:var(--s-h2);font-weight:300;line-height:1.08;letter-spacing:-.005em;color:var(--fg);max-width:calc(78*var(--u));text-wrap:balance}
+.lead{font-size:var(--s-body);line-height:1.25;margin-top:calc(3.2*var(--u));max-width:calc(86*var(--u));color:var(--body)}
+.main{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;padding:calc(3.2*var(--u)) 0 calc(.6*var(--u))}
+.l-menu .main,.l-quiz .main,.l-image .main,.l-gallery .main,.l-people .main,.l-syllabus .main{justify-content:safe center}
+.lead+.main{padding-top:calc(2.6*var(--u))}
+.source{position:absolute;left:calc(3.92*var(--u));bottom:calc(2.1*var(--u));max-width:calc(84*var(--u));font-size:var(--s-tiny);line-height:1.3;color:var(--quiet);z-index:2}
+.dfoot{position:absolute;left:calc(3.92*var(--u));bottom:calc(2.1*var(--u));font-size:var(--s-tiny);color:var(--quiet);z-index:2}
+.source~.dfoot{display:none}
+/* the slide number in the green HSG tab, bottom right */
+.pn{position:absolute;right:calc(3.94*var(--u));top:calc(51.41*var(--u));width:calc(2.33*var(--u));height:calc(2.56*var(--u));z-index:3;display:grid;place-items:center;padding:calc(.45*var(--u)) 0 0 calc(.45*var(--u));
+  font-size:calc(1.1*var(--u));font-weight:300;color:#fff;font-variant-numeric:tabular-nums}
+.pn svg{position:absolute;inset:0;width:100%;height:100%;fill:var(--green);z-index:-1}
+
+/* running text: paragraphs without a mark, points with a dash as on the template */
+.copy{display:grid;gap:calc(1.5*var(--u));align-content:start;min-width:0}
+.copy p{font-size:var(--s-body);line-height:1.25;color:var(--body)}
+ul.dash{list-style:none;display:grid;gap:calc(.9*var(--u))}
+ul.dash>li{position:relative;padding-left:calc(2.2*var(--u));font-size:var(--s-body);line-height:1.25;color:var(--body)}
+ul.dash>li::before{content:"-";position:absolute;left:calc(.1*var(--u))}
+ul.dash ul{list-style:none;display:grid;gap:calc(.25*var(--u));margin-top:calc(.35*var(--u))}
+ul.dash ul li{position:relative;padding-left:calc(1.8*var(--u));font-size:var(--s-sub);line-height:1.25;color:var(--body)}
+ul.dash ul li::before{content:"-";position:absolute;left:0}
+.dense ul.dash>li,.dense .copy p{font-size:var(--s-mid)}
+.dense ul.dash{gap:calc(.6*var(--u))}
+.group h3{font-size:calc(2.4*var(--u));font-weight:300;line-height:1.15;color:var(--fg);margin-bottom:calc(.5*var(--u))}
+.group ul.dash{gap:calc(.2*var(--u))}
+.dense .group ul.dash>li,.dense .group p{font-size:var(--s-mid)}
+.groups{display:grid;gap:calc(3*var(--u))}
+.defs{display:grid;grid-template-columns:auto 1fr;gap:calc(.45*var(--u)) calc(4*var(--u));font-size:var(--s-mid);line-height:1.25;color:var(--body)}
+.defs dt{position:relative;padding-left:calc(2.2*var(--u))}
+.defs dt::before{content:"-";position:absolute;left:calc(.1*var(--u))}
+.after{font-size:var(--s-body);line-height:1.3;color:var(--body);margin-top:calc(2.6*var(--u));padding-left:calc(24*var(--u))}
+
+/* copy on the left, picture, box or code on the right */
+.split{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:calc(4*var(--u));align-items:center}
+.split.wide{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.l-code .split{align-items:start}
+.pic{display:flex;flex-direction:column;align-items:center;min-height:0}
+.pic img{display:block;max-width:100%;max-height:calc(34*var(--u));width:auto;height:auto;object-fit:contain}
+.pic.shadow img{filter:drop-shadow(calc(.35*var(--u)) calc(.35*var(--u)) calc(.55*var(--u)) rgba(0,0,0,.38))}
+.pic figcaption{font-size:var(--s-tiny);color:var(--quiet);margin-top:calc(.9*var(--u));text-align:center;max-width:calc(44*var(--u))}
+
+/* boxes: green for a question to the room, an outline for an example or a note, teal for a remark */
+.box{border-radius:calc(.9*var(--u));padding:calc(1.3*var(--u)) calc(2*var(--u));font-size:var(--s-mid);line-height:1.25;text-wrap:balance}
+.box.green{background:var(--green);border:calc(.12*var(--u)) solid var(--dgreen);color:#fff;text-align:center}
+.box.outline{background:#fff;border:calc(.12*var(--u)) solid var(--green);color:var(--body);border-radius:0}
+.box.teal{background:var(--teal);border:calc(.12*var(--u)) solid #5d8f99;color:#fff;border-radius:0}
+.box h3{font-size:var(--s-mid);font-weight:600;margin-bottom:calc(.4*var(--u))}
+.box a{color:inherit}
+.callout{flex:none;max-width:calc(34*var(--u));margin-bottom:calc(-1*var(--u))}
+.callout.box{font-size:var(--s-sub)}
+
+pre.code{font-size:calc(1.3*var(--u));line-height:1.35;padding:calc(1.6*var(--u)) calc(2*var(--u));white-space:pre;overflow:hidden;tab-size:4}
+pre.code.small{font-size:calc(1.05*var(--u))}
+pre.code.outline{background:#fff;border:calc(.12*var(--u)) solid var(--green);color:#262626}
+pre.code.teal{background:var(--teal);border:calc(.12*var(--u)) solid #5d8f99;color:#fff}
+.codecap{font-size:var(--s-tiny);color:var(--quiet);margin-top:calc(.8*var(--u))}
+
+/* table: green header, rows in two green tints, white rules */
+table.t{width:100%;border-collapse:collapse;font-size:var(--s-mid);line-height:1.2}
+.t th{background:var(--green);color:#fff;text-align:left;padding:calc(.75*var(--u)) calc(1*var(--u))}
+.t td{padding:calc(.65*var(--u)) calc(1*var(--u));color:var(--body);vertical-align:top}
+.t tr:nth-child(odd) td{background:var(--row-a)}
+.t tr:nth-child(even) td{background:var(--row-b)}
+.t th+th,.t td+td{border-left:calc(.15*var(--u)) solid #fff}
+.t tr+tr td{border-top:calc(.15*var(--u)) solid #fff}
+.t td:first-child{font-weight:600;color:var(--fg)}
+.t.many{font-size:var(--s-sub)}
+.t.many td{padding:calc(.45*var(--u)) calc(1*var(--u))}
+
+/* menu: the topics of the day in a thin green frame */
+.menu{border:calc(.12*var(--u)) solid var(--green);padding:calc(2.6*var(--u)) calc(2.4*var(--u));width:calc(66*var(--u));display:grid;gap:calc(.35*var(--u))}
+.menu p{font-size:var(--s-sub);line-height:1.3;color:var(--body)}
+.menu p.cur{font-weight:600;color:var(--green)}
+
+/* quiz: questions in green boxes, staggered in two columns */
+.quiz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(2.6*var(--u)) calc(3*var(--u));align-items:center}
+.quiz .box{justify-self:start;max-width:calc(40*var(--u))}
+.quiz .box:nth-child(even){justify-self:end}
+.quiz.n3 .box:last-child{grid-column:1/-1;justify-self:center}
+
+/* task: a salmon label set at an angle, as on the template's homework slides */
+.task{position:relative;flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;gap:calc(4*var(--u))}
+.task .copy{align-self:start}
+.stamp{justify-self:center;background:var(--salmon);border:calc(.12*var(--u)) solid #d65b5b;border-radius:calc(1.1*var(--u));color:#fff;font-size:calc(3*var(--u));line-height:1.2;
+  padding:calc(1.7*var(--u)) calc(2.8*var(--u));transform:rotate(-9deg);text-align:center;max-width:calc(44*var(--u));text-wrap:balance}
+.task .go{position:absolute;right:calc(4*var(--u));bottom:calc(2*var(--u));font-size:var(--s-sub)}
+.task.solo{grid-template-columns:1fr}
+
+.gallery{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:calc(3*var(--u));align-items:end}
+.gallery .pic img{max-height:calc(30*var(--u))}
+.people{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:calc(3*var(--u));align-items:end;justify-items:center}
+.person{display:flex;flex-direction:column;align-items:center;text-align:center;gap:calc(1.4*var(--u))}
+.person img{width:calc(13*var(--u));height:calc(16*var(--u));object-fit:cover;display:block;filter:drop-shadow(calc(.35*var(--u)) calc(.35*var(--u)) calc(.55*var(--u)) rgba(0,0,0,.38))}
+.person .name{font-size:var(--s-small);line-height:1.25;color:var(--fg)}
+.person .role{font-size:var(--s-small);line-height:1.25;color:var(--body)}
+.people.n1 img,.people.n2 img{width:calc(17*var(--u));height:calc(21*var(--u))}
+
+/* quote: the quote is the headline, right aligned, the picture below on the left */
+.l-quote .headrow{justify-content:flex-end}
+.l-quote h2{text-align:right;max-width:calc(64*var(--u));line-height:1.15;text-wrap:balance}
+.attr{font-size:var(--s-mid);text-align:right;color:var(--body);margin-top:calc(1*var(--u))}
+.qbody{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:calc(4*var(--u));align-items:end;padding:calc(2*var(--u)) 0 calc(1*var(--u))}
+.qbody .pic{align-items:flex-start}
+.qbody .pic img{width:100%;max-height:calc(30*var(--u));object-position:left bottom}
+.qbody ul.dash>li{font-size:var(--s-sub)}
+
+/* questions and study slides carry the template's pictures: the figure on the question mark and the light bulb */
+.figure{display:flex;justify-content:center;align-items:center}
+.figure img{width:calc(22*var(--u));height:auto;display:block}
+.bulb{position:absolute;right:calc(4*var(--u));top:calc(2.2*var(--u));width:calc(10*var(--u));height:auto;z-index:2}
+.l-study .headrow{padding-right:calc(12*var(--u))}
+.l-questions .split{grid-template-columns:minmax(0,1fr) calc(24*var(--u))}
+.takeh{font-size:var(--s-mid);color:var(--body);margin-bottom:calc(1.6*var(--u))}
+.l-questions ul.dash{gap:calc(1.5*var(--u))}
+
+.l-questions .after{padding-left:calc(30*var(--u))}
+.l-questions.bare .main{justify-content:flex-end}
+.l-questions.bare .figure{justify-content:flex-end;padding-right:calc(2*var(--u))}
+.l-questions.bare .figure img{width:calc(24*var(--u))}
+
+/* syllabus: the course plan, one bar per session; the current one is teal; assignments in salmon on the right */
+.plan{display:grid;grid-template-columns:calc(11*var(--u)) calc(6*var(--u)) minmax(0,1fr) calc(23*var(--u));column-gap:calc(1.6*var(--u));align-items:center}
+.legend{grid-column:1;display:grid;gap:calc(1*var(--u));align-self:center}
+.legend span{display:grid;place-items:center;height:calc(3.4*var(--u));font-size:calc(1.05*var(--u));color:#fff}
+.lg-l{background:var(--green)}.lg-e{background:var(--dgreen)}.lg-a{background:var(--salmon)}
+.rows{grid-column:2/4;display:grid;grid-template-columns:calc(6*var(--u)) minmax(0,1fr);column-gap:calc(1.6*var(--u));row-gap:calc(.4*var(--u));align-items:center}
+.l-syllabus .main{padding-top:calc(1.4*var(--u))}
+.rows .date{font-size:calc(.72*var(--u));color:var(--quiet);text-align:right;font-variant-numeric:tabular-nums}
+.rows .bar{height:calc(2.15*var(--u));display:grid;place-items:center;font-size:calc(1.1*var(--u));color:#fff;background:var(--green);border-bottom:calc(.15*var(--u)) solid #00591f;padding:0 calc(1*var(--u));
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rows .bar.ex{background:var(--dgreen)}
+.rows .bar.cur{background:var(--teal);border-color:#5d8f99}
+.rows .brk{grid-column:2;height:calc(.45*var(--u));background:#111;margin:calc(.3*var(--u)) 0}
+.assign{grid-column:4;display:grid;row-gap:calc(.4*var(--u));align-self:stretch}
+.assign div{background:var(--salmon);color:#fff;font-size:calc(1.05*var(--u));display:grid;place-items:center;text-align:center;padding:calc(1*var(--u));margin:calc(.3*var(--u)) 0}
+
+/* title slide: logo, title and the course on the left, the gear on the right, the green wedge at the foot */
+.l-title .frame,.l-section .frame{padding:0;display:block}
+.logo{position:absolute;left:calc(3.9*var(--u));top:calc(3.4*var(--u));width:calc(24.3*var(--u));height:auto;z-index:2}
+.art{position:absolute;inset:0;overflow:hidden;z-index:0}
+.gear{position:absolute;left:calc(47.65*var(--u));top:calc(-1.9*var(--u));width:calc(53.2*var(--u));height:calc(53.2*var(--u));object-fit:contain}
+.veil{position:absolute;inset:0;z-index:1;background:linear-gradient(to top right,#fff 0%,rgba(255,255,255,.6) 50%,rgba(255,255,255,0) 100%)}
+.wedge{position:absolute;left:calc(50*var(--u));top:calc(34.65*var(--u));width:calc(50*var(--u));height:calc(21.6*var(--u));background:var(--green);z-index:2;
+  clip-path:polygon(100% 0,100% 100%,3.65% 100%,0 52.9%)}
+.tagline{position:absolute;right:calc(4*var(--u));top:calc(15.65*var(--u));z-index:3;font-family:HSGSerif,"Palatino Linotype",Palatino,serif;font-size:calc(1.39*var(--u));color:#fff}
+.tblock{position:absolute;left:calc(9*var(--u));top:calc(12*var(--u));width:calc(44*var(--u));height:calc(19.6*var(--u));z-index:2;display:flex;flex-direction:column;justify-content:flex-end}
+.kicker{font-size:var(--s-kick);line-height:1.2;color:var(--fg);margin-bottom:calc(2.2*var(--u))}
+h1{font-size:var(--s-h1);font-weight:300;line-height:1.08;letter-spacing:-.01em;color:var(--fg);text-wrap:balance}
+.tbody{position:absolute;left:calc(9*var(--u));top:calc(34.2*var(--u));width:calc(40*var(--u));z-index:2;font-size:calc(1.67*var(--u));line-height:1.3;color:var(--fg)}
+.tbody p+p{margin-top:calc(2.2*var(--u))}
+.l-section .tblock{top:calc(14*var(--u));height:calc(20*var(--u));width:calc(70*var(--u))}
+.l-section .wedge{left:calc(62*var(--u));width:calc(38*var(--u));top:calc(40.25*var(--u));height:calc(16*var(--u))}
+
+/* the controls: a pill that floats under the slide, as in the FuSo decks, in HSG green */
+.controls{position:fixed;left:0;right:0;bottom:0;height:var(--ctl);display:grid;place-items:center;z-index:7;pointer-events:none;
+  color:#111;font-family:system-ui,sans-serif;font-size:13px;font-weight:600}
+.pill{pointer-events:auto;display:flex;align-items:center;height:44px;padding:0 6px;border-radius:22px;background:#fff;
+  border:1px solid #ddd;box-shadow:0 4px 18px rgba(0,0,0,.1);transition:opacity .25s,transform .25s}
+.pill>div{display:flex;align-items:center;gap:2px}
+.pill .sep{width:1px;height:20px;background:#ddd;margin:0 8px}
+.controls button{border:0;background:transparent;color:inherit;font:inherit;height:34px;padding:0 12px;border-radius:17px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
+.controls [hidden]{display:none}
+.controls svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.controls button:hover,body.show-notes #notesBtn,body:has(.overview.open) #ovBtn{background:#f0f0f0}
+.controls button:focus-visible{outline:2px solid #00802F;outline-offset:2px}
+.controls .nav button{width:32px;height:32px;padding:0;background:#00802F;color:#fff}
+.controls .nav button:not(:disabled):hover{background:#0A5F2D}
+.controls .nav button:disabled{opacity:.3;cursor:default}
+.nav svg{stroke-width:2.25}
+.count{min-width:60px;text-align:center;font-variant-numeric:tabular-nums}
+:root:not(:fullscreen) .fs-on,:root:fullscreen .fs-off{display:none}
+.progress{position:fixed;left:0;right:0;bottom:0;height:3px;background:#ddd}
+.progress span{display:block;height:100%;width:0;background:#00802F;transition:width .3s}
+:root:fullscreen{--bar:0px}
+:root:fullscreen .progress{bottom:0;background:transparent}
+:root:fullscreen .pill{opacity:0;transform:translateY(10px);pointer-events:none}
+:root:fullscreen body.awake .pill,:root:fullscreen .pill:has(:focus-visible){opacity:1;transform:none;pointer-events:auto}
+:root:fullscreen body:not(.awake){cursor:none}
+
+.overview{position:fixed;inset:0;z-index:10;display:none;overflow:auto;padding:calc(5*var(--u)) calc(5*var(--u)) calc(8*var(--u));background:#fff}
+.overview.open{display:block}
+.overview h2{font-size:calc(3*var(--u))}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(20*var(--u)),1fr));gap:calc(1.4*var(--u));margin-top:calc(3*var(--u))}
+.ov-grid button{all:unset;cursor:pointer;box-sizing:border-box;min-height:calc(10*var(--u));padding:calc(1.6*var(--u));background:#f2f2f2;border-left:calc(.5*var(--u)) solid var(--green);
+  color:#111;font-size:calc(1.25*var(--u));line-height:1.25;display:flex;flex-direction:column;gap:calc(.6*var(--u))}
+.ov-grid button:focus-visible{outline:2px solid currentColor}
+.ov-grid small{font-size:calc(.9*var(--u));color:var(--quiet)}
+.notes-view{position:fixed;left:0;right:0;bottom:var(--bar);z-index:6;display:none;max-height:42%;overflow:auto;padding:calc(2*var(--u)) calc(5*var(--u));
+  background:#f2f2f2;color:#111;border-top:1px solid #ddd;font-size:calc(1.4*var(--u));line-height:1.45;white-space:pre-wrap}
+body.show-notes .notes-view{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+
+/* windows narrower than 1000px: still one slide at a time, but the slide fills the window and its content
+   reflows into one column; a slide taller than the window scrolls within itself */
+@media (max-width:999px),(max-height:480px){
+  :root{--u:8px;--s-h1:34px;--s-h2:25px;--s-kick:17px;--s-body:17px;--s-mid:16px;--s-sub:15px;--s-small:14px;--s-tiny:12px}
+  body{background:#fff}
+  .slide{left:0;top:0;width:100%;height:calc(100% - var(--bar));transform:none;overflow-y:auto}
+  .frame{height:auto;min-height:100%;display:block;padding:30px 20px 70px}
+  .headrow{display:block;min-height:0}
+  .callout{margin:16px 0 0;max-width:none}
+  .lead{margin-top:16px}
+  .main{display:block;padding:22px 0 0}
+  .split,.split.wide,.task,.qbody,.quiz,.gallery,.people,.l-questions .split{grid-template-columns:1fr;gap:24px}
+  .quiz .box,.quiz .box:nth-child(even){justify-self:stretch;max-width:none}
+  .after,.l-questions .after{padding-left:0}
+  .defs{grid-template-columns:1fr;gap:2px}.defs dd{padding-left:22px;margin-bottom:8px}
+  .menu{width:auto;padding:18px}
+  .pic img{max-height:none}
+  .figure img{width:150px}
+  .bulb{width:64px;top:16px;right:16px}
+  .l-study .headrow{padding-right:72px}
+  table.t{font-size:14px}.t th,.t td{padding:6px 7px}
+  .tablewrap{overflow-x:auto}
+  pre.code,pre.code.small{font-size:12px;overflow-x:auto}
+  .stamp{font-size:22px;transform:rotate(-5deg);margin:20px 0}
+  .task .go{position:static;display:block;margin-top:20px}
+  .plan{display:block}.legend{display:flex;gap:8px;margin-bottom:16px}.legend span{flex:1;height:30px;font-size:12px}
+  .rows{grid-template-columns:62px 1fr;row-gap:5px}.rows .date{font-size:10px}.rows .bar{height:26px;font-size:12px;white-space:normal}
+  .assign{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}.assign div{font-size:12px;padding:8px;margin:0}
+  .person img{width:120px;height:148px}
+  .l-quote h2{text-align:left}.attr{text-align:left}
+  .l-title .frame,.l-section .frame{display:flex;flex-direction:column;padding:24px 20px 0}
+  .logo,.tblock,.tbody,.tagline{position:static;width:auto;height:auto}
+  .logo{width:190px;margin-bottom:44px}
+  .tbody{margin:26px 0 30px;font-size:15px}
+  .gear{left:auto;right:-70px;top:-50px;width:210px;height:210px}
+  .l-title .frame,.l-section .frame{overflow:hidden}
+  .wedge{position:static;width:auto;height:auto;clip-path:none;margin:auto -20px 0;padding:26px 20px 18px;display:flex;justify-content:flex-end;
+    clip-path:polygon(100% 0,100% 100%,0 100%,0 40%)}
+  .tagline{font-size:15px}
+  .l-section .wedge{width:auto;height:90px;margin-top:40px}
+  .source,.dfoot{position:static;display:block;margin-top:24px}
+  .pn{position:absolute;top:auto;bottom:16px;right:16px;width:30px;height:33px;font-size:12px}
+  .pill{width:100%;height:100%;padding:3px 10px 0;border-radius:0;border:0;box-shadow:none;justify-content:space-between}
+  .pill .sep{display:none}
+  .tools button{flex-direction:column;gap:3px;height:48px;min-width:56px;padding:0 6px;border-radius:10px;font-size:10.5px}
+  .tools svg{width:20px;height:20px}
+  .controls .nav button{width:38px;height:38px}
+  .progress{bottom:calc(var(--ctl) - 3px)}
+}
+@media print{
+  @page{size:13.333in 7.5in;margin:0}
+  :root{--u:.13333in;--bar:0px}
+  html,body{height:auto}
+  body{overflow:visible;background:#fff}
+  .slide{position:relative;left:auto;top:auto;transform:none;visibility:visible;height:7.5in;width:100%;break-after:page}
+  .controls,.overview,.notes-view{display:none!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<main aria-label="Computing on Bits">
+<section class="slide l-title active" id="s1" data-title="Computing on Bits" aria-label="Slide 1 of 41"><div class="frame"><div class="art"><img class="gear" src="assets/title-gear.png" alt="Word cloud of research topics in the shape of a gear"><div class="veil"></div></div><img class="logo" src="assets/hsg_logo.png" alt="University of St.Gallen"><div class="tblock"><p class="kicker">Computersysteme</p><h1>Computing on Bits</h1></div><div class="tbody"><p>Simon Mayer</p><p>University of St.Gallen<br>Bachelor in Computer Science<br><br>Computersysteme (1,904)</p></div><div class="wedge"><p class="tagline">From insight to impact.</p></div></div></section>
+<section class="slide l-syllabus" id="s2" data-title="Course Syllabus" aria-label="Slide 2 of 41"><div class="frame"><div class="headrow"><div><h2>Course Syllabus</h2></div></div><div class="main"><div class="plan"><div class="legend"><span class="lg-l">Lecture</span><span class="lg-e">Exercise</span><span class="lg-a">Assignment</span></div><div class="rows"><span class="date">16.09.2026</span><div class="bar">Information: Numbers, Bits, Bytes, Encodings</div><span class="date">23.09.2026</span><div class="bar ex">Bare Metal Programming</div><span class="date">30.09.2026</span><div class="bar cur">Computing on Bits: Circuits and Processors</div><span class="date">07.10.2026</span><div class="bar">Assembly Basics</div><span class="date">14.10.2026</span><div class="bar ex">Assembly Reverse-Engineering &amp; Assembly Bombs</div><span class="date">21.10.2026</span><div class="bar">Control Flow</div><span></span><div class="brk" aria-label="Break"></div><span class="date">11.11.2026</span><div class="bar">Memory Basics</div><span class="date">18.11.2026</span><div class="bar">Memory Hierarchy and Caches</div><span class="date">25.11.2026</span><div class="bar ex">Memory Experiments</div><span class="date">02.12.2026</span><div class="bar">Processor Architecture</div><span class="date">09.12.2026</span><div class="bar">Modern Processors</div><span class="date">16.12.2026</span><div class="bar">Multiprocessors, GPUs, Heterogeneous Manycore</div></div><div class="assign" style="grid-template-rows:repeat(13,auto)"><div style="grid-row:2/5">Bare Metal Programming</div><div style="grid-row:5/10">Assembly Reverse-Engineering</div><div style="grid-row:10/13">Memory Experiments</div></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>2</span></section>
+<section class="slide l-table" id="s3" data-title="Our Journey So Far…" aria-label="Slide 3 of 41"><div class="frame"><div class="headrow"><div><h2>Our Journey So Far…</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Step</th><th>Building blocks</th><th>Where</th></tr></thead><tbody><tr><td>Information</td><td>Binary digits + context: numbers, text, pixels and colors, instructions</td><td><a href="https://hyperdecks.github.io/computersystems/01-information/html/" target="_blank" rel="noopener">Lecture 1</a>: done!</td></tr><tr><td>Logic + arithmetic</td><td>School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)</td><td><strong>Today</strong></td></tr><tr><td>Electronics</td><td>Logic gates from electronic components (today: transistors)</td><td><strong>Today</strong></td></tr><tr><td>Calculator</td><td>Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!</td><td><strong>Today</strong></td></tr><tr><td>Processor</td><td>Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!</td><td><a href="https://hyperdecks.github.io/computersystems/03-processors/html/" target="_blank" rel="noopener">Lecture 3</a></td></tr><tr><td>Programs</td><td>Instruction sets, machine code and assembly language</td><td><a href="https://hyperdecks.github.io/computersystems/03-processors/html/" target="_blank" rel="noopener">Lectures 3</a> and <a href="https://hyperdecks.github.io/computersystems/04-assembly/html/" target="_blank" rel="noopener">4</a></td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>3</span></section>
+<section class="slide l-menu" id="s4" data-title="Today&#x27;s Menu" aria-label="Slide 4 of 41"><div class="frame"><div class="headrow"><div><h2>Today&#x27;s Menu</h2></div></div><div class="main"><div class="menu"><p>Information Basics: Numbers, Bits, Bytes, Encodings</p><p class=cur>Computing Basics: Transistors and Circuits</p><p>Processor Basics</p></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>4</span></section>
+<section class="slide l-text" id="s5" data-title="Remember: Bits Are Binary Digits" aria-label="Slide 5 of 41"><div class="frame"><div class="headrow"><div><h2>Remember: Bits Are Binary Digits</h2></div></div><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>Logic: basic representation of the logical values True and False</li><li>Practicality: many easily feasible physical representations (punched card, electrical switch, SSD, fibre optics, …)</li><li>G.W. Leibniz: using binary, arithmetic and logic can be combined!</li></ul></div><figure class="pic shadow"><img src="assets/leibniz.jpg" alt="Painted portrait of Gottfried Wilhelm Leibniz with a long curly wig"></figure></div></div></div><p class="source">Recap of <a href="https://hyperdecks.github.io/computersystems/01-information/html/#/47" target="_blank" rel="noopener">lecture 1</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>5</span></section>
+<section class="slide l-text" id="s6" data-title="Computing on Bits: Transistors" aria-label="Slide 6 of 41"><div class="frame"><div class="headrow"><div><h2>Computing on Bits: Transistors</h2></div><aside class="callout box green">Why is it so useful in a computing context?</aside></div><div class="main"><div class="split"><div class="copy"><p>“Transistors are the key active components in practically all modern electronics. The transistor is thus considered to be one of the greatest inventions of the 20th century.”</p><p>Because it can be used as an <strong>electronic switch</strong>!</p></div><figure class="pic"><img src="assets/transistor-switch.gif" alt="Drawing of a transistor as a water channel: a gate lever opens or closes the flow from source to drain"></figure></div></div></div><p class="source">Price, Robert W. (2004): <a href="https://books.google.com/?id=q7UzNoWdGAkC&amp;pg=PA42&amp;dq=transistor+inventions-of-the-twentieth-century" target="_blank" rel="noopener">Roadmap to Entrepreneurial Success</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>6</span></section>
+<section class="slide l-image" id="s7" data-title="Global Production of Transistors per Capita" aria-label="Slide 7 of 41"><div class="frame"><div class="headrow"><div><h2>Global Production of Transistors per Capita</h2></div></div><div class="main"><figure class="pic big"><img src="assets/transistor-production.png" alt="Bar chart of transistors produced per person per year from 1955 to 2015, rising from 0.001 to 56 billion"><figcaption>~150 billion transistors per second in 2015. Compare this to global car production: ~2 per second!</figcaption></figure></div></div><p class="source"><a href="https://www.darrinqualman.com/global-production-transistors/" target="_blank" rel="noopener">darrinqualman.com/global-production-transistors</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>7</span></section>
+<section class="slide l-image" id="s8" data-title="«Economies of Scale»" aria-label="Slide 8 of 41"><div class="frame"><div class="headrow"><div><h2>«Economies of Scale»</h2></div></div><div class="main"><figure class="pic shadow big"><img src="assets/transistor-economies.jpg" alt="Chart from 1955 to 2014: the price per transistor falls steeply while the number of transistors made per year rises steeply"></figure></div></div><p class="source"><a href="https://spectrum.ieee.org/transistor-production-has-reached-astronomical-scales" target="_blank" rel="noopener">IEEE Spectrum: Transistor production has reached astronomical scales</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>8</span></section>
+<section class="slide l-gallery" id="s9" data-title="Schematics of a Transistor" aria-label="Slide 9 of 41"><div class="frame"><div class="headrow"><div><h2>Schematics of a Transistor</h2></div><aside class="callout box green">This is key! What is it?</aside></div><div class="main"><div class="gallery" style="--n:2"><figure class="pic"><img src="assets/transistor-switch.gif" alt="Drawing of a transistor as a water channel with gate, source and drain"><figcaption>Gate, source, drain</figcaption></figure><figure class="pic"><img src="assets/mosfet.png" alt="Cross-section of a MOSFET with gate on top, source and drain on the sides and the base below"><figcaption>MOSFET: gate, drain, source, base</figcaption></figure></div></div></div><p class="source">Picture: <a href="https://en.wikipedia.org/wiki/Transistor" target="_blank" rel="noopener">Wikipedia: Transistor</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>9</span></section>
+<section class="slide l-image" id="s10" data-title="Now we&#x27;re ready to engineer a computer!" aria-label="Slide 10 of 41"><div class="frame"><div class="headrow"><div><h2>Now we&#x27;re ready to engineer a computer!</h2></div></div><div class="main"><figure class="pic shadow big"><img src="assets/baby-book.png" alt="A children&#x27;s board book titled Computer Engineering for Babies, with a button, two logic gates and a light on the cover"></figure></div></div><p class="source"><a href="https://www.kickstarter.com/projects/babyengineering/computer-engineering-for-babies" target="_blank" rel="noopener">Computer Engineering for Babies</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>10</span></section>
+<section class="slide l-text" id="s11" data-title="Computing on Bits: Boolean Algebra" aria-label="Slide 11 of 41"><div class="frame"><div class="headrow"><div><h2>Computing on Bits: Boolean Algebra</h2></div></div><div class="main"><div class="split wide"><div class="copy"><ul class="dash"><li>George Boole (1815-1864): Boolean algebra</li><li>Charles Sanders Peirce (1839-1914): logic operations using electronic components</li><li>In a letter to A. Marquand (1886), Peirce suggests using electrically operated switches called relays for «and» and «or» operations</li></ul></div><div><pre class="code outline">boolean x = 1;
+boolean y = 0;
+boolean z = 1;
+
+NOT   ~x =&gt; 0       ~y =&gt; 1
+AND   (x &amp; y) =&gt; 0  (x &amp; z) =&gt; 1
+OR    (x | y) =&gt; 1  (y | y) =&gt; 0
+XOR   (x ^ y) =&gt; 1  (x ^ z) =&gt; 0</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>11</span></section>
+<section class="slide l-quote" id="s12" data-title="“(…) it is by no means hopeless (…) to make a machine for really very difficult mathematical problems.”" aria-label="Slide 12 of 41"><div class="frame"><div class="headrow"><div><h2>“(…) it is by no means hopeless (…) to make a machine for really very difficult mathematical problems.”</h2><p class="attr">Charles S. Peirce</p></div></div><div class="qbody"><figure class="pic shadow"><img src="assets/relay.png" alt="A relay with a copper coil on a white table, connected to red test leads"></figure><div><ul class="dash"><li>Back then: relays!</li><li>Today: transistors!</li><li>Good that we&#x27;re not dealing with electromechanics anymore ;-)</li></ul></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>12</span></section>
+<section class="slide l-image" id="s13" data-title="Claude Shannon: Connection of Boolean Algebra and Digital Logic" aria-label="Slide 13 of 41"><div class="frame"><div class="headrow"><div><h2>Claude Shannon: Connection of Boolean Algebra and Digital Logic</h2></div></div><div class="main"><figure class="pic big"><img src="assets/shannon-table.png" alt="Table titled Analogue Between the Calculus of Propositions and the Symbolic Relay Analysis, mapping circuit states to propositions"></figure></div></div><p class="source"><a href="https://www.theatlantic.com/technology/archive/2017/03/aristotle-computer/518697/" target="_blank" rel="noopener">The Atlantic</a> · <a href="https://www.youtube.com/watch?v=kP0zi5lX-Fo" target="_blank" rel="noopener">Claude Shannon at MIT: The best master&#x27;s thesis in history</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>13</span></section>
+<section class="slide l-text" id="s14" data-title="Computing on Bits: Logic Gates" aria-label="Slide 14 of 41"><div class="frame"><div class="headrow"><div><h2>Computing on Bits: Logic Gates</h2></div></div><p class="lead">Example:</p><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>There is a voltage on the output Q only if there is a voltage on both inputs A and B</li><li>Only if both inputs A and B are set to TRUE, the output Q is set to TRUE: that&#x27;s an AND</li></ul></div><figure class="pic"><img src="assets/logic-gates.png" alt="Symbols of six logic gates: OR, AND, XOR, NOR, NAND and NOT, each with inputs A and B and output Q"><figcaption>Symbols for logic gates</figcaption></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>14</span></section>
+<section class="slide l-table" id="s15" data-title="XOR Function: Q = (A XOR B)" aria-label="Slide 15 of 41"><div class="frame"><div class="headrow"><div><h2>XOR Function: Q = (A XOR B)</h2></div><aside class="callout box teal">Exclusive Or: «Either A or B, but not both!»</aside></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Input A</th><th>Input B</th><th>Output Q</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>?</td></tr><tr><td>0</td><td>1</td><td>?</td></tr><tr><td>1</td><td>0</td><td>?</td></tr><tr><td>1</td><td>1</td><td>?</td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>15</span></section>
+<section class="slide l-table" id="s16" data-title="XOR Function: Q = (A XOR B)" aria-label="Slide 16 of 41"><div class="frame"><div class="headrow"><div><h2>XOR Function: Q = (A XOR B)</h2></div><aside class="callout box teal">Exclusive Or: «Either A or B, but not both!»</aside></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Input A</th><th>Input B</th><th>Output Q</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>0</td></tr><tr><td>0</td><td>1</td><td>1</td></tr><tr><td>1</td><td>0</td><td>1</td></tr><tr><td>1</td><td>1</td><td>0</td></tr></tbody></table></div><p class="after" style="padding-left:0">We&#x27;ll need this as well for our computer… ;-)</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>16</span></section>
+<section class="slide l-text" id="s17" data-title="Computing on Bits: NAND" aria-label="Slide 17 of 41"><div class="frame"><div class="headrow"><div><h2>Computing on Bits: NAND</h2></div></div><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>Henry Sheffer (1882-1964): functional completeness of NAND</li><li>All operations over a binary number space can be represented using combinations of NOT-AND («NAND») gates</li><li>Equivalently: all logic operations can be computed with combinations of NAND gates</li><li>Proofs: <a href="https://en.wikipedia.org/wiki/NAND_logic" target="_blank" rel="noopener">Wikipedia: NAND logic</a></li></ul></div><figure class="pic"><img src="assets/nand-gate.png" alt="Symbol of a NAND gate with inputs A and B and output Q"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>17</span></section>
+<section class="slide l-table" id="s18" data-title="If a NAND receives the same input twice, it computes a NOT" aria-label="Slide 18 of 41"><div class="frame"><div class="headrow"><div><h2>If a NAND receives the same input twice, it computes a NOT</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Input A</th><th>Input B</th><th>Output Q</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>1</td></tr><tr><td>0</td><td>1</td><td>1 (does not matter: inputs different!)</td></tr><tr><td>1</td><td>0</td><td>1 (does not matter: inputs different!)</td></tr><tr><td>1</td><td>1</td><td>0</td></tr></tbody></table></div><p class="after" style="padding-left:0">With A = B, only the first and the last row occur: Q = NOT A.</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>18</span></section>
+<section class="slide l-text" id="s19" data-title="How to Build a NAND Gate?" aria-label="Slide 19 of 41"><div class="frame"><div class="headrow"><div><h2>How to Build a NAND Gate?</h2></div></div><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>Two transistors, T1 (input A) and T2 (input B), between the output Q and ground</li><li>A pull-up resistor connects Q to the supply voltage (e.g., 5 volts)</li><li>So we need two transistors to produce a NAND. We produce billions of transistors per second…</li><li>We can compute with lots of NANDs ;-)</li></ul></div><figure class="pic"><img src="assets/nand-transistors.gif" alt="Circuit diagram of a NAND gate: two transistor switches T1 and T2 in series under a resistor to +Vcc, with the truth table beside it"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>19</span></section>
+<section class="slide l-table" id="s20" data-title="It&#x27;s easier to see than you think!" aria-label="Slide 20 of 41"><div class="frame"><div class="headrow"><div><h2>It&#x27;s easier to see than you think!</h2></div></div><div class="main"><div class="tablewrap"><table class="t many"><thead><tr><th>A</th><th>B</th><th>T1</th><th>T2</th><th>Q</th></tr></thead><tbody><tr><td>0</td><td>0</td><td>open</td><td>open</td><td>1: Q is connected to the supply voltage (via the pull-up resistor)</td></tr><tr><td>1</td><td>0</td><td>closed</td><td>open</td><td>1: Q is connected to the supply voltage</td></tr><tr><td>0</td><td>1</td><td>open</td><td>closed</td><td>1: Q is connected to the supply voltage</td></tr><tr><td>1</td><td>1</td><td>closed</td><td>closed</td><td>0: the supply voltage is connected to ground, Q carries no voltage</td></tr></tbody></table></div><p class="after" style="padding-left:0">That&#x27;s the NAND function, Q = (A NAND B): that&#x27;s what we wanted!!</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>20</span></section>
+<section class="slide l-task" id="s21" data-title="Did you do the homework?" aria-label="Slide 21 of 41"><div class="frame"><div class="headrow"><div><h2>Did you do the homework?</h2></div></div><div class="main"><div class="task solo"><p class="stamp">Solve the first five levels of the NAND Game!</p><a class="go" href="https://www.nandgame.com/" target="_blank" rel="noopener">nandgame.com</a></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>21</span></section>
+<section class="slide l-questions" id="s22" data-title="Any Questions / Comments / Doubts / Concerns?" aria-label="Slide 22 of 41"><div class="frame"><div class="headrow"><div><h2>Any Questions / Comments / Doubts / Concerns?</h2></div></div><div class="main"><div class="split"><div><p class="takeh">Take-Home</p><ul class="dash"><li>Through standard encodings, any symbol can be represented as a binary number</li><li>We can (relatively easily and cheaply) create NAND gates</li><li>Combinations of NAND gates can express all logic functions, and thus all functions over a binary number space</li></ul></div><div class="figure"><img src="assets/questions.png" alt="A figure sits thinking on a large green question mark"></div></div><p class="after">Therefore, we have a universal calculator (or, «computer»). At least in principle; we&#x27;ll build it next ;-)</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>22</span></section>
+<section class="slide l-table" id="s23" data-title="Our Journey So Far…" aria-label="Slide 23 of 41"><div class="frame"><div class="headrow"><div><h2>Our Journey So Far…</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Step</th><th>Building blocks</th><th>Where</th></tr></thead><tbody><tr><td>Information</td><td>Binary digits + context: numbers, text, pixels and colors, instructions</td><td><a href="https://hyperdecks.github.io/computersystems/01-information/html/" target="_blank" rel="noopener">Lecture 1</a>: done!</td></tr><tr><td>Logic + arithmetic</td><td>School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)</td><td><strong>Done!</strong></td></tr><tr><td>Electronics</td><td>Logic gates from electronic components (today: transistors)</td><td><strong>Done!</strong></td></tr><tr><td>Calculator</td><td>Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!</td><td><strong>Next</strong></td></tr><tr><td>Processor</td><td>Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!</td><td><a href="https://hyperdecks.github.io/computersystems/03-processors/html/" target="_blank" rel="noopener">Lecture 3</a></td></tr><tr><td>Programs</td><td>Instruction sets, machine code and assembly language</td><td><a href="https://hyperdecks.github.io/computersystems/03-processors/html/" target="_blank" rel="noopener">Lectures 3</a> and <a href="https://hyperdecks.github.io/computersystems/04-assembly/html/" target="_blank" rel="noopener">4</a></td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>23</span></section>
+<section class="slide l-text" id="s24" data-title="Let&#x27;s build a Calculator!" aria-label="Slide 24 of 41"><div class="frame"><div class="headrow"><div><h2>Let&#x27;s build a Calculator!</h2></div><aside class="callout box green">How do we do pen-and-paper additions?</aside></div><div class="main"><div class="split wide"><div class="copy"><p>You already know how to do this; you just need to transfer some knowledge from school.</p><p>As we have seen, in binary, logic and arithmetic are equivalent. So we should be able to do this calculation with a circuit of only NAND gates.</p></div><div><pre class="code outline">    6       6      0b      1b
++   6   +   3   + 1b    + 1b
+-----   -----   ----    ----
+   12       9     1b      0b
+carry 1 carry 0 carry 0 carry 1</pre></div></div><p class="after">And if we can add, we can also multiply, subtract, divide… (<a href="https://hyperdecks.github.io/computersystems/01-information/html/#/19" target="_blank" rel="noopener">remember</a>)</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>24</span></section>
+<section class="slide l-text" id="s25" data-title="Now YOU build a Calculator!" aria-label="Slide 25 of 41"><div class="frame"><div class="headrow"><div><h2>Now YOU build a Calculator!</h2></div><aside class="callout box green">Teams of two: what&#x27;s the meaning of «sum» and «carry» in binary?</aside></div><div class="main dense"><div class="split wide"><div class="copy"><ul class="dash"><li>You have two inputs, A and B, which are both binary digits</li><li>You have two outputs, S(um) and C(arry), which are both binary digits</li><li>If a bit A and a bit B go in, S should hold the sum while C should hold the carry</li><li>Example: A = 1 and B = 1 should yield S = 0 and C = 1</li></ul></div><div><pre class="code outline">   1b
++  1b
+-----
+  10b
+
+The «0» is the sum bit S
+The «1» is the carry bit C</pre></div></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>25</span></section>
+<section class="slide l-quiz" id="s26" data-title="Walkthrough" aria-label="Slide 26 of 41"><div class="frame"><div class="headrow"><div><h2>Walkthrough</h2></div></div><div class="main"><div class="split wide"><div class="quiz n4"><div class="box green">Which value (0/1) does S need to assume if A/B are 0/0, 0/1, 1/0 or 1/1?</div><div class="box green">With which logical expression can you express S = A ?? B?</div><div class="box green">With which logical expression can you express C = A ?? B?</div><div class="box green">Can you draw your calculator using the logic gate symbols?</div></div><figure class="pic"><img src="assets/logic-gates.png" alt="Symbols of six logic gates: OR, AND, XOR, NOR, NAND and NOT"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>26</span></section>
+<section class="slide l-text" id="s27" data-title="A Half-Adder Adds Two Bits" aria-label="Slide 27 of 41"><div class="frame"><div class="headrow"><div><h2>A Half-Adder Adds Two Bits</h2></div></div><div class="main dense"><div class="split"><div class="copy"><ul class="dash"><li>The sum output should be 0 if both inputs are 0. It should also be 0 if an overflow occurs. In other words, it should be 1 if either A or B is 1 (but not both). That&#x27;s an <strong>exclusive OR</strong>!</li><li>The carry output should be 1 if both A and B are 1. That&#x27;s an <strong>AND</strong>!</li></ul></div><figure class="pic"><img src="assets/half-adder.jpg" alt="Circuit of a half-adder: inputs A and B go to an XOR gate with output S and to an AND gate with output C"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>27</span></section>
+<section class="slide l-gallery" id="s28" data-title="From the Half-Adder to the Full Adder" aria-label="Slide 28 of 41"><div class="frame"><div class="headrow"><div><h2>From the Half-Adder to the Full Adder</h2></div></div><div class="main"><div class="gallery" style="--n:3"><figure class="pic"><img src="assets/half-adder-block.jpg" alt="Block diagram of a half-adder with inputs A and B and outputs sum and carry"><figcaption>Half-adder: two bits in, sum and carry out</figcaption></figure><figure class="pic"><img src="assets/full-adder-gates.jpg" alt="Circuit of a full adder from two XOR gates, two AND gates and one OR gate, with inputs A, B and carry-in"><figcaption>Full adder: 2× XOR, 2× AND, 1× OR</figcaption></figure><figure class="pic"><img src="assets/full-adder-block.jpg" alt="Block diagram of a full adder with inputs A, B and carry-in and outputs sum and carry-out"><figcaption>Full adder: also takes the carry-in</figcaption></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>28</span></section>
+<section class="slide l-text" id="s29" data-title="Let&#x27;s build a larger Adder" aria-label="Slide 29 of 41"><div class="frame"><div class="headrow"><div><h2>Let&#x27;s build a larger Adder</h2></div></div><div class="main"><div class="split"><div class="copy"><dl class="defs"><dt>First 4-bit number</dt><dd>A0 … A3</dd><dt>Second 4-bit number</dt><dd>B0 … B3</dd><dt>Result</dt><dd>S0 … S3</dd><dt>Carry-out</dt><dd>C4</dd></dl></div><figure class="pic"><img src="assets/4bit-adder.jpg" alt="A 4-bit adder: one half-adder and three full adders in a row, with the carry passed from right to left"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>29</span></section>
+<section class="slide l-gallery" id="s30" data-title="A 4-Bit Adder in One Chip" aria-label="Slide 30 of 41"><div class="frame"><div class="headrow"><div><h2>A 4-Bit Adder in One Chip</h2></div></div><div class="main"><div class="gallery" style="--n:2"><figure class="pic"><img src="assets/74ls83.gif" alt="Block diagram of the 74LS83 4-bit full adder with inputs A3 to A0, B3 to B0 and carry-in, outputs S3 to S0 and carry-out"><figcaption>The 74LS83 4-bit full adder</figcaption></figure><figure class="pic"><img src="assets/74ls83-chip.jpg" alt="A black integrated circuit chip with 16 pins"><figcaption><a href="https://www.jameco.com/z/74LS83-Major-Brands-4-Bit-Binary-Full-Adder-DIP-16_48063.html" target="_blank" rel="noopener">The chip</a></figcaption></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>30</span></section>
+<section class="slide l-quiz" id="s31" data-title="Test yourselves: 0110b + 0010b" aria-label="Slide 31 of 41"><div class="frame"><div class="headrow"><div><h2>Test yourselves: 0110b + 0010b</h2></div></div><p class="lead">A = 0010<sub>2</sub> and B = 0110<sub>2</sub></p><div class="main"><div class="split wide"><div class="quiz n2"><div class="box green">What are C1, C2, C3 and C4?</div><div class="box green">What are S0, S1, S2 and S3?</div></div><figure class="pic"><img src="assets/4bit-adder.jpg" alt="A 4-bit adder: one half-adder and three full adders in a row"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>31</span><template class="notes">C1 = 0, C2 = 1, C3 = 1, C4 = 0; S0 = 0, S1 = 0, S2 = 0, S3 = 1. So 0010 + 0110 = 1000 (2 + 6 = 8).</template></section>
+<section class="slide l-gallery" id="s32" data-title="Do it yourself!" aria-label="Slide 32 of 41"><div class="frame"><div class="headrow"><div><h2>Do it yourself!</h2></div></div><div class="main"><div class="gallery" style="--n:2"><figure class="pic shadow"><img src="assets/transistor-board.jpg" alt="A green circuit board with many single transistors, wires and a 9-volt battery"><figcaption>A circuit board built from single transistors</figcaption></figure><figure class="pic shadow"><img src="assets/raspberry-pi.jpg" alt="A Raspberry Pi single-board computer"><figcaption>1&#x27;000&#x27;000&#x27;000× more transistors</figcaption></figure></div><p class="after" style="padding-left:0"><a href="https://www.jameco.com/z/2N3904BU-Major-Brands-Transistor-2N3904-NPN-General-Purpose-bulk-_38359.html" target="_blank" rel="noopener">Buy transistors</a>, build a <a href="https://www.youtube.com/watch?v=xISG4nGTQYE" target="_blank" rel="noopener">simple 4-bit computer</a> (video from 4:30), or start with <a href="https://eater.net/8bit" target="_blank" rel="noopener">these kits</a>.</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>32</span></section>
+<section class="slide l-text" id="s33" data-title="Let&#x27;s build a LARGER Adder" aria-label="Slide 33 of 41"><div class="frame"><div class="headrow"><div><h2>Let&#x27;s build a LARGER Adder</h2></div><aside class="callout box green">What&#x27;s the physical size of this circuit (i.e., in cm)?</aside></div><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>1× 8-bit adder = 8× 1-bit adders that are connected properly</li><li>2× XOR + 2× AND + 1× OR per full adder: 40 gates in total, about 80 transistors in total</li><li>Inputs a0 … a7 and b0 … b7, result s0 … s7, and a carry-out</li></ul></div><figure class="pic"><img src="assets/8bit-adder.png" alt="An 8-bit adder: eight full adder blocks in a row with the carry chained through"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>33</span></section>
+<section class="slide l-gallery" id="s34" data-title="Thank you, Moore!" aria-label="Slide 34 of 41"><div class="frame"><div class="headrow"><div><h2>Thank you, Moore!</h2></div></div><div class="main"><div class="gallery" style="--n:3"><figure class="pic shadow"><img src="assets/hair-sem.jpg" alt="Electron microscope image of a human hair with a small box marked on its surface"><figcaption><a href="https://www.latenightim.com/internet-marketing-electrons-and-the-meaning-of-life/" target="_blank" rel="noopener">A human hair</a></figcaption></figure><figure class="pic shadow"><img src="assets/hair-transistor.jpg" alt="Electron microscope close-up of the marked area with a tiny transistor structure"><figcaption>Zoomed in: a transistor</figcaption></figure><figure class="pic shadow"><img src="assets/blood-cell.png" alt="Illustration: a red blood cell of 0.008 mm beside a transistor of 0.00009 mm"><figcaption><a href="https://cogentlegal.com/2013/11/understand-spatial-relationships/" target="_blank" rel="noopener">Red blood cell and transistor</a></figcaption></figure></div><p class="after" style="padding-left:0">In 2026, leading-edge manufacturing (TSMC N2, Intel 18A) places transistors at a pitch of ~23-45 nm. That&#x27;s roughly 1/2000th of a human hair.</p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>34</span></section>
+<section class="slide l-text" id="s35" data-title="How large is our 8-bit adder?" aria-label="Slide 35 of 41"><div class="frame"><div class="headrow"><div><h2>How large is our 8-bit adder?</h2></div></div><p class="lead">About 80 transistors at about 25 nm each:</p><div class="main"><div class="split"><div class="copy"><ul class="dash"><li>2000 nm if chained in a straight line (+ wiring)</li><li>225 nm × 225 nm if arranged in a 2D grid («rectangle»)</li><li>125 nm × 125 nm × 125 nm if arranged in a 3D grid («cube»)</li></ul></div><figure class="pic"><img src="assets/8bit-adder.png" alt="An 8-bit adder: eight full adder blocks in a row"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>35</span></section>
+<section class="slide l-gallery" id="s36" data-title="Thank you, Moore!" aria-label="Slide 36 of 41"><div class="frame"><div class="headrow"><div><h2>Thank you, Moore!</h2></div></div><div class="main"><div class="gallery" style="--n:3"><figure class="pic"><img src="assets/nand-transistors.gif" alt="Circuit diagram of a NAND gate built from two transistors"><figcaption>A transistor: ~25 nm</figcaption></figure><figure class="pic"><img src="assets/8bit-adder.png" alt="An 8-bit adder: eight full adder blocks in a row"><figcaption>Our 8-bit adder circuit: a cube of ~125 nm</figcaption></figure><figure class="pic"><img src="assets/virus.png" alt="Illustration of a coronavirus particle with spikes"><figcaption>A virus: ~100 nm</figcaption></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>36</span></section>
+<section class="slide l-image" id="s37" data-title="Another Adder…" aria-label="Slide 37 of 41"><div class="frame"><div class="headrow"><div><h2>Another Adder…</h2></div></div><div class="main"><figure class="pic shadow big"><img src="assets/knex-computer.png" alt="News article from heise online: a YouTuber builds a mechanical 8-bit computer from K&#x27;nex, with a photo of the colorful machine"></figure></div></div><p class="source"><a href="https://m.youtube.com/watch?v=Fxv3JoS1uY8" target="_blank" rel="noopener">Video</a> · <a href="https://www.heise.de/news/Youtuber-baut-mechanischen-8-Bit-Computer-aus-K-nex-10495869.html" target="_blank" rel="noopener">heise online</a></p><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>37</span></section>
+<section class="slide l-image" id="s38" data-title="Aaand Another Adder" aria-label="Slide 38 of 41"><div class="frame"><div class="headrow"><div><h2>Aaand Another Adder</h2></div></div><div class="main"><figure class="pic shadow big"><img src="assets/minecart-adder.png" alt="Video still: minecarts on rails in a block-built adding machine"><figcaption>We&#x27;ve talked about electromechanical (relays) and electronic adders (transistors). Here&#x27;s a mechanical adder that uses just a small gravity trick ;-) (<a href="https://www.youtube.com/watch?time_continue=160&amp;v=mrLxnY8Gtfw" target="_blank" rel="noopener">video</a>, from 0:18). And remember the <a href="https://hyperdecks.github.io/computersystems/01-information/html/#/40" target="_blank" rel="noopener">mechanical computers of the first lecture</a>!</figcaption></figure></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>38</span></section>
+<section class="slide l-table" id="s39" data-title="Our Journey So Far…" aria-label="Slide 39 of 41"><div class="frame"><div class="headrow"><div><h2>Our Journey So Far…</h2></div></div><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Step</th><th>Building blocks</th><th>Where</th></tr></thead><tbody><tr><td>Information</td><td>Binary digits + context: numbers, text, pixels and colors, instructions</td><td><a href="https://hyperdecks.github.io/computersystems/01-information/html/" target="_blank" rel="noopener">Lecture 1</a>: done!</td></tr><tr><td>Logic + arithmetic</td><td>School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)</td><td><strong>Done!</strong></td></tr><tr><td>Electronics</td><td>Logic gates from electronic components (today: transistors)</td><td><strong>Done!</strong></td></tr><tr><td>Calculator</td><td>Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!</td><td><strong>Done!</strong></td></tr><tr><td>Processor</td><td>Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!</td><td><a href="https://hyperdecks.github.io/computersystems/03-processors/html/" target="_blank" rel="noopener">Lecture 3</a></td></tr><tr><td>Programs</td><td>Instruction sets, machine code and assembly language</td><td><a href="https://hyperdecks.github.io/computersystems/03-processors/html/" target="_blank" rel="noopener">Lectures 3</a> and <a href="https://hyperdecks.github.io/computersystems/04-assembly/html/" target="_blank" rel="noopener">4</a></td></tr></tbody></table></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>39</span></section>
+<section class="slide l-questions" id="s40" data-title="Any Questions / Comments / Doubts / Concerns?" aria-label="Slide 40 of 41"><div class="frame"><div class="headrow"><div><h2>Any Questions / Comments / Doubts / Concerns?</h2></div></div><div class="main"><div class="split"><div><p class="takeh">Take-Home</p><ul class="dash"><li>Through (smart) combinations of logic gates, we can build adding circuits, and you did this!</li><li>Through (smart) combinations of logic gates, we can also build subtractors, multipliers, etc.</li><li>These can be produced in mass quantities and at extremely low prices and sizes</li></ul></div><div class="figure"><img src="assets/questions.png" alt="A figure sits thinking on a large green question mark"></div></div><p class="after">Next: <a href="https://hyperdecks.github.io/computersystems/03-processors/html/" target="_blank" rel="noopener">Processors and Assembly</a></p></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>40</span></section>
+<section class="slide l-study" id="s41" data-title="How to Study this Material?" aria-label="Slide 41 of 41"><div class="frame"><img class="bulb" src="assets/lightbulb.jpg" alt="Drawing of a lit light bulb"><div class="headrow"><div><h2>How to Study this Material?</h2></div></div><div class="main"><div class="split"><div class="copy"><div class="groups"><div class="group"><h3>Basic Depth</h3><ul class="dash"><li>Play nandgame.com, and understand it! (I&#x27;m serious)</li><li>Read up on circuits and <a href="https://en.wikipedia.org/wiki/Logic_gate" target="_blank" rel="noopener">logic gates</a>, and understand <a href="https://en.wikipedia.org/wiki/Adder_%28electronics%29" target="_blank" rel="noopener">adder circuits</a></li><li>Keep internalizing number representations, especially hexadecimal (<a href="https://hyperdecks.github.io/computersystems/01-information/html/#/52" target="_blank" rel="noopener">lecture 1</a>)</li><li>Get prepared for the exercise session</li></ul></div><div class="group"><h3>Advanced Depth</h3><ul class="dash"><li>Play more levels on <a href="https://www.nandgame.com/" target="_blank" rel="noopener">nandgame.com</a></li></ul></div></div></div><figure class="pic"><img src="assets/nandgame-levels.png" alt="The level list of the NAND Game: logic gates, arithmetics, switching, arithmetic logic unit, memory and processor"></figure></div></div></div><p class="dfoot">Computersysteme | Institute of Computer Science | University of St.Gallen</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>41</span></section>
+</main>
+<div class="controls" role="navigation" aria-label="Presentation controls"><div class="pill"><div class="nav"><button id="prev" title="Previous slide (←)" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="count" id="count">1 / 41</span><button id="next" title="Next slide (→)" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div><i class="sep"></i><div class="tools"><button id="ovBtn" title="All slides (O)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Overview</button><button id="notesBtn" title="Speaker notes (N)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M8 9h8M8 12.5h8M8 16h4"/></svg>Notes</button><button id="fsBtn" title="Full screen (F)"><svg class="fs-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="fs-off">Full screen</span><svg class="fs-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg><span class="fs-on">Exit</span></button></div></div><div class="progress" aria-label="Slide progress"><span id="progress"></span></div></div>
+<div class="overview" id="overview" role="dialog" aria-label="Slide overview"><h2>Computing on Bits</h2><div class="ov-grid"></div></div>
+<div class="notes-view" id="notesView" aria-label="Speaker notes"></div>
+<script>
+(()=>{const slides=[...document.querySelectorAll('.slide')],root=document.documentElement,body=document.body,
+ ov=document.getElementById('overview'),nv=document.getElementById('notesView');
+const by=id=>document.getElementById(id);
+let cur=0;const m=location.hash.match(/(\d+)$/);if(m&&+m[1]>=1&&+m[1]<=slides.length)cur=+m[1]-1;
+function go(n){cur=Math.max(0,Math.min(slides.length-1,n));
+ slides.forEach((s,i)=>{s.classList.toggle('active',i===cur);s.setAttribute('aria-hidden',i!==cur)});
+ slides[cur].scrollTop=0;
+ by('count').textContent=(cur+1)+' / '+slides.length;by('prev').disabled=cur===0;by('next').disabled=cur===slides.length-1;
+ by('progress').style.width=((cur+1)/slides.length*100)+'%';
+ const t=slides[cur].querySelector('.notes');nv.textContent=t?t.textContent:'';
+ history.replaceState(null,'','#/'+(cur+1));ov.classList.remove('open');
+}
+by('prev').onclick=()=>go(cur-1);by('next').onclick=()=>go(cur+1);
+by('ovBtn').onclick=()=>ov.classList.toggle('open');
+const notes=()=>body.classList.toggle('show-notes');if(by('notesBtn'))by('notesBtn').onclick=notes;
+if(!document.fullscreenEnabled)by('fsBtn').hidden=true;
+let idle;const pill=document.querySelector('.pill'),wake=()=>{body.classList.add('awake');clearTimeout(idle);
+ idle=setTimeout(()=>{if(!pill.matches(':hover'))body.classList.remove('awake')},2500)};
+['mousemove','touchstart'].forEach(t=>document.addEventListener(t,wake,{passive:true}));
+by('fsBtn').onclick=()=>document.fullscreenElement?document.exitFullscreen():root.requestFullscreen();
+const grid=ov.querySelector('.ov-grid');
+slides.forEach((s,i)=>{const b=document.createElement('button'),sm=document.createElement('small');
+ sm.textContent=(i+1)+(s.dataset.time?'  ·  '+s.dataset.time:'');b.append(sm,s.dataset.title);b.onclick=()=>go(i);grid.append(b)});
+document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey)return;
+ const inCtl=e.target instanceof Element&&e.target.closest('a,button');const k=e.key;
+ if(['ArrowRight','PageDown'].includes(k)||(k===' '&&!inCtl)){e.preventDefault();go(cur+1)}
+ else if(['ArrowLeft','PageUp'].includes(k)){e.preventDefault();go(cur-1)}
+ else if(k==='Home')go(0);else if(k==='End')go(slides.length-1);
+ else if(k==='o'||k==='O')ov.classList.toggle('open');else if(k==='Escape')ov.classList.remove('open');
+ else if(k==='f'||k==='F')by('fsBtn').click();else if(k==='n'||k==='N')notes()});
+let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;x0=null;
+ if(Math.abs(d)>60)go(cur+(d<0?1:-1))},{passive:true});
+window.hsgDeck={go,count:slides.length};go(cur)})();
+</script>
+</body>
+</html>

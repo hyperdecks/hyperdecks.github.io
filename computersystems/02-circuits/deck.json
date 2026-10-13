@@ -1,0 +1,837 @@
+{
+ "title": "Computing on Bits",
+ "lang": "en",
+ "footer": "Computersysteme | Institute of Computer Science | University of St.Gallen",
+ "slides": [
+  {
+   "layout": "title",
+   "kicker": "Computersysteme",
+   "title": "Computing on Bits",
+   "presenters": [
+    "Simon Mayer"
+   ],
+   "meta": [
+    "University of St.Gallen",
+    "Bachelor in Computer Science",
+    "",
+    "Computersysteme (1,904)"
+   ]
+  },
+  {
+   "layout": "syllabus",
+   "title": "Course Syllabus",
+   "items": [
+    {
+     "date": "16.09.2026",
+     "title": "Information: Numbers, Bits, Bytes, Encodings"
+    },
+    {
+     "date": "23.09.2026",
+     "title": "Bare Metal Programming",
+     "kind": "exercise"
+    },
+    {
+     "date": "30.09.2026",
+     "title": "Computing on Bits: Circuits and Processors"
+    },
+    {
+     "date": "07.10.2026",
+     "title": "Assembly Basics"
+    },
+    {
+     "date": "14.10.2026",
+     "title": "Assembly Reverse-Engineering & Assembly Bombs",
+     "kind": "exercise"
+    },
+    {
+     "date": "21.10.2026",
+     "title": "Control Flow"
+    },
+    {
+     "date": "11.11.2026",
+     "title": "Memory Basics"
+    },
+    {
+     "date": "18.11.2026",
+     "title": "Memory Hierarchy and Caches"
+    },
+    {
+     "date": "25.11.2026",
+     "title": "Memory Experiments",
+     "kind": "exercise"
+    },
+    {
+     "date": "02.12.2026",
+     "title": "Processor Architecture"
+    },
+    {
+     "date": "09.12.2026",
+     "title": "Modern Processors"
+    },
+    {
+     "date": "16.12.2026",
+     "title": "Multiprocessors, GPUs, Heterogeneous Manycore"
+    }
+   ],
+   "current": 3,
+   "break_after": 6,
+   "assignments": [
+    {
+     "title": "Bare Metal Programming",
+     "from": 2,
+     "to": 4
+    },
+    {
+     "title": "Assembly Reverse-Engineering",
+     "from": 5,
+     "to": 8
+    },
+    {
+     "title": "Memory Experiments",
+     "from": 9,
+     "to": 11
+    }
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "Our Journey So Far…",
+   "columns": [
+    "Step",
+    "Building blocks",
+    "Where"
+   ],
+   "rows": [
+    [
+     "Information",
+     "Binary digits + context: numbers, text, pixels and colors, instructions",
+     "[Lecture 1](https://hyperdecks.github.io/computersystems/01-information/html/): done!"
+    ],
+    [
+     "Logic + arithmetic",
+     "School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)",
+     "**Today**"
+    ],
+    [
+     "Electronics",
+     "Logic gates from electronic components (today: transistors)",
+     "**Today**"
+    ],
+    [
+     "Calculator",
+     "Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!",
+     "**Today**"
+    ],
+    [
+     "Processor",
+     "Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!",
+     "[Lecture 3](https://hyperdecks.github.io/computersystems/03-processors/html/)"
+    ],
+    [
+     "Programs",
+     "Instruction sets, machine code and assembly language",
+     "[Lectures 3](https://hyperdecks.github.io/computersystems/03-processors/html/) and [4](https://hyperdecks.github.io/computersystems/04-assembly/html/)"
+    ]
+   ]
+  },
+  {
+   "layout": "menu",
+   "title": "Today's Menu",
+   "items": [
+    "Information Basics: Numbers, Bits, Bytes, Encodings",
+    "Computing Basics: Transistors and Circuits",
+    "Processor Basics"
+   ],
+   "current": 2
+  },
+  {
+   "layout": "text",
+   "title": "Remember: Bits Are Binary Digits",
+   "points": [
+    "Logic: basic representation of the logical values True and False",
+    "Practicality: many easily feasible physical representations (punched card, electrical switch, SSD, fibre optics, …)",
+    "G.W. Leibniz: using binary, arithmetic and logic can be combined!"
+   ],
+   "aside": {
+    "image": "img/leibniz.jpg",
+    "alt": "Painted portrait of Gottfried Wilhelm Leibniz with a long curly wig"
+   },
+   "source": "Recap of [lecture 1](https://hyperdecks.github.io/computersystems/01-information/html/#/47)"
+  },
+  {
+   "layout": "text",
+   "title": "Computing on Bits: Transistors",
+   "callout": {
+    "text": "Why is it so useful in a computing context?"
+   },
+   "paragraphs": [
+    "“Transistors are the key active components in practically all modern electronics. The transistor is thus considered to be one of the greatest inventions of the 20th century.”",
+    "Because it can be used as an **electronic switch**!"
+   ],
+   "aside": {
+    "image": "img/transistor-switch.gif",
+    "alt": "Drawing of a transistor as a water channel: a gate lever opens or closes the flow from source to drain",
+    "shadow": false
+   },
+   "source": "Price, Robert W. (2004): [Roadmap to Entrepreneurial Success](https://books.google.com/?id=q7UzNoWdGAkC&pg=PA42&dq=transistor+inventions-of-the-twentieth-century)"
+  },
+  {
+   "layout": "image",
+   "title": "Global Production of Transistors per Capita",
+   "image": "img/transistor-production.png",
+   "alt": "Bar chart of transistors produced per person per year from 1955 to 2015, rising from 0.001 to 56 billion",
+   "shadow": false,
+   "caption": "~150 billion transistors per second in 2015. Compare this to global car production: ~2 per second!",
+   "source": "[darrinqualman.com/global-production-transistors](https://www.darrinqualman.com/global-production-transistors/)"
+  },
+  {
+   "layout": "image",
+   "title": "«Economies of Scale»",
+   "image": "img/transistor-economies.jpg",
+   "alt": "Chart from 1955 to 2014: the price per transistor falls steeply while the number of transistors made per year rises steeply",
+   "source": "[IEEE Spectrum: Transistor production has reached astronomical scales](https://spectrum.ieee.org/transistor-production-has-reached-astronomical-scales)"
+  },
+  {
+   "layout": "gallery",
+   "title": "Schematics of a Transistor",
+   "callout": {
+    "text": "This is key! What is it?"
+   },
+   "items": [
+    {
+     "image": "img/transistor-switch.gif",
+     "alt": "Drawing of a transistor as a water channel with gate, source and drain",
+     "caption": "Gate, source, drain",
+     "shadow": false
+    },
+    {
+     "image": "img/mosfet.png",
+     "alt": "Cross-section of a MOSFET with gate on top, source and drain on the sides and the base below",
+     "caption": "MOSFET: gate, drain, source, base",
+     "shadow": false
+    }
+   ],
+   "source": "Picture: [Wikipedia: Transistor](https://en.wikipedia.org/wiki/Transistor)"
+  },
+  {
+   "layout": "image",
+   "title": "Now we're ready to engineer a computer!",
+   "image": "img/baby-book.png",
+   "alt": "A children's board book titled Computer Engineering for Babies, with a button, two logic gates and a light on the cover",
+   "source": "[Computer Engineering for Babies](https://www.kickstarter.com/projects/babyengineering/computer-engineering-for-babies)"
+  },
+  {
+   "layout": "text",
+   "title": "Computing on Bits: Boolean Algebra",
+   "points": [
+    "George Boole (1815-1864): Boolean algebra",
+    "Charles Sanders Peirce (1839-1914): logic operations using electronic components",
+    "In a letter to A. Marquand (1886), Peirce suggests using electrically operated switches called relays for «and» and «or» operations"
+   ],
+   "aside": {
+    "code": "boolean x = 1;\nboolean y = 0;\nboolean z = 1;\n\nNOT   ~x => 0       ~y => 1\nAND   (x & y) => 0  (x & z) => 1\nOR    (x | y) => 1  (y | y) => 0\nXOR   (x ^ y) => 1  (x ^ z) => 0"
+   }
+  },
+  {
+   "layout": "quote",
+   "title": "“(…) it is by no means hopeless (…) to make a machine for really very difficult mathematical problems.”",
+   "attribution": "Charles S. Peirce",
+   "picture": {
+    "image": "img/relay.png",
+    "alt": "A relay with a copper coil on a white table, connected to red test leads"
+   },
+   "points": [
+    "Back then: relays!",
+    "Today: transistors!",
+    "Good that we're not dealing with electromechanics anymore ;-)"
+   ]
+  },
+  {
+   "layout": "image",
+   "title": "Claude Shannon: Connection of Boolean Algebra and Digital Logic",
+   "image": "img/shannon-table.png",
+   "alt": "Table titled Analogue Between the Calculus of Propositions and the Symbolic Relay Analysis, mapping circuit states to propositions",
+   "shadow": false,
+   "source": "[The Atlantic](https://www.theatlantic.com/technology/archive/2017/03/aristotle-computer/518697/) · [Claude Shannon at MIT: The best master's thesis in history](https://www.youtube.com/watch?v=kP0zi5lX-Fo)"
+  },
+  {
+   "layout": "text",
+   "title": "Computing on Bits: Logic Gates",
+   "lead": "Example:",
+   "points": [
+    "There is a voltage on the output Q only if there is a voltage on both inputs A and B",
+    "Only if both inputs A and B are set to TRUE, the output Q is set to TRUE: that's an AND"
+   ],
+   "aside": {
+    "image": "img/logic-gates.png",
+    "alt": "Symbols of six logic gates: OR, AND, XOR, NOR, NAND and NOT, each with inputs A and B and output Q",
+    "caption": "Symbols for logic gates",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "table",
+   "title": "XOR Function: Q = (A XOR B)",
+   "callout": {
+    "text": "Exclusive Or: «Either A or B, but not both!»",
+    "style": "teal"
+   },
+   "columns": [
+    "Input A",
+    "Input B",
+    "Output Q"
+   ],
+   "rows": [
+    [
+     "0",
+     "0",
+     "?"
+    ],
+    [
+     "0",
+     "1",
+     "?"
+    ],
+    [
+     "1",
+     "0",
+     "?"
+    ],
+    [
+     "1",
+     "1",
+     "?"
+    ]
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "XOR Function: Q = (A XOR B)",
+   "callout": {
+    "text": "Exclusive Or: «Either A or B, but not both!»",
+    "style": "teal"
+   },
+   "columns": [
+    "Input A",
+    "Input B",
+    "Output Q"
+   ],
+   "rows": [
+    [
+     "0",
+     "0",
+     "0"
+    ],
+    [
+     "0",
+     "1",
+     "1"
+    ],
+    [
+     "1",
+     "0",
+     "1"
+    ],
+    [
+     "1",
+     "1",
+     "0"
+    ]
+   ],
+   "after": "We'll need this as well for our computer… ;-)"
+  },
+  {
+   "layout": "text",
+   "title": "Computing on Bits: NAND",
+   "points": [
+    "Henry Sheffer (1882-1964): functional completeness of NAND",
+    "All operations over a binary number space can be represented using combinations of NOT-AND («NAND») gates",
+    "Equivalently: all logic operations can be computed with combinations of NAND gates",
+    "Proofs: [Wikipedia: NAND logic](https://en.wikipedia.org/wiki/NAND_logic)"
+   ],
+   "aside": {
+    "image": "img/nand-gate.png",
+    "alt": "Symbol of a NAND gate with inputs A and B and output Q",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "table",
+   "title": "If a NAND receives the same input twice, it computes a NOT",
+   "columns": [
+    "Input A",
+    "Input B",
+    "Output Q"
+   ],
+   "rows": [
+    [
+     "0",
+     "0",
+     "1"
+    ],
+    [
+     "0",
+     "1",
+     "1 (does not matter: inputs different!)"
+    ],
+    [
+     "1",
+     "0",
+     "1 (does not matter: inputs different!)"
+    ],
+    [
+     "1",
+     "1",
+     "0"
+    ]
+   ],
+   "after": "With A = B, only the first and the last row occur: Q = NOT A."
+  },
+  {
+   "layout": "text",
+   "title": "How to Build a NAND Gate?",
+   "points": [
+    "Two transistors, T1 (input A) and T2 (input B), between the output Q and ground",
+    "A pull-up resistor connects Q to the supply voltage (e.g., 5 volts)",
+    "So we need two transistors to produce a NAND. We produce billions of transistors per second…",
+    "We can compute with lots of NANDs ;-)"
+   ],
+   "aside": {
+    "image": "img/nand-transistors.gif",
+    "alt": "Circuit diagram of a NAND gate: two transistor switches T1 and T2 in series under a resistor to +Vcc, with the truth table beside it",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "table",
+   "title": "It's easier to see than you think!",
+   "columns": [
+    "A",
+    "B",
+    "T1",
+    "T2",
+    "Q"
+   ],
+   "rows": [
+    [
+     "0",
+     "0",
+     "open",
+     "open",
+     "1: Q is connected to the supply voltage (via the pull-up resistor)"
+    ],
+    [
+     "1",
+     "0",
+     "closed",
+     "open",
+     "1: Q is connected to the supply voltage"
+    ],
+    [
+     "0",
+     "1",
+     "open",
+     "closed",
+     "1: Q is connected to the supply voltage"
+    ],
+    [
+     "1",
+     "1",
+     "closed",
+     "closed",
+     "0: the supply voltage is connected to ground, Q carries no voltage"
+    ]
+   ],
+   "after": "That's the NAND function, Q = (A NAND B): that's what we wanted!!"
+  },
+  {
+   "layout": "task",
+   "title": "Did you do the homework?",
+   "stamp": "Solve the first five levels of the NAND Game!",
+   "url": "https://www.nandgame.com/",
+   "label": "nandgame.com"
+  },
+  {
+   "layout": "questions",
+   "title": "Any Questions / Comments / Doubts / Concerns?",
+   "heading": "Take-Home",
+   "points": [
+    "Through standard encodings, any symbol can be represented as a binary number",
+    "We can (relatively easily and cheaply) create NAND gates",
+    "Combinations of NAND gates can express all logic functions, and thus all functions over a binary number space"
+   ],
+   "after": "Therefore, we have a universal calculator (or, «computer»). At least in principle; we'll build it next ;-)"
+  },
+  {
+   "layout": "table",
+   "title": "Our Journey So Far…",
+   "columns": [
+    "Step",
+    "Building blocks",
+    "Where"
+   ],
+   "rows": [
+    [
+     "Information",
+     "Binary digits + context: numbers, text, pixels and colors, instructions",
+     "[Lecture 1](https://hyperdecks.github.io/computersystems/01-information/html/): done!"
+    ],
+    [
+     "Logic + arithmetic",
+     "School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)",
+     "**Done!**"
+    ],
+    [
+     "Electronics",
+     "Logic gates from electronic components (today: transistors)",
+     "**Done!**"
+    ],
+    [
+     "Calculator",
+     "Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!",
+     "**Next**"
+    ],
+    [
+     "Processor",
+     "Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!",
+     "[Lecture 3](https://hyperdecks.github.io/computersystems/03-processors/html/)"
+    ],
+    [
+     "Programs",
+     "Instruction sets, machine code and assembly language",
+     "[Lectures 3](https://hyperdecks.github.io/computersystems/03-processors/html/) and [4](https://hyperdecks.github.io/computersystems/04-assembly/html/)"
+    ]
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Let's build a Calculator!",
+   "callout": {
+    "text": "How do we do pen-and-paper additions?"
+   },
+   "paragraphs": [
+    "You already know how to do this; you just need to transfer some knowledge from school.",
+    "As we have seen, in binary, logic and arithmetic are equivalent. So we should be able to do this calculation with a circuit of only NAND gates."
+   ],
+   "aside": {
+    "code": "    6       6      0b      1b\n+   6   +   3   + 1b    + 1b\n-----   -----   ----    ----\n   12       9     1b      0b\ncarry 1 carry 0 carry 0 carry 1"
+   },
+   "after": "And if we can add, we can also multiply, subtract, divide… ([remember](https://hyperdecks.github.io/computersystems/01-information/html/#/19))"
+  },
+  {
+   "layout": "text",
+   "title": "Now YOU build a Calculator!",
+   "callout": {
+    "text": "Teams of two: what's the meaning of «sum» and «carry» in binary?"
+   },
+   "points": [
+    "You have two inputs, A and B, which are both binary digits",
+    "You have two outputs, S(um) and C(arry), which are both binary digits",
+    "If a bit A and a bit B go in, S should hold the sum while C should hold the carry",
+    "Example: A = 1 and B = 1 should yield S = 0 and C = 1"
+   ],
+   "aside": {
+    "code": "   1b\n+  1b\n-----\n  10b\n\nThe «0» is the sum bit S\nThe «1» is the carry bit C"
+   }
+  },
+  {
+   "layout": "quiz",
+   "title": "Walkthrough",
+   "items": [
+    "Which value (0/1) does S need to assume if A/B are 0/0, 0/1, 1/0 or 1/1?",
+    "With which logical expression can you express S = A ?? B?",
+    "With which logical expression can you express C = A ?? B?",
+    "Can you draw your calculator using the logic gate symbols?"
+   ],
+   "aside": {
+    "image": "img/logic-gates.png",
+    "alt": "Symbols of six logic gates: OR, AND, XOR, NOR, NAND and NOT",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "text",
+   "title": "A Half-Adder Adds Two Bits",
+   "points": [
+    "The sum output should be 0 if both inputs are 0. It should also be 0 if an overflow occurs. In other words, it should be 1 if either A or B is 1 (but not both). That's an **exclusive OR**!",
+    "The carry output should be 1 if both A and B are 1. That's an **AND**!"
+   ],
+   "aside": {
+    "image": "img/half-adder.jpg",
+    "alt": "Circuit of a half-adder: inputs A and B go to an XOR gate with output S and to an AND gate with output C",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "gallery",
+   "title": "From the Half-Adder to the Full Adder",
+   "items": [
+    {
+     "image": "img/half-adder-block.jpg",
+     "alt": "Block diagram of a half-adder with inputs A and B and outputs sum and carry",
+     "caption": "Half-adder: two bits in, sum and carry out",
+     "shadow": false
+    },
+    {
+     "image": "img/full-adder-gates.jpg",
+     "alt": "Circuit of a full adder from two XOR gates, two AND gates and one OR gate, with inputs A, B and carry-in",
+     "caption": "Full adder: 2× XOR, 2× AND, 1× OR",
+     "shadow": false
+    },
+    {
+     "image": "img/full-adder-block.jpg",
+     "alt": "Block diagram of a full adder with inputs A, B and carry-in and outputs sum and carry-out",
+     "caption": "Full adder: also takes the carry-in",
+     "shadow": false
+    }
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Let's build a larger Adder",
+   "defs": [
+    [
+     "First 4-bit number",
+     "A0 … A3"
+    ],
+    [
+     "Second 4-bit number",
+     "B0 … B3"
+    ],
+    [
+     "Result",
+     "S0 … S3"
+    ],
+    [
+     "Carry-out",
+     "C4"
+    ]
+   ],
+   "aside": {
+    "image": "img/4bit-adder.jpg",
+    "alt": "A 4-bit adder: one half-adder and three full adders in a row, with the carry passed from right to left",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "gallery",
+   "title": "A 4-Bit Adder in One Chip",
+   "items": [
+    {
+     "image": "img/74ls83.gif",
+     "alt": "Block diagram of the 74LS83 4-bit full adder with inputs A3 to A0, B3 to B0 and carry-in, outputs S3 to S0 and carry-out",
+     "caption": "The 74LS83 4-bit full adder",
+     "shadow": false
+    },
+    {
+     "image": "img/74ls83-chip.jpg",
+     "alt": "A black integrated circuit chip with 16 pins",
+     "caption": "[The chip](https://www.jameco.com/z/74LS83-Major-Brands-4-Bit-Binary-Full-Adder-DIP-16_48063.html)",
+     "shadow": false
+    }
+   ]
+  },
+  {
+   "layout": "quiz",
+   "title": "Test yourselves: 0110b + 0010b",
+   "lead": "A = 0010_{2} and B = 0110_{2}",
+   "items": [
+    "What are C1, C2, C3 and C4?",
+    "What are S0, S1, S2 and S3?"
+   ],
+   "aside": {
+    "image": "img/4bit-adder.jpg",
+    "alt": "A 4-bit adder: one half-adder and three full adders in a row",
+    "shadow": false
+   },
+   "notes": "C1 = 0, C2 = 1, C3 = 1, C4 = 0; S0 = 0, S1 = 0, S2 = 0, S3 = 1. So 0010 + 0110 = 1000 (2 + 6 = 8)."
+  },
+  {
+   "layout": "gallery",
+   "title": "Do it yourself!",
+   "items": [
+    {
+     "image": "img/transistor-board.jpg",
+     "alt": "A green circuit board with many single transistors, wires and a 9-volt battery",
+     "caption": "A circuit board built from single transistors"
+    },
+    {
+     "image": "img/raspberry-pi.jpg",
+     "alt": "A Raspberry Pi single-board computer",
+     "caption": "1'000'000'000× more transistors"
+    }
+   ],
+   "after": "[Buy transistors](https://www.jameco.com/z/2N3904BU-Major-Brands-Transistor-2N3904-NPN-General-Purpose-bulk-_38359.html), build a [simple 4-bit computer](https://www.youtube.com/watch?v=xISG4nGTQYE) (video from 4:30), or start with [these kits](https://eater.net/8bit)."
+  },
+  {
+   "layout": "text",
+   "title": "Let's build a LARGER Adder",
+   "callout": {
+    "text": "What's the physical size of this circuit (i.e., in cm)?"
+   },
+   "points": [
+    "1× 8-bit adder = 8× 1-bit adders that are connected properly",
+    "2× XOR + 2× AND + 1× OR per full adder: 40 gates in total, about 80 transistors in total",
+    "Inputs a0 … a7 and b0 … b7, result s0 … s7, and a carry-out"
+   ],
+   "aside": {
+    "image": "img/8bit-adder.png",
+    "alt": "An 8-bit adder: eight full adder blocks in a row with the carry chained through",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "gallery",
+   "title": "Thank you, Moore!",
+   "items": [
+    {
+     "image": "img/hair-sem.jpg",
+     "alt": "Electron microscope image of a human hair with a small box marked on its surface",
+     "caption": "[A human hair](https://www.latenightim.com/internet-marketing-electrons-and-the-meaning-of-life/)"
+    },
+    {
+     "image": "img/hair-transistor.jpg",
+     "alt": "Electron microscope close-up of the marked area with a tiny transistor structure",
+     "caption": "Zoomed in: a transistor"
+    },
+    {
+     "image": "img/blood-cell.png",
+     "alt": "Illustration: a red blood cell of 0.008 mm beside a transistor of 0.00009 mm",
+     "caption": "[Red blood cell and transistor](https://cogentlegal.com/2013/11/understand-spatial-relationships/)"
+    }
+   ],
+   "after": "In 2026, leading-edge manufacturing (TSMC N2, Intel 18A) places transistors at a pitch of ~23-45 nm. That's roughly 1/2000th of a human hair."
+  },
+  {
+   "layout": "text",
+   "title": "How large is our 8-bit adder?",
+   "lead": "About 80 transistors at about 25 nm each:",
+   "points": [
+    "2000 nm if chained in a straight line (+ wiring)",
+    "225 nm × 225 nm if arranged in a 2D grid («rectangle»)",
+    "125 nm × 125 nm × 125 nm if arranged in a 3D grid («cube»)"
+   ],
+   "aside": {
+    "image": "img/8bit-adder.png",
+    "alt": "An 8-bit adder: eight full adder blocks in a row",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "gallery",
+   "title": "Thank you, Moore!",
+   "items": [
+    {
+     "image": "img/nand-transistors.gif",
+     "alt": "Circuit diagram of a NAND gate built from two transistors",
+     "caption": "A transistor: ~25 nm",
+     "shadow": false
+    },
+    {
+     "image": "img/8bit-adder.png",
+     "alt": "An 8-bit adder: eight full adder blocks in a row",
+     "caption": "Our 8-bit adder circuit: a cube of ~125 nm",
+     "shadow": false
+    },
+    {
+     "image": "img/virus.png",
+     "alt": "Illustration of a coronavirus particle with spikes",
+     "caption": "A virus: ~100 nm",
+     "shadow": false
+    }
+   ]
+  },
+  {
+   "layout": "image",
+   "title": "Another Adder…",
+   "image": "img/knex-computer.png",
+   "alt": "News article from heise online: a YouTuber builds a mechanical 8-bit computer from K'nex, with a photo of the colorful machine",
+   "source": "[Video](https://m.youtube.com/watch?v=Fxv3JoS1uY8) · [heise online](https://www.heise.de/news/Youtuber-baut-mechanischen-8-Bit-Computer-aus-K-nex-10495869.html)"
+  },
+  {
+   "layout": "image",
+   "title": "Aaand Another Adder",
+   "image": "img/minecart-adder.png",
+   "alt": "Video still: minecarts on rails in a block-built adding machine",
+   "caption": "We've talked about electromechanical (relays) and electronic adders (transistors). Here's a mechanical adder that uses just a small gravity trick ;-) ([video](https://www.youtube.com/watch?time_continue=160&v=mrLxnY8Gtfw), from 0:18). And remember the [mechanical computers of the first lecture](https://hyperdecks.github.io/computersystems/01-information/html/#/40)!"
+  },
+  {
+   "layout": "table",
+   "title": "Our Journey So Far…",
+   "columns": [
+    "Step",
+    "Building blocks",
+    "Where"
+   ],
+   "rows": [
+    [
+     "Information",
+     "Binary digits + context: numbers, text, pixels and colors, instructions",
+     "[Lecture 1](https://hyperdecks.github.io/computersystems/01-information/html/): done!"
+    ],
+    [
+     "Logic + arithmetic",
+     "School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)",
+     "**Done!**"
+    ],
+    [
+     "Electronics",
+     "Logic gates from electronic components (today: transistors)",
+     "**Done!**"
+    ],
+    [
+     "Calculator",
+     "Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!",
+     "**Done!**"
+    ],
+    [
+     "Processor",
+     "Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!",
+     "[Lecture 3](https://hyperdecks.github.io/computersystems/03-processors/html/)"
+    ],
+    [
+     "Programs",
+     "Instruction sets, machine code and assembly language",
+     "[Lectures 3](https://hyperdecks.github.io/computersystems/03-processors/html/) and [4](https://hyperdecks.github.io/computersystems/04-assembly/html/)"
+    ]
+   ]
+  },
+  {
+   "layout": "questions",
+   "title": "Any Questions / Comments / Doubts / Concerns?",
+   "heading": "Take-Home",
+   "points": [
+    "Through (smart) combinations of logic gates, we can build adding circuits, and you did this!",
+    "Through (smart) combinations of logic gates, we can also build subtractors, multipliers, etc.",
+    "These can be produced in mass quantities and at extremely low prices and sizes"
+   ],
+   "after": "Next: [Processors and Assembly](https://hyperdecks.github.io/computersystems/03-processors/html/)"
+  },
+  {
+   "layout": "study",
+   "title": "How to Study this Material?",
+   "groups": [
+    {
+     "heading": "Basic Depth",
+     "points": [
+      "Play nandgame.com, and understand it! (I'm serious)",
+      "Read up on circuits and [logic gates](https://en.wikipedia.org/wiki/Logic_gate), and understand [adder circuits](https://en.wikipedia.org/wiki/Adder_%28electronics%29)",
+      "Keep internalizing number representations, especially hexadecimal ([lecture 1](https://hyperdecks.github.io/computersystems/01-information/html/#/52))",
+      "Get prepared for the exercise session"
+     ]
+    },
+    {
+     "heading": "Advanced Depth",
+     "points": [
+      "Play more levels on [nandgame.com](https://www.nandgame.com/)"
+     ]
+    }
+   ],
+   "aside": {
+    "image": "img/nandgame-levels.png",
+    "alt": "The level list of the NAND Game: logic gates, arithmetics, switching, arithmetic logic unit, memory and processor",
+    "shadow": false
+   }
+  }
+ ]
+}

@@ -1,0 +1,1068 @@
+{
+ "title": "Processors and Assembly",
+ "lang": "en",
+ "footer": "Computersysteme | Institute of Computer Science | University of St.Gallen",
+ "slides": [
+  {
+   "layout": "title",
+   "kicker": "Computersysteme",
+   "title": "Processors and Assembly",
+   "presenters": [
+    "Simon Mayer"
+   ],
+   "meta": [
+    "University of St.Gallen",
+    "Bachelor in Computer Science",
+    "",
+    "Computersysteme (1,904)"
+   ]
+  },
+  {
+   "layout": "syllabus",
+   "title": "Course Syllabus",
+   "items": [
+    {
+     "date": "16.09.2026",
+     "title": "Information: Numbers, Bits, Bytes, Encodings"
+    },
+    {
+     "date": "23.09.2026",
+     "title": "Bare Metal Programming",
+     "kind": "exercise"
+    },
+    {
+     "date": "30.09.2026",
+     "title": "Computing on Bits: Circuits and Processors"
+    },
+    {
+     "date": "07.10.2026",
+     "title": "Assembly Basics"
+    },
+    {
+     "date": "14.10.2026",
+     "title": "Assembly Reverse-Engineering & Assembly Bombs",
+     "kind": "exercise"
+    },
+    {
+     "date": "21.10.2026",
+     "title": "Control Flow"
+    },
+    {
+     "date": "11.11.2026",
+     "title": "Memory Basics"
+    },
+    {
+     "date": "18.11.2026",
+     "title": "Memory Hierarchy and Caches"
+    },
+    {
+     "date": "25.11.2026",
+     "title": "Memory Experiments",
+     "kind": "exercise"
+    },
+    {
+     "date": "02.12.2026",
+     "title": "Processor Architecture"
+    },
+    {
+     "date": "09.12.2026",
+     "title": "Modern Processors"
+    },
+    {
+     "date": "16.12.2026",
+     "title": "Multiprocessors, GPUs, Heterogeneous Manycore"
+    }
+   ],
+   "current": 4,
+   "break_after": 6,
+   "assignments": [
+    {
+     "title": "Bare Metal Programming",
+     "from": 2,
+     "to": 4
+    },
+    {
+     "title": "Assembly Reverse-Engineering",
+     "from": 5,
+     "to": 8
+    },
+    {
+     "title": "Memory Experiments",
+     "from": 9,
+     "to": 11
+    }
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Remember: We Built Adders",
+   "points": [
+    "A half-adder adds two bits: the sum is an exclusive OR, the carry is an AND",
+    "1× 8-bit adder = 8× 1-bit adders that are connected properly: 40 gates, about 80 transistors",
+    "Arranged in a 3D grid, that's a cube of about 125 nm × 125 nm × 125 nm"
+   ],
+   "aside": {
+    "image": "img/half-adder.jpg",
+    "alt": "Circuit of a half-adder: inputs A and B go to an XOR gate with output S and to an AND gate with output C",
+    "shadow": false
+   },
+   "source": "Recap of [lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/#/27)"
+  },
+  {
+   "layout": "table",
+   "title": "Our Journey So Far…",
+   "columns": [
+    "Step",
+    "Building blocks",
+    "Where"
+   ],
+   "rows": [
+    [
+     "Information",
+     "Binary digits + context: numbers, text, pixels and colors, instructions",
+     "[Lecture 1](https://hyperdecks.github.io/computersystems/01-information/html/): done!"
+    ],
+    [
+     "Logic + arithmetic",
+     "School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/): done!"
+    ],
+    [
+     "Electronics",
+     "Logic gates from electronic components (today: transistors)",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/): done!"
+    ],
+    [
+     "Calculator",
+     "Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/): done!"
+    ],
+    [
+     "Processor",
+     "Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!",
+     "**Today**"
+    ],
+    [
+     "Programs",
+     "Instruction sets, machine code and assembly language",
+     "**Today**, and [lecture 4](https://hyperdecks.github.io/computersystems/04-assembly/html/)"
+    ]
+   ]
+  },
+  {
+   "layout": "menu",
+   "title": "Our Menu for Today",
+   "items": [
+    "Building a Computer",
+    "Designing a simple Instruction Set",
+    "Introduction to Assembly Language",
+    "Basic Assembly Constructs"
+   ],
+   "current": 1
+  },
+  {
+   "layout": "text",
+   "title": "Central Processing Units: A Story of Two (?) Enterprises",
+   "points": [
+    "Intel («Team Blue»)",
+    {
+     "text": "AMD («Team Red»)",
+     "sub": [
+      "First to break the 1 GHz clock speed barrier for a mainstream processor",
+      "First to introduce x86-64 (most machines are still capable of executing IA32 in backwards-compatibility mode)"
+     ]
+    },
+    "Nvidia («Team Green»), focusing on graphics processing units (GPUs)",
+    "ARM, focusing on mobile, power-efficient processors, often within mobile SoCs"
+   ],
+   "aside": {
+    "image": "img/epyc-vs-xeon.jpg",
+    "alt": "An AMD EPYC processor and an Intel Xeon Platinum processor side by side with VS between them",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "gallery",
+   "title": "Intel, AMD, Nvidia",
+   "items": [
+    {
+     "image": "img/intel-stock.png",
+     "alt": "Share price chart of Intel since 1991, at 37.17 USD",
+     "caption": "Intel"
+    },
+    {
+     "image": "img/amd-stock.png",
+     "alt": "Share price chart of AMD since 1991, at 211.51 USD",
+     "caption": "AMD"
+    },
+    {
+     "image": "img/nvidia-stock.png",
+     "alt": "Share price chart of Nvidia since 2002, at 185.04 USD, rising steeply in recent years",
+     "caption": "Nvidia"
+    }
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Who Manufactures Integrated Circuits?",
+   "points": [
+    {
+     "text": "Integrated device manufacturers design and manufacture the circuits",
+     "sub": [
+      "Intel, Samsung, Texas Instruments, Infineon (Intel now also runs a pure-play foundry business)"
+     ]
+    },
+    {
+     "text": "Pure-play foundries manufacture the designs of fabless (= non-fabricating) companies",
+     "sub": [
+      "TSMC, GlobalFoundries, UMC"
+     ]
+    },
+    {
+     "text": "Fabless companies outsource production to such a fabrication company",
+     "sub": [
+      "AMD, Nvidia, Qualcomm, Zhaoxin, Apple",
+      "ARM is different again: it licenses IP and does not sell chips at all"
+     ]
+    }
+   ],
+   "aside": {
+    "image": "img/broadcom-soc.jpg",
+    "alt": "Close-up of a Broadcom system-on-chip on the green circuit board of a Raspberry Pi"
+   },
+   "source": "[Wikipedia: TSMC](https://en.wikipedia.org/wiki/TSMC)"
+  },
+  {
+   "layout": "text",
+   "title": "CPU Architectures Work with Two Main Illusions",
+   "groups": [
+    {
+     "heading": "Instruction set architecture",
+     "points": [
+      "ISAs assume that instructions are executed in sequence",
+      "Processor hardware is more elaborate, but ensures that the overall behavior matches sequential execution"
+     ]
+    },
+    {
+     "heading": "Linear memory model",
+     "points": [
+      "We assume that memory is simply a very large byte array",
+      "Hardware is much more elaborate, but makes sure that its outside behavior matches the linear memory model"
+     ]
+    }
+   ],
+   "after": "In the lectures, you will see x86-64; in the second exercise, you apply the concepts to ARMv8."
+  },
+  {
+   "layout": "text",
+   "title": "Let's build a simple CPU that works on 4-bit numbers",
+   "lead": "Computing is just mathematics (that's what Leibniz said already!). Simple idea, in principle…",
+   "points": [
+    "Construct an adding circuit",
+    "Construct multiplier, subtractor, divider circuits: let's say we have 4 such units!",
+    "Add memory for inputs and outputs",
+    "Wire all these components together…"
+   ],
+   "aside": {
+    "image": "img/74ls83.gif",
+    "alt": "Block diagram of the 74LS83 4-bit full adder with inputs A3 to A0, B3 to B0 and carry-in, outputs S3 to S0 and carry-out",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "text",
+   "title": "We also want to select which of these four functions to perform!",
+   "callout": {
+    "text": "In modern processors, we call this an Arithmetic/Logic Unit (ALU)",
+    "style": "teal"
+   },
+   "lead": "Introduce two «function select» bits:",
+   "defs": [
+    [
+     "00",
+     "activate the add unit"
+    ],
+    [
+     "01",
+     "activate the multiply unit"
+    ],
+    [
+     "10",
+     "activate the subtract unit"
+    ],
+    [
+     "11",
+     "activate the divide unit"
+    ]
+   ],
+   "aside": {
+    "code": "first 4-bit number   second 4-bit number\n        |                   |\n  +-----+------+------+-----+\n  | add | mult | sub  | div | <- function\n  +-----+------+------+-----+    select\n               |                 (2 bits)\n         output / result"
+   },
+   "after": "Done! Here's a general-purpose calculator. The function select bits are instructions for a «control unit»."
+  },
+  {
+   "layout": "text",
+   "title": "Putting It Together",
+   "defs": [
+    [
+     "ALU",
+     "you've designed this ;-)"
+    ],
+    [
+     "Control unit",
+     "which instruction is executed next?"
+    ],
+    [
+     "Registers",
+     "very small, extremely fast memory (e.g., 16× 64-bit general-purpose registers): data that the ALU can directly compute on"
+    ],
+    [
+     "Memory («RAM»)",
+     "holds more data"
+    ],
+    [
+     "Persistent storage (e.g., SSD)",
+     "holds even more data"
+    ]
+   ],
+   "aside": {
+    "image": "img/cpu-diagram.jpg",
+    "alt": "Block diagram: input device, central processing unit with control unit, arithmetic/logic unit and registers, output device, and a memory unit below",
+    "shadow": false,
+    "caption": "Diagram: computerscience.gcse.guru"
+   }
+  },
+  {
+   "layout": "gallery",
+   "title": "Putting It Together: The Real Parts",
+   "items": [
+    {
+     "image": "img/core-i7.png",
+     "alt": "An Intel Core i7 processor",
+     "caption": "Central processing unit",
+     "shadow": false
+    },
+    {
+     "image": "img/ram.png",
+     "alt": "Two black DDR4 memory modules",
+     "caption": "Memory («RAM»)",
+     "shadow": false
+    },
+    {
+     "image": "img/ssd.jpg",
+     "alt": "Solid state drives of different sizes",
+     "caption": "Persistent storage (SSD)",
+     "shadow": false
+    },
+    {
+     "image": "img/keyboard.png",
+     "alt": "A black computer keyboard",
+     "caption": "Input device",
+     "shadow": false
+    }
+   ]
+  },
+  {
+   "layout": "image",
+   "title": "Remember miniaturization…?",
+   "image": "img/blood-cell.png",
+   "alt": "Illustration: a red blood cell of 0.008 mm beside a transistor of 0.00009 mm",
+   "caption": "[Lecture 2: Thank you, Moore!](https://hyperdecks.github.io/computersystems/02-circuits/html/#/34)",
+   "source": "[cogentlegal.com](https://cogentlegal.com/2013/11/understand-spatial-relationships/)"
+  },
+  {
+   "layout": "gallery",
+   "title": "Intel 8008 (1972)",
+   "items": [
+    {
+     "image": "img/intel-8008-chip.png",
+     "alt": "An Intel C8008-1 chip in a ceramic package with gold pins",
+     "shadow": false
+    },
+    {
+     "image": "img/intel-8008-die.png",
+     "alt": "Die photo of the Intel 8008 with labelled regions: instruction register, instruction decode, ALU registers, carry, ALU, registers and PC/stack",
+     "shadow": false
+    }
+   ],
+   "source": "[righto.com: Die photos and analysis of the 8008](http://www.righto.com/2016/12/die-photos-and-analysis-of_24.html)"
+  },
+  {
+   "layout": "image",
+   "title": "Intel Core i7 Haswell Refresh (2014)",
+   "image": "img/haswell-die.jpg",
+   "alt": "Die photo of an Intel Core i7 with four cores, processor graphics, a shared L3 cache, the system agent and the memory controller",
+   "source": "[guru3d.com: Core i7 4790 processor review](https://www.guru3d.com/articles-pages/core-i7-4790-processor-review,3.html)"
+  },
+  {
+   "layout": "text",
+   "title": "Apple M1 System-on-Chip (2020)",
+   "defs": [
+    [
+     "CPU",
+     "Central Processing Unit"
+    ],
+    [
+     "GPU",
+     "Graphics Processing Unit"
+    ],
+    [
+     "NPU",
+     "Neural (Network) Processing Unit"
+    ],
+    [
+     "SLC",
+     "System-Level Cache"
+    ]
+   ],
+   "aside": {
+    "image": "img/m1-die.png",
+    "alt": "Annotated die photo of the Apple M1 with marked regions for GPU cores, CPU clusters, system-level cache and the neural engine",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "menu",
+   "title": "Our Menu for Today",
+   "items": [
+    "Building a Computer",
+    "Designing a simple Instruction Set",
+    "Introduction to Assembly Language",
+    "Basic Assembly Constructs"
+   ],
+   "current": 2
+  },
+  {
+   "layout": "quiz",
+   "title": "Designing a Simple Instruction Set Architecture",
+   "lead": "Here's the CPU hardware we have: 4 memory slots and 2 data registers of 4 bits each, and an ALU that can add and subtract.",
+   "items": [
+    "How many bits do we need to address four memory slots?",
+    "How many bits do we need to address two registers?",
+    "How many bits do we need to encode five instructions?"
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "Our Instruction Set: 5 Instructions",
+   "columns": [
+    "Instruction",
+    "Encoding"
+   ],
+   "rows": [
+    [
+     "Load from memory address xx (M[xx]) into register y (R[y])",
+     "`000 xx y`"
+    ],
+    [
+     "Store from R[x] into M[yy]",
+     "`001 x yy`"
+    ],
+    [
+     "Add the contents of R[0] and R[1] and store the result in R[x]",
+     "`010 x`"
+    ],
+    [
+     "Subtract the contents of R[0] from R[1] and store the result in R[x]",
+     "`011 x`"
+    ],
+    [
+     "Insert the 4-bit number n into M[xx]",
+     "`100 nnnn xx`"
+    ]
+   ],
+   "after": "Memory: addresses 00, 01, 10, 11. Registers: addresses 0 and 1."
+  },
+  {
+   "layout": "code",
+   "title": "Writing a Program for our ISA",
+   "callout": {
+    "text": "2-min teamwork!"
+   },
+   "code": "// Machine-level program that adds 7 and 8\nInsert 7 into M[00]:      100 0111 00\nInsert 8 into M[01]:      ?\nLoad from M[00] to R[0]:  ?\nLoad from M[01] to R[1]:  ?\nAdd registers into R[0]:  ?\nStore R[0] into M[10]:    ?",
+   "points": [
+    "7 = 0 × 8 + 1 × 4 + 1 × 2 + 1 × 1 = 0111_{2}",
+    "Insert (`100`) 7 (`0111`) into M[00] (`00`): `100 0111 00`"
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Writing a Program for our ISA: Done!",
+   "code": "// Machine-level program that adds 7 and 8\nInsert 7 into M[00]:      100 0111 00\nInsert 8 into M[01]:      100 1000 01\nLoad from M[00] to R[0]:  000 00 0\nLoad from M[01] to R[1]:  000 01 1\nAdd registers into R[0]:  010 0\nStore R[0] into M[10]:    001 0 10",
+   "points": [
+    "Memory afterwards: M[00] = 7, M[01] = 8, M[10] = 15",
+    "Registers afterwards: R[0] = 15 (it held 7 before the add), R[1] = 8"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "What if we write the program in this way?",
+   "points": [
+    "The encoding of this machine-level program is unique!",
+    "We could say that this is the 611'097'513'226th program of our ISA",
+    "So this means that programs themselves are just numbers…"
+   ],
+   "aside": {
+    "code": "1000111001001000010000000000110100001010\n\n100 0111 00   Insert 7 into M[00]\n100 1000 01   Insert 8 into M[01]\n000 00 0      Load M[00] to R[0]\n000 01 1      Load M[01] to R[1]\n010 0         Add into R[0]\n001 0 10      Store R[0] into M[10]"
+   }
+  },
+  {
+   "layout": "text",
+   "title": "Reading the Bits: One by One",
+   "lead": "Let's read machine code one bit at a time…",
+   "defs": [
+    [
+     "`0`",
+     "could be load, store, add or subtract. Let's see the next bit."
+    ],
+    [
+     "`0 0`",
+     "could be load or store. Let's see the next bit."
+    ],
+    [
+     "`0 0 0`",
+     "ah, this must be load. Expecting 3 more bits to complete the instruction."
+    ],
+    [
+     "`000 01 1`",
+     "aha! This is a load from M[01] to R[1]. Done. Next instruction please!"
+    ]
+   ],
+   "aside": {
+    "image": "img/diver-ok.png",
+    "alt": "A scuba diver under water makes the OK sign with one hand"
+   },
+   "notes": "Demo"
+  },
+  {
+   "layout": "text",
+   "title": "Another Computer Program",
+   "callout": {
+    "text": "What does this program do?"
+   },
+   "paragraphs": [
+    "`1000010001001000`\n`0100000000001101`\n`10001000`"
+   ],
+   "points": [
+    "Note that everything here is again just binary. So we can use our digital circuits to actually process all of this!"
+   ],
+   "aside": {
+    "code": "Load   M[xx] -> R[y]         000 xx y\nStore  R[x] -> M[yy]         001 x yy\nAdd    R[0] + R[1] -> R[x]   010 x\nSub    R[1] - R[0] -> R[x]   011 x\nInsert n -> M[xx]            100 nnnn xx"
+   }
+  },
+  {
+   "layout": "code",
+   "title": "Another Computer Program: Decoded",
+   "code": "100 0010 00   Insert 2 into M[00]\n100 1000 01   Insert 8 into M[01]\n000 00 0      Load M[00] into R[0]\n000 01 1      Load M[01] into R[1]\n011 0         R[0] = R[1] - R[0]\n001 0 00      Store R[0] into M[00]",
+   "points": [
+    "Memory afterwards: M[00] = 6 (it held 2 before), M[01] = 8",
+    "Registers afterwards: R[0] = 6, R[1] = 8"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Self-Test: Write a Multiplier Using Our ISA",
+   "paragraphs": [
+    "For example, a «multiply-by-4»."
+   ],
+   "aside": {
+    "code": "Load   M[xx] -> R[y]         000 xx y\nStore  R[x] -> M[yy]         001 x yy\nAdd    R[0] + R[1] -> R[x]   010 x\nSub    R[1] - R[0] -> R[x]   011 x\nInsert n -> M[xx]            100 nnnn xx"
+   }
+  },
+  {
+   "layout": "text",
+   "title": "Putting Everything Together",
+   "callout": {
+    "text": "How do these components together «run» a computer program?"
+   },
+   "lead": "Memory holds program data and instructions. The CPU runs in a loop; in each cycle:",
+   "defs": [
+    [
+     "Fetch",
+     "the control unit decides which instruction is next and fetches it from memory"
+    ],
+    [
+     "Decode",
+     "the CPU finds out what data the instruction needs, and what to do with it"
+    ],
+    [
+     "Load",
+     "the required data is loaded into the CPU registers"
+    ],
+    [
+     "Execute",
+     "the ALU computes the result of the instruction"
+    ],
+    [
+     "Store",
+     "the result is sent back and stored in memory"
+    ]
+   ],
+   "aside": {
+    "image": "img/cpu-diagram.jpg",
+    "alt": "Block diagram of a computer: CPU with control unit, ALU and registers, connected to a memory unit",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "text",
+   "title": "The CPU Clock",
+   "callout": {
+    "text": "What are typical CPU clock frequencies?"
+   },
+   "points": [
+    "How often this cycle is executed per second is determined by the CPU clock",
+    {
+     "text": "However, only few instructions take exactly one clock cycle to execute",
+     "sub": [
+      "Example: on a modern Intel/AMD core, an integer multiplication has a latency of about 3 cycles (on the 2004 Intel Nocona, it was 10)"
+     ]
+    },
+    "We'll talk more about this when we go into processors after the semester break"
+   ],
+   "after": "All of this is (of course) just bits in context…"
+  },
+  {
+   "layout": "table",
+   "title": "Let's add instruction memory!",
+   "callout": {
+    "text": "Why 0x102?"
+   },
+   "lead": "«The instruction 100001000b (insert 0010b at memory 00b) is located at memory address 0x100.»",
+   "columns": [
+    "Address",
+    "Instruction",
+    "Meaning"
+   ],
+   "rows": [
+    [
+     "0x100",
+     "`100001000`",
+     "Insert 2 in M[00]"
+    ],
+    [
+     "0x102",
+     "`100100001`",
+     "Insert 8 in M[01]"
+    ],
+    [
+     "0x104",
+     "`000000`",
+     "Load M[00] into R[0]"
+    ],
+    [
+     "0x105",
+     "`000011`",
+     "Load M[01] into R[1]"
+    ],
+    [
+     "0x106",
+     "`0100`",
+     "Add into R[0]"
+    ],
+    [
+     "0x107",
+     "`001000`",
+     "Store R[0] into M[00]"
+    ]
+   ],
+   "after": "We address memory in bytes (0x100 = 256). A 9-bit instruction is rounded up to the next byte: 2 bytes.",
+   "notes": "Why 0x102? Because we count the bits in the instruction (9 bits) and round up to the next byte (2 bytes)."
+  },
+  {
+   "layout": "code",
+   "title": "This will become boring fast…",
+   "code": "def annoying_question():\n    print(\"Welcome to the *Annoying Input Machine*!\")\n    while True:\n        answer = input(\"Quick! Tell me your deepest secret \"\n                       \"(or type 'stop' to escape)\")\n        if answer == \"stop\":\n            print(\"But I do want to know your secret…!\")\n        else:\n            print(f\"'{answer}'? Interesting choice...\")"
+  },
+  {
+   "layout": "text",
+   "title": "Let's add control flow",
+   "lead": "A sixth instruction: «continue executing with the instruction at hexadecimal address HHH».",
+   "points": [
+    "Encoding: `101 HHH`",
+    "e.g., `101 100` to continue at 0x100. But this would mix binary and hex! Context confusion!!",
+    "Better in binary: `101 000100000000`"
+   ],
+   "aside": {
+    "code": "Load   M[xx] -> R[y]         000 xx y\nStore  R[x] -> M[yy]         001 x yy\nAdd    R[0] + R[1] -> R[x]   010 x\nSub    R[1] - R[0] -> R[x]   011 x\nInsert n -> M[xx]            100 nnnn xx\nJump   to address HHH        101 HHH"
+   }
+  },
+  {
+   "layout": "code",
+   "title": "What does this program do?",
+   "callout": {
+    "text": "What's the content of M[00]?"
+   },
+   "code": "0x100  100001000        Insert 2 in M[00]\n0x102  100100001        Insert 8 in M[01]\n0x104  000000           Load M[00] into R[0]\n0x105  000011           Load M[01] into R[1]\n0x106  0100             Add into R[0]\n0x107  001000           Store R[0] into M[00]\n0x108  101000100000110  Jump to 0x106…",
+   "notes": "M[00]: 2 … 10 … 18 … 26 … 34 …"
+  },
+  {
+   "layout": "questions",
+   "title": "Any Questions / Comments / Doubts / Concerns?",
+   "heading": "Take-Homes",
+   "points": [
+    "We can selectively switch on our adding circuit, or other types of circuits",
+    "The instructions that switch them on or off are binary as well: they are what the processor executes",
+    "The processor works with memory that holds instructions and data, and runs in a cycle through all instructions",
+    "Very basic control flow can be realized through instruction jumps"
+   ]
+  },
+  {
+   "layout": "study",
+   "title": "How to Study this Material?",
+   "groups": [
+    {
+     "heading": "Basic Depth",
+     "points": [
+      "On this topic, the slides are self-contained! Go through the examples, create your own ISA, write your own programs in it",
+      "Start reading the chapter «Machine-Level Representation of Programs» of Bryant & O'Hallaron",
+      "Consider [Microarchitecture and Instruction Set Architecture](https://www.geeksforgeeks.org/microarchitecture-and-instruction-set-architecture/) (GeeksforGeeks), a great overview",
+      "And [Instruction set architecture](https://en.wikipedia.org/wiki/Instruction_set_architecture) (Wikipedia): its section on instruction encoding aligns directly with today"
+     ]
+    },
+    {
+     "heading": "Advanced Depth",
+     "points": [
+      "An interesting technical read: the [ARMv8-M architecture](https://community.arm.com/cfs-file/__key/telligent-evolution-components-attachments/01-2142-00-00-00-00-66-90/Whitepaper-_2D00_-ARMv8_2D00_M-Architecture-Technical-Overview.pdf). See if you like it!",
+      "You might already want to have a look at the [ARM Assembly Cheat Sheet](https://azeria.gumroad.com/l/Arm-cheatsheet-2020-version)"
+     ]
+    }
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "Our Journey So Far…",
+   "columns": [
+    "Step",
+    "Building blocks",
+    "Where"
+   ],
+   "rows": [
+    [
+     "Information",
+     "Binary digits + context: numbers, text, pixels and colors, instructions",
+     "[Lecture 1](https://hyperdecks.github.io/computersystems/01-information/html/): done!"
+    ],
+    [
+     "Logic + arithmetic",
+     "School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/): done!"
+    ],
+    [
+     "Electronics",
+     "Logic gates from electronic components (today: transistors)",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/): done!"
+    ],
+    [
+     "Calculator",
+     "Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/): done!"
+    ],
+    [
+     "Processor",
+     "Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!",
+     "**Done!**"
+    ],
+    [
+     "Programs",
+     "Instruction sets, machine code and assembly language",
+     "**Today**, and [lecture 4](https://hyperdecks.github.io/computersystems/04-assembly/html/)"
+    ]
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Putting Everything Together: From Program to Processor",
+   "lead": "[Remember the bit string](https://hyperdecks.github.io/computersystems/01-information/html/#/45) `11111111 00111111 11111111 00111111`? Bits can also be a machine-level instruction in an x86 processor.",
+   "points": [
+    "e.g., `addq %rax,%rbx`: «Add the two numbers stored in registers %rax and %rbx and store the result in register %rbx.»",
+    "Demo: high-level program code to assembly code with [godbolt.org](https://godbolt.org/)",
+    "Demo: assembly code to bits with the [online x86 assembler](https://defuse.ca/online-x86-assembler.htm#disassembly)"
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Putting Everything Together",
+   "code": "push rbp                    0:  55\nmov rbp, rsp                1:  48 89 e5\nmov QWORD PTR [rbp-24], rdi 4:  48 89 7d e8\nmov rax, QWORD PTR [rbp-24] 8:  48 8b 45 e8\nadd rax, rax                c:  48 01 c0\nmov QWORD PTR [rbp-8], rax  f:  48 89 45 f8\nmov rax, QWORD PTR [rbp-8]  13: 48 8b 45 f8\npop rbp                     17: 5d\nret                         18: c3",
+   "points": [
+    "High-level programming language (e.g., C, C#, Go): `long doubleMe(long number) { return number + number; }`",
+    "Assembly code (ASM): on the left",
+    "Executable machine code, as hex numbers: on the right",
+    "…as one hex number: 55 48 89 E5 48 89 7D E8 48 8B 45 E8 48 01 C0 48 89 45 F8 48 8B 45 F8 5D C3",
+    "…and as one (long) binary number"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Teams of 2, take 2",
+   "callout": {
+    "text": "What's the basic problem in this encoding? How would you fix that problem?"
+   },
+   "lead": "An example ISA:",
+   "defs": [
+    [
+     "Jump",
+     "`00`"
+    ],
+    [
+     "Run",
+     "`001`"
+    ],
+    [
+     "Stop",
+     "`10`"
+    ],
+    [
+     "Hit",
+     "`01`"
+    ]
+   ],
+   "aside": {
+    "code": "00100001\n\nmight be  001 00 001\n          Run-Jump-Run\n\nmight be  00 10 00 01\n          Jump-Stop-Jump-Hit"
+   }
+  },
+  {
+   "layout": "text",
+   "title": "Observations",
+   "points": [
+    "More common instructions have shorter encodings",
+    "From a given starting position, the decoding of bits to machine instructions is unique",
+    "Core issue of the example: the encoding of «Jump» (00) is a prefix of the encoding of «Run» (001)",
+    "We say that such codes break the Fano condition"
+   ],
+   "source": "[godbolt.org](https://godbolt.org/) · [defuse.ca/online-x86-assembler.htm](https://defuse.ca/online-x86-assembler.htm)"
+  },
+  {
+   "layout": "quiz",
+   "title": "Leibniz would say: «Computer programs are very large numbers!»",
+   "lead": "Each computer program is a binary number, interpreted as executable instructions!",
+   "items": [
+    "How many programs are there?",
+    "How many problems are there?"
+   ],
+   "notes": "This implies that there are (very many) problems for which no algorithm exists to solve them. Classic example: the Halting Problem.",
+   "aside": {
+    "image": "img/leibniz.jpg",
+    "alt": "Painted portrait of Gottfried Wilhelm Leibniz with a long curly wig"
+   }
+  },
+  {
+   "layout": "text",
+   "title": "Problems Without Algorithms",
+   "points": [
+    "This implies that there are (very many) problems for which no algorithm exists to solve them",
+    "Classic example: the [Halting Problem](https://en.wikipedia.org/wiki/Halting_problem)"
+   ],
+   "aside": {
+    "code": "01010101 01001000 10001001 11100101\n01001000 10001001 01111101 11101000\n01001000 10001011 01000101 11101000\n01001000 00000001 11000000 01001000\n10001001 01000101 11111000 01001000\n10001011 01000101 11111000 01011101\n11000011   "
+   },
+   "lead": "Our `doubleMe` program, as one binary number:"
+  },
+  {
+   "layout": "questions",
+   "title": "Any Questions / Comments / Doubts / Concerns?",
+   "heading": "Take-Homes",
+   "points": [
+    "Not only data is binary, programs are too",
+    "Processors run binary code, and compilers translate programs to binary machine code",
+    "This translation requires a specification of the instruction set architecture of the target system",
+    "This is why you needed to set up the arm-none-eabi toolchain: you compile for a different ISA!"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Now Let's Switch to Real ISAs",
+   "points": [
+    "Our instruction set: 5 instructions (load, store, add, subtract, insert)",
+    "Intel x86-64: 981-3683 instructions, depending on what is counted as an instruction… ([Intel manual](https://cdrdv2.intel.com/v1/dl/getContent/671200))",
+    "ARMv8: ~1000 instructions, again depending on what is counted… ([ARMv8-A ISA](https://developer.arm.com/-/media/Arm%20Developer%20Community/PDF/Learn%20the%20Architecture/Armv8-A%20Instruction%20Set%20Architecture.pdf?revision=ebf53406-04fd-4c67-a485-1b329febfb3e))"
+   ],
+   "aside": {
+    "image": "img/x86-opcodes.jpg",
+    "alt": "Colorful chart titled x86 Opcode Structure and Instruction Overview, with a grid of opcodes 0 to F",
+    "caption": "Source: Fraunhofer FKIE",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "menu",
+   "title": "Our Menu for Today",
+   "items": [
+    "Building a Computer",
+    "Designing a simple Instruction Set",
+    "Introduction to Assembly Language",
+    "Basic Assembly Constructs"
+   ],
+   "current": 3
+  },
+  {
+   "layout": "text",
+   "title": "Program Compilation and Execution",
+   "aside": {
+    "code": "long doubleMe(long number) {\n  long doubleNumber = number + number;\n  return doubleNumber;\n}"
+   },
+   "source": "[godbolt.org](https://godbolt.org/) · [defuse.ca/online-x86-assembler.htm](https://defuse.ca/online-x86-assembler.htm)",
+   "points": [
+    "**High-level programming language**: productivity features to simplify writing code; rather generic!",
+    "**Assembly code**: textual representation of the machine code with individual instructions; machine-specific!",
+    "**Executable machine code**: binary code that is generated from the assembly code and additional data"
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Remember Shifting?",
+   "code": "unsigned udiv8(unsigned x)\n{\n  return x/8;\n}\n\n// Compiled arithmetic operations\nshrl $3, %eax   # logical shift: x >> 3",
+   "points": [
+    "The compiler replaces the division by 8 with a shift by 3 bits",
+    "It uses a logical shift for unsigned numbers",
+    "[Lecture 1: Shifting](https://hyperdecks.github.io/computersystems/01-information/html/#/72)"
+   ],
+   "caption": "Try it: [godbolt.org](https://godbolt.org/)"
+  },
+  {
+   "layout": "code",
+   "title": "Exercise… and Lecture",
+   "code": "arm-none-eabi-gcc -g -nostartfiles \\\n  -mfloat-abi=hard -O0 -DRPI4 \\\n  -mfpu=crypto-neon-fp-armv8 \\\n  -march=armv8-a+crc -mcpu=cortex-a72 \\\n  power_blink.c -o kernel.elf",
+   "points": [
+    "It compiles the C code in `power_blink.c` (which can be understood by humans) into the file `kernel.elf` (which can be understood by machines)",
+    "Actually, you already know that `kernel.elf` can only be understood by one specific type of machine!"
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Let's see it!",
+   "callout": {
+    "text": "Why am I not using arm-none-eabi-objdump for notepad.exe?"
+   },
+   "code": "arm-none-eabi-objdump -d kernel.elf\narm-none-eabi-objdump -d -S kernel.elf\n\nobjdump -d C:\\Windows\\System32\\notepad.exe",
+   "points": [
+    "`-d` disassembles the compiled program: instead of translating from human to machine, we translate back to human…",
+    "Adding `-S` preserves the structure of the original C code (if this information is available)",
+    "With a compiler installed, you can also do this with code compiled for your machine (most probably x86-64), e.g., system programs"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "What are we seeing here?",
+   "defs": [
+    [
+     "`8000:`",
+     "the memory offset («memory address») of the instruction; 0x8000 is the default load address of 32-bit Raspberry Pi kernels (0x80000 in 64-bit mode), where your program starts"
+    ],
+    [
+     "`e308210c`",
+     "the instruction itself as a hexadecimal number"
+    ],
+    [
+     "`movw`",
+     "the mnemonic: a symbolic, human-readable name"
+    ],
+    [
+     "`r2, #33036`",
+     "the parameters of the instruction"
+    ]
+   ],
+   "aside": {
+    "image": "img/objdump-gpio.png",
+    "alt": "Disassembly in a blue terminal: C comments for the GPIO peripheral address, then addresses 8000 to 8010 with hex instructions movw, movt, mov, movt and str"
+   },
+   "after": "Together, all of this is assembly language: a thin layer just above the processing of 0s and 1s."
+  },
+  {
+   "layout": "code",
+   "title": "Let's see what this does!",
+   "code": "8000:  e308210c  movw  r2, #33036  ; 0x810c\n8004:  e3402001  movt  r2, #1\n8008:  e3a03000  mov   r3, #0\n800c:  e34f3e20  movt  r3, #65056  ; 0xfe20\n8010:  e5823000  str   r3, [r2]",
+   "points": [
+    "Remember the definition: `#define GPIO_BASE 0xFE200000UL`",
+    "r3 is 32 bits wide, so r3 contains 8 hex digits: 0x?? 0x?? 0x?? 0x??",
+    "In bits: ???????? ???????? ???????? ????????"
+   ],
+   "caption": "[ARM documentation: the Cortex-M3 instruction set](https://developer.arm.com/documentation/dui0552/a/the-cortex-m3-instruction-set/)"
+  },
+  {
+   "layout": "code",
+   "title": "Let's see what this does!",
+   "code": "8000:  e308210c  movw  r2, #33036  ; 0x810c\n8004:  e3402001  movt  r2, #1\n8008:  e3a03000  mov   r3, #0\n800c:  e34f3e20  movt  r3, #65056  ; 0xfe20\n8010:  e5823000  str   r3, [r2]",
+   "points": [
+    "`MOVW Rd, #imm16` copies the value of Operand2 (an «immediate 16-bit value») into register Rd",
+    "After `mov r3, #0`: r3 = 0x00 0x00 0x00 0x00",
+    "In bits: 00000000 00000000 00000000 00000000"
+   ],
+   "caption": "[ARM documentation: the Cortex-M3 instruction set](https://developer.arm.com/documentation/dui0552/a/the-cortex-m3-instruction-set/)"
+  },
+  {
+   "layout": "code",
+   "title": "Let's see what this does!",
+   "code": "8000:  e308210c  movw  r2, #33036  ; 0x810c\n8004:  e3402001  movt  r2, #1\n8008:  e3a03000  mov   r3, #0\n800c:  e34f3e20  movt  r3, #65056  ; 0xfe20\n8010:  e5823000  str   r3, [r2]",
+   "points": [
+    "`MOVT Rd, #imm16` («move top») writes a 16-bit immediate value to the top halfword, Rd[31:16]; it does not affect Rd[15:0]",
+    "After `movt r3, #65056`: r3 = 0xFE 0x20 0x00 0x00",
+    "In bits: 11111110 00100000 00000000 00000000. That's GPIO_BASE!"
+   ],
+   "caption": "[ARM documentation: the Cortex-M3 instruction set](https://developer.arm.com/documentation/dui0552/a/the-cortex-m3-instruction-set/)"
+  },
+  {
+   "layout": "table",
+   "title": "Assembly language is (has to be!) simple",
+   "lead": "There are only few types of constructs:",
+   "columns": [
+    "Construct",
+    "Instructions"
+   ],
+   "rows": [
+    [
+     "Loading and storing of data from/to memory and registers",
+     "`mov` etc."
+    ],
+    [
+     "Execution of basic logic and arithmetic operations",
+     "`add`, `sub`, `imul`, `shr` …"
+    ],
+    [
+     "Testing of conditions (e.g., x > 0; y <= 0)",
+     "`cmp` and `test`"
+    ],
+    [
+     "Jumping (branching) to other addresses to control program flow",
+     "`b` and `jmp`"
+    ]
+   ],
+   "after": "All high-level constructs (conditionals, loops, function calls, recursion, variables, …) only help programmers write code efficiently. On the machine level, none of them exist directly: machine code is merely sequences of instructions in memory."
+  },
+  {
+   "layout": "code",
+   "title": "Exercise… another particularly interesting line…",
+   "code": "// To emulate a \"timer\", we keep the\n// processor busy counting to 500000\nfor(timer = 0; timer < 500000; timer++) {\n  ;\n}\n\n// arm-none-eabi-objdump -D kernel.elf\n80dc:  e5932000  ldr   r2, [r3]\n80e0:  e30a311f  movw  r3, #41247  ; 0xa11f\n80e4:  e3403007  movt  r3, #7\n80e8:  e1520003  cmp   r2, r3",
+   "points": [
+    "Objdump shows us the machine code (so-called «assembly instructions») of the `kernel.elf` file"
+   ],
+   "notes": "movw and movt put 0x0007A11F = 499'999 into r3: the loop bound."
+  },
+  {
+   "layout": "study",
+   "title": "How to Study this Material?",
+   "groups": [
+    {
+     "heading": "Basic Depth",
+     "points": [
+      "Play with programs in your ARM toolchain and with a gcc toolchain on your computer!",
+      "Write small programs, compile them, disassemble them, look at the assembly",
+      "Then, Exercise 2 will give you a large training opportunity",
+      "Continue with [lecture 4, Assembly Language](https://hyperdecks.github.io/computersystems/04-assembly/html/)"
+     ]
+    },
+    {
+     "heading": "Advanced Depth",
+     "points": [
+      "A [video on interesting assembly instructions](https://www.youtube.com/watch?v=Wz_xJPN7lAY) in the x86-64 ISA",
+      "Its PCMPxSTRx (pairwise comparison between strings, with several options) is useful for string search and shows why some ISAs are so large ([discussion](https://stackoverflow.com/questions/30041045/what-is-an-efficient-way-to-search-a-string-for-the-first-of-a-set-of-delimiters))"
+     ]
+    }
+   ]
+  },
+  {
+   "layout": "questions",
+   "title": "Any Questions / Comments / Doubts / Concerns?"
+  }
+ ]
+}

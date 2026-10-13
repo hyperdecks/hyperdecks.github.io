@@ -1,0 +1,972 @@
+{
+ "title": "Assembly Language",
+ "lang": "en",
+ "footer": "Computersysteme | Institute of Computer Science | University of St.Gallen",
+ "slides": [
+  {
+   "layout": "title",
+   "kicker": "Computersysteme",
+   "title": "Assembly Language",
+   "presenters": [
+    "Simon Mayer"
+   ],
+   "meta": [
+    "University of St.Gallen",
+    "Bachelor in Computer Science",
+    "",
+    "Computersysteme (1,904)"
+   ]
+  },
+  {
+   "layout": "syllabus",
+   "title": "Course Syllabus",
+   "items": [
+    {
+     "date": "16.09.2026",
+     "title": "Information: Numbers, Bits, Bytes, Encodings"
+    },
+    {
+     "date": "23.09.2026",
+     "title": "Bare Metal Programming",
+     "kind": "exercise"
+    },
+    {
+     "date": "30.09.2026",
+     "title": "Computing on Bits: Circuits and Processors"
+    },
+    {
+     "date": "07.10.2026",
+     "title": "Assembly Basics"
+    },
+    {
+     "date": "14.10.2026",
+     "title": "Assembly Reverse-Engineering & Assembly Bombs",
+     "kind": "exercise"
+    },
+    {
+     "date": "21.10.2026",
+     "title": "Control Flow"
+    },
+    {
+     "date": "11.11.2026",
+     "title": "Memory Basics"
+    },
+    {
+     "date": "18.11.2026",
+     "title": "Memory Hierarchy and Caches"
+    },
+    {
+     "date": "25.11.2026",
+     "title": "Memory Experiments",
+     "kind": "exercise"
+    },
+    {
+     "date": "02.12.2026",
+     "title": "Processor Architecture"
+    },
+    {
+     "date": "09.12.2026",
+     "title": "Modern Processors"
+    },
+    {
+     "date": "16.12.2026",
+     "title": "Multiprocessors, GPUs, Heterogeneous Manycore"
+    }
+   ],
+   "current": 6,
+   "break_after": 6,
+   "assignments": [
+    {
+     "title": "Bare Metal Programming",
+     "from": 2,
+     "to": 4
+    },
+    {
+     "title": "Assembly Reverse-Engineering",
+     "from": 5,
+     "to": 8
+    },
+    {
+     "title": "Memory Experiments",
+     "from": 9,
+     "to": 11
+    }
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "Our Journey So Far…",
+   "columns": [
+    "Step",
+    "Building blocks",
+    "Where"
+   ],
+   "rows": [
+    [
+     "Information",
+     "Binary digits + context: numbers, text, pixels and colors, instructions",
+     "[Lecture 1](https://hyperdecks.github.io/computersystems/01-information/html/): done!"
+    ],
+    [
+     "Logic + arithmetic",
+     "School mathematics (logic, set theory); logic operations (NOT, NOR, …, NAND)",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/): done!"
+    ],
+    [
+     "Electronics",
+     "Logic gates from electronic components (today: transistors)",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/): done!"
+    ],
+    [
+     "Calculator",
+     "Adder circuits and circuits for other arithmetic functions: a general-purpose calculator!",
+     "[Lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/): done!"
+    ],
+    [
+     "Processor",
+     "Function selector, arithmetic/logic unit, control unit, registers: voilà, a CPU!",
+     "[Lecture 3](https://hyperdecks.github.io/computersystems/03-processors/html/): done!"
+    ],
+    [
+     "Programs",
+     "Instruction sets, machine code and assembly language",
+     "[Lecture 3](https://hyperdecks.github.io/computersystems/03-processors/html/), and **today**"
+    ]
+   ]
+  },
+  {
+   "layout": "menu",
+   "title": "Our Menu for Today",
+   "items": [
+    "Introduction to Assembly Language",
+    "Registers and Memory",
+    "Assembly Operands",
+    "Common Assembly Instructions",
+    "Conditionals and Loops",
+    "A simple Exploit"
+   ],
+   "current": 1
+  },
+  {
+   "layout": "text",
+   "title": "Why do we look at Assembly Code?",
+   "points": [
+    "Assembly code makes normally hidden processor state visible: it lets us look into the very essence of computing"
+   ],
+   "lead": "Examples you will see today and just after the break:",
+   "defs": [
+    [
+     "Program counter (PC)",
+     "the memory address of the next instruction (like 0x100 to 0x108 in [our small ISA](https://hyperdecks.github.io/computersystems/03-processors/html/#/33))"
+    ],
+    [
+     "Register file",
+     "16 named locations for 64-bit values (addresses and data); some special-purpose, others general-purpose"
+    ],
+    [
+     "Condition code registers",
+     "status of the most recent arithmetic or logical instruction (needed for if/else and loops!)"
+    ]
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Assembly Overview",
+   "points": [
+    "From a given starting position, there is a unique encoding of bytes to machine instructions",
+    "More common instructions have shorter encodings",
+    "There are different ISAs for different architectures (lecture: x86-64; exercise: ARMv8)",
+    "There are different styles within one architecture (AT&T vs. Intel)",
+    {
+     "text": "Compiler optimizations have a large impact on the program!",
+     "sub": [
+      "Rearrange execution order",
+      "Eliminate unneeded operations",
+      "Replace slow (machine) operations with faster ones"
+     ]
+    }
+   ],
+   "aside": {
+    "code": "Intel syntax\nmov   eax,[ebx+20h]\nadd   eax,[ebx+ecx*2h]\nlea   eax,[ebx+ecx]\n\nAT&T syntax\nmovl  0x20(%ebx),%eax\naddl  (%ebx,%ecx,0x2),%eax\nleal  (%ebx,%ecx),%eax"
+   }
+  },
+  {
+   "layout": "code",
+   "title": "Demo: Some Assembly Intuition",
+   "code": "int main()\n{\n  int number = 3;\n  return number * 8;\n}\n\nint main()\n{\n  int number = 3;\n  return number * 9;\n}",
+   "points": [
+    "`gcc -S prog.c` generates assembly, `gcc -c prog.c` generates object code, `objdump -d prog.o` disassembles the object",
+    "Try it with `doubleMe` from [lecture 3](https://hyperdecks.github.io/computersystems/03-processors/html/#/46), or online: [godbolt.org](https://godbolt.org/) and the [online x86 assembler](https://defuse.ca/online-x86-assembler.htm)",
+    "Look at both programs in the compiler explorer"
+   ]
+  },
+  {
+   "layout": "image",
+   "title": "First: Pointer Fun with Binky! :-D",
+   "image": "img/binky.png",
+   "alt": "Binky, a blue clay figure with big yellow eyes and a wide smile",
+   "caption": "[Pointer Fun with Binky](https://www.youtube.com/watch?v=5VnDaHBi8dM)"
+  },
+  {
+   "layout": "code",
+   "title": "Some Assembly Intuition",
+   "code": "int foo(int x, int y) {\n  return x * y;\n}\nint main()\n{\n  return foo(3, 8);\n}\n\nvoid swap(int* xp, int* yp)\n{\n  int t0 = *xp;\n  int t1 = *yp;\n  *xp = t1;\n  *yp = t0;\n}",
+   "points": [
+    "Look at both in the compiler explorer: [godbolt.org](https://godbolt.org/)"
+   ]
+  },
+  {
+   "layout": "menu",
+   "title": "Our Menu for Today",
+   "items": [
+    "Introduction to Assembly Language",
+    "Registers and Memory",
+    "Assembly Operands",
+    "Common Assembly Instructions",
+    "Conditionals and Loops",
+    "A simple Exploit"
+   ],
+   "current": 2
+  },
+  {
+   "layout": "text",
+   "title": "Remember our small instruction set?",
+   "lead": "In [lecture 3](https://hyperdecks.github.io/computersystems/03-processors/html/#/33), this program kept adding 8 to M[00]: 2 … 10 … 18 … 26 … 34 …",
+   "paragraphs": [
+    "Just 2 registers sounds a bit limiting…"
+   ],
+   "aside": {
+    "code": "0x100  100001000        Insert 2\n0x102  100100001        Insert 8\n0x104  000000           Load M[00]\n0x105  000011           Load M[01]\n0x106  0100             Add\n0x107  001000           Store to M[00]\n0x108  101000100000110  Jump to 0x106"
+   }
+  },
+  {
+   "layout": "text",
+   "title": "x86-64 Registers",
+   "points": [
+    "x86-64 has 16 named registers",
+    "These can store 64 bits each",
+    "They are very close to the processor: it can access register values almost instantaneously (i.e., within one processor cycle, multiple billion times per second)",
+    "Very informative: [Wikibooks: x86 Architecture](https://en.wikibooks.org/wiki/X86_Assembly/X86_Architecture)"
+   ],
+   "aside": {
+    "image": "img/x86-registers.png",
+    "alt": "Table of the 16 x86-64 integer registers and their usage: %rax return value, %rdi to %r9 arguments 1 to 6, %rsp stack pointer, others caller or callee saved",
+    "shadow": false,
+    "caption": "Source: Lora Charles, [slideplayer.com](http://slideplayer.com/slide/9679824/)"
+   }
+  },
+  {
+   "layout": "table",
+   "title": "x86-64 Registers: Naming",
+   "columns": [
+    "Architecture",
+    "Registers",
+    "Names"
+   ],
+   "rows": [
+    [
+     "8080 (1974)",
+     "six paired registers",
+     "(B,C), (D,E), (H,L)"
+    ],
+    [
+     "8086 (1978)",
+     "8× 16-bit registers",
+     "%ax, %bx, … %si, %di, %bp"
+    ],
+    [
+     "IA32 (1985)",
+     "8× 32-bit registers",
+     "%eax, %ebx, …, %ebp"
+    ],
+    [
+     "x86-64 (2000)",
+     "16× 64-bit registers",
+     "%rax, %rbx, …, %r8 … %r15"
+    ]
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "x86-64 Registers: Names for Parts of a Register",
+   "points": [
+    "%rdi, %rax, %rbx, %rcx, etc. denote the entire 64 bits (i.e., the so-called quad-word) of a register",
+    "To address the other, low-order portions, other names are used:"
+   ],
+   "defs": [
+    [
+     "%edi, %eax, etc.",
+     "32 bits, double-word («l» or «d»)"
+    ],
+    [
+     "%di, %ax, etc.",
+     "16 bits, word («w»)"
+    ],
+    [
+     "%dil, %al, etc.",
+     "8 bits, byte («b»)"
+    ]
+   ],
+   "aside": {
+    "image": "img/register-names.png",
+    "alt": "Table with the 64-bit register names and the names of their lower 32, 16 and 8 bits, from rax, eax, ax, al to r15, r15d, r15w, r15b",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "text",
+   "title": "x86-64 Registers: Who Saves What?",
+   "callout": {
+    "text": "«Function calls are just an elaborate illusion»",
+    "style": "teal"
+   },
+   "defs": [
+    [
+     "Caller saved",
+     "the caller of a procedure needs to take care of these registers, no guarantees: foo() may override %r10"
+    ],
+    [
+     "Callee saved",
+     "the caller can trust that these hold the same value after a call: main can trust that %rbx is unchanged. If foo() uses that register, it needs to restore the value before returning to main()"
+    ],
+    [
+     "Stack pointer",
+     "indicates the current position in the run-time stack (more on this next week)"
+    ]
+   ],
+   "aside": {
+    "code": "main() {\n  int i = 2;\n  foo();\n  i = i + 1;\n}"
+   }
+  },
+  {
+   "layout": "menu",
+   "title": "Our Menu for Today",
+   "items": [
+    "Introduction to Assembly Language",
+    "Registers and Memory",
+    "Assembly Operands",
+    "Common Assembly Instructions",
+    "Conditionals and Loops",
+    "A simple Exploit"
+   ],
+   "current": 3
+  },
+  {
+   "layout": "table",
+   "title": "Assembly Operands",
+   "lead": "An x86-64 instruction has zero to three operands (`ret`, `notq %rax`, `addq %rdi, %rax`, `imulq $300, %rdi, %rax`). Operands are always one of three types:",
+   "columns": [
+    "Type",
+    "Example",
+    "Means"
+   ],
+   "rows": [
+    [
+     "Immediate operand (prefixed with `$`)",
+     "`addq $16, %rcx`, `subq $0x4050, %rax`",
+     "the value itself"
+    ],
+    [
+     "Register name (prefixed with `%`)",
+     "`addq %rdx, %rcx`",
+     "the content of the register"
+    ],
+    [
+     "Absolute memory location (usually hex)",
+     "`0x104`",
+     "Mem[0x104]"
+    ],
+    [
+     "Memory location",
+     "`(%rax)`",
+     "Mem[%rax]"
+    ],
+    [
+     "Scaled indexed displaced memory location",
+     "`0x14(%rax,%rdx,4)`",
+     "Mem[0x14 + %rax + %rdx × 4]"
+    ],
+    [
+     "In general",
+     "`d(Rb,Ri,s)`",
+     "Mem[d + Rb + Ri × s]"
+    ]
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "What's the value and type of each of these operands?",
+   "points": [
+    "`%rax`",
+    "`$0x108`",
+    "`0x104`",
+    "`(%rax)`",
+    "`4(%rax)`",
+    "`(%rax,%rdx,4)`"
+   ],
+   "aside": {
+    "code": "Given register contents\n%rax   0x100\n%rcx   0x1\n%rdx   0x3\n\nGiven memory contents\n0x100  0xFF\n0x104  0xAB\n0x108  0x13\n0x10C  0x11"
+   },
+   "after": "Memory is byte-addressable; the table simply shows one 4-byte word per row."
+  },
+  {
+   "layout": "table",
+   "title": "Value and Type of Each Operand",
+   "columns": [
+    "Operand",
+    "Value",
+    "Type"
+   ],
+   "rows": [
+    [
+     "`%rax`",
+     "0x100",
+     "register name"
+    ],
+    [
+     "`$0x108`",
+     "0x108",
+     "immediate value"
+    ],
+    [
+     "`0x104`",
+     "0xAB",
+     "absolute memory location"
+    ],
+    [
+     "`(%rax)`",
+     "0xFF",
+     "memory location"
+    ],
+    [
+     "`4(%rax)`",
+     "0xAB",
+     "memory location"
+    ],
+    [
+     "`(%rax,%rdx,4)`",
+     "0x11",
+     "memory location"
+    ]
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Why exactly 0x11?",
+   "points": [
+    "%rax contains 0x100 (a memory address, i.e., a pointer)",
+    "%rax + 4 × %rdx = 0x100 + 4 × 0x3 = 0x100 + 0xC = 0x10C",
+    "The parentheses ( ) tell us that we need to dereference 0x10C: Mem[0x10C] = 0x11"
+   ],
+   "aside": {
+    "code": "(%rax,%rdx,4)\n= Mem[%rax + %rdx * 4]\n= Mem[0x100 + 0x3 * 4]\n= Mem[0x10C]\n= 0x11"
+   }
+  },
+  {
+   "layout": "menu",
+   "title": "Our Menu for Today",
+   "items": [
+    "Introduction to Assembly Language",
+    "Registers and Memory",
+    "Assembly Operands",
+    "Common Assembly Instructions",
+    "Conditionals and Loops",
+    "A simple Exploit"
+   ],
+   "current": 4
+  },
+  {
+   "layout": "text",
+   "title": "Data Movement",
+   "lead": "Data movement from source to destination.",
+   "groups": [
+    {
+     "heading": "x86-64 data movement instructions (excerpt)",
+     "points": [
+      "`mov(b/w/l/q)`: move byte/word/double-word/quad-word",
+      "`movabsq`: move an absolute 64-bit immediate value"
+     ]
+    },
+    {
+     "heading": "Observations",
+     "points": [
+      "We can move chunks of 8, 16, 32, and 64 bits",
+      "Movement from memory to memory is not permitted in general!"
+     ]
+    }
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "Moving Immediate Values",
+   "columns": [
+    "Instruction",
+    "Contents of %rax afterwards"
+   ],
+   "rows": [
+    [
+     "1: `movabsq $0x0011223344556677, %rax`",
+     "0x0011223344556677"
+    ],
+    [
+     "2: `movb $-1, %al`",
+     "0x00112233445566FF"
+    ],
+    [
+     "3: `movw $-1, %ax`",
+     "0x001122334455FFFF"
+    ],
+    [
+     "4: `movl $-1, %eax`",
+     "==0x00000000FFFFFFFF=="
+    ],
+    [
+     "5: `movq $-1, %rax`",
+     "0xFFFFFFFFFFFFFFFF"
+    ]
+   ],
+   "after": "Line 4 is not an error. It is due to the standard convention of how double-words are copied (it avoids partial-register dependencies)!"
+  },
+  {
+   "layout": "table",
+   "title": "Moving between Registers and Memory",
+   "lead": "Remember: d(Rb,Ri,s) = Mem[d + Rb + Ri × s]",
+   "columns": [
+    "Step",
+    "%rax",
+    "%rbx",
+    "Memory"
+   ],
+   "rows": [
+    [
+     "Start",
+     "0x?..?",
+     "0x?..?",
+     "0x0..00 to 0x0..0C: all 0x?..?"
+    ],
+    [
+     "1: `movq $0x000000000000AFFE, %rax`",
+     "0x0..AFFE",
+     "0x?..?",
+     "unchanged"
+    ],
+    [
+     "2: `movq $0x0000000000000008, %rbx`",
+     "0x0..AFFE",
+     "0x0..08",
+     "unchanged"
+    ],
+    [
+     "3: `movq %rax, (%rbx)`",
+     "0x0..AFFE",
+     "0x0..08",
+     "0x0..08: 0x0..AFFE"
+    ],
+    [
+     "4: `movq %rax, -8(%rbx)`",
+     "0x0..AFFE",
+     "0x0..08",
+     "0x0..00: 0x0..AFFE, and 0x0..08: 0x0..AFFE"
+    ]
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Binky's Data Movement Exercise",
+   "code": "long exchange(long* xpointer, long y) {\n  long x = *xpointer;\n  *xpointer = y;\n  return x;\n}\n\nexchange:\n  movq  (%rdi), %rax\n  movq  %rsi, (%rdi)\n  ret",
+   "points": [
+    "Compiled with the compiler explorer (optimization level `-O1`)",
+    "Observation: C pointers are simply addresses in memory",
+    "Arguments are assigned to registers in order: %rdi → %rsi → %rdx → %rcx → %r8 → %r9",
+    "In this example, `xpointer` goes into %rdi, `y` goes into %rsi"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Sample Exam Question (6pt ~ 6min)",
+   "lead": "(6pt) Complete the figure given the following information:",
+   "points": [
+    "Register RSI contains the value 12",
+    "Register RDX contains the value 0xFFFFFFFF",
+    "Register RAX represents a pointer to memory location 0xFFFF0000",
+    "What is the result of the processor executing the instruction `movq (%rax), %rsi`?",
+    "The memory location immediately below 0xFFFF0000 is called 0xFFFF0008. Why?"
+   ],
+   "aside": {
+    "code": "Register file\n%rax   ?\n%rdx   ?\n%rsi   ?\n%rdi   0x0000FFFF\n\nMemory\n0x00000000\n0x0000FFFF   42\n0xFFFF0000   68\n0xFFFF0008  144\n0xFFFFFFFF"
+   }
+  },
+  {
+   "layout": "code",
+   "title": "Sample Exam Question: Solution",
+   "code": "Register file\n%rax   0xFFFF0000\n%rdx   0xFFFFFFFF\n%rsi   12  ->  68\n%rdi   0x0000FFFF\n\nMemory\n0x00000000\n0x0000FFFF   42\n0xFFFF0000   68\n0xFFFF0008  144\n0xFFFFFFFF",
+   "points": [
+    "`movq (%rax), %rsi` reads the quad-word at the address in %rax (0xFFFF0000) into %rsi: 12 becomes 68",
+    "A quad-word has 8 bytes, and memory is byte-addressable: the next quad-word starts at 0xFFFF0008"
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "Arithmetic and Logic Operations",
+   "columns": [
+    "Instructions",
+    "Example",
+    "Effect"
+   ],
+   "rows": [
+    [
+     "`inc`, `dec`, `neg`, `not` (b/w/l/q)",
+     "`incq (%rsp)`",
+     "increments the value stored at the memory location pointed to by %rsp by $1"
+    ],
+    [
+     "`add`, `sub` (b/w/l/q); `imul` (w/l/q: 64b from 64b × 64b)",
+     "`subq %rax, %rdx`",
+     "reduces the value in %rdx by the value in %rax"
+    ],
+    [
+     "`xor`, `or`, `and` (b/w/l/q)",
+     "`orq %rax, %rbx`",
+     "binary OR, denoted using the pipe symbol: 001b | 100b = ???b"
+    ],
+    [
+     "`sal`, `shl` (same as sal), `sar`, `shr` (b/w/l/q)",
+     "`salq $3, %rax`",
+     "shifts the value in %rax left by 3 bits: multiplies it by 8"
+    ],
+    [
+     "`leaq S, D`: works like mov, but only computes the address and does not access memory at all",
+     "`movq $5, %rdx`\n`leaq 7(%rdx,%rdx,2), %rax`",
+     "computes %rax as 7 + 5 + 5 × 2 = 22"
+    ]
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Arithmetic and Logic Operations Exercise",
+   "callout": {
+    "text": "Can you do it without using imulq?"
+   },
+   "code": "long arith(long x, long y) {\n  long t1 = x | y;\n  t1 = t1 - y;\n  t1 = t1 * 48;\n  return t1;\n}\n\narith:\n  orq    %rsi, %rdi\n  subq   %rsi, %rdi\n  imulq  $48, %rdi\n  movq   %rdi, %rax",
+   "points": [
+    "Where do the arguments go? x → %rdi, y → %rsi",
+    "We compile this to assembly line by line…"
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Arithmetic and Logic Operations Exercise: Without imulq",
+   "code": "arith:\n  orq    %rsi, %rdi\n  subq   %rsi, %rdi\n  movq   %rdi, %rax\n  addq   %rax, %rax\n  addq   %rdi, %rax\n  salq   $4, %rax",
+   "points": [
+    "%rax = t1, then t1 + t1 = 2 × t1, then + t1 = 3 × t1",
+    "Shifting left by 4 bits multiplies by 16: 3 × 16 = 48",
+    "[Lecture 1: Shifting](https://hyperdecks.github.io/computersystems/01-information/html/#/72)"
+   ]
+  },
+  {
+   "layout": "quiz",
+   "title": "Potential Exam Question (5p)",
+   "lead": "`xorq %rcx, %rcx` computes a bit-by-bit xor of a register's contents with the same register's contents, and stores the result in that register.",
+   "items": [
+    "What would be any alternative instruction to achieve the same result?",
+    "Can you speculate why the compiler typically chooses to use the xor option over this?"
+   ],
+   "source": "[defuse.ca/online-x86-assembler.htm](https://defuse.ca/online-x86-assembler.htm)",
+   "notes": "Alternative: movq $0, %rcx. The encoding of xorq %rcx, %rcx might be shorter than for the movq $0, %rcx operation."
+  },
+  {
+   "layout": "menu",
+   "title": "Our Menu for Today",
+   "items": [
+    "Introduction to Assembly Language",
+    "Registers and Memory",
+    "Assembly Operands",
+    "Common Assembly Instructions",
+    "Conditionals and Loops",
+    "A simple Exploit"
+   ],
+   "current": 5
+  },
+  {
+   "layout": "code",
+   "title": "Conditionals Intuition",
+   "code": "long conditionalsExample(long x) {\n  if (x > 0) {\n    return 1;\n  } else {\n    return 0;\n  }\n}\n\nlong conditionalsExample(long x) {\n    if (x <= 0) goto mark;\n    return 1;\nmark:\n    return 0;\n}",
+   "points": [
+    "Same for both!",
+    "This also works for loops: we jump back, as in [our small ISA](https://hyperdecks.github.io/computersystems/03-processors/html/#/33)"
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Conditionals Intuition: The Assembly",
+   "callout": {
+    "text": "How exactly do cmpq and jle work?"
+   },
+   "code": "conditionalsExample(long):\n        pushq   %rbp\n        movq    %rsp, %rbp\n        movq    %rdi, -8(%rbp)\n        cmpq    $0, -8(%rbp)\n        jle     .L6\n        movl    $1, %eax\n        jmp     .L4\n.L6:\n        nop\n        movl    $0, %eax\n.L4:\n        popq    %rbp\n        ret",
+   "points": [
+    "Same for both C versions!",
+    "Variable x is located in %rdi"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Condition Code Registers",
+   "points": [
+    "Single-bit registers («flags») that hold attributes of the most recent arithmetic, logical or comparison operation",
+    "Logical operations always set CF and OF to zero (there cannot be an overflow)",
+    "Shift operations set CF to the last bit shifted out; OF is defined only for 1-bit shifts"
+   ],
+   "defs": [
+    [
+     "CF",
+     "carry flag: set on a carry out"
+    ],
+    [
+     "ZF",
+     "zero flag: set if the result is zero"
+    ],
+    [
+     "SF",
+     "sign flag: set if the result is negative"
+    ],
+    [
+     "OF",
+     "overflow flag: set on a [2's complement overflow](https://hyperdecks.github.io/computersystems/01-information/html/#/68)"
+    ]
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "Condition Codes",
+   "lead": "We do not have to execute arithmetic or logic operations just to set condition codes. We can set them explicitly through cmp and test:",
+   "points": [
+    "`cmp` does a `sub`, but without remembering the result. It just remembers the condition codes",
+    "`test` does an `and`, but without remembering the result. It just remembers the condition codes"
+   ],
+   "aside": {
+    "code": "cmp(b/w/l/q) A, B    # CCs from B - A\ntest(b/w/l/q) A, B   # CCs from A & B\n\ntestq %rax, %rax\n# compare %rax to itself to see\n# whether its content is negative,\n# zero or positive"
+   }
+  },
+  {
+   "layout": "code",
+   "title": "Control Flow: Conditionals",
+   "code": "void loopToZero(long x) {\n  do {\n    x = x - 1;\n  } while (x > 0);\n}\n// Same as:\nvoid loopToZero(long x) {\nmyMark:\n  x = x - 1;\n  if (x > 0) goto myMark;\n}\n// Compiled:\nloopToZero(long):\n.L2:\n  subq   $1, %rdi\n  testq  %rdi, %rdi\n  jg     .L2\n  ret",
+   "points": [
+    "Logic, arithmetic and comparison instructions (testq and cmpq) set condition codes",
+    "Conditional jumps and conditional moves read them",
+    "These jumps and moves implement conditionals, switches and loops in a computer system"
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "Condition Codes to Conditionally Jump",
+   "columns": [
+    "Instruction",
+    "Jump…"
+   ],
+   "rows": [
+    [
+     "`jmp Label`",
+     "unconditional jump: always jumps!"
+    ],
+    [
+     "`jmp *Operand`",
+     "to the location read from memory"
+    ],
+    [
+     "`je Label`",
+     "if equal (zero flag set)"
+    ],
+    [
+     "`jne Label`",
+     "if not equal (zero flag not set)"
+    ],
+    [
+     "`js Label`",
+     "if negative (sign flag set)"
+    ],
+    [
+     "`jns Label`",
+     "if nonnegative (sign flag not set)"
+    ]
+   ]
+  },
+  {
+   "layout": "table",
+   "title": "Condition Codes to Conditionally Jump: Signed and Unsigned",
+   "columns": [
+    "Signed",
+    "Jump…",
+    "Unsigned",
+    "Jump…"
+   ],
+   "rows": [
+    [
+     "`jg Label` (= jnle)",
+     "if greater / if not less or equal (>)",
+     "`ja Label` (= jnbe)",
+     "if above (>)"
+    ],
+    [
+     "`jge Label` (= jnl)",
+     "if greater or equal / if not less (>=)",
+     "`jae Label` (= jnb)",
+     "if above or equal (>=)"
+    ],
+    [
+     "`jl Label` (= jnge)",
+     "if less (<)",
+     "`jb Label` (= jnae)",
+     "if below (<)"
+    ],
+    [
+     "`jle Label` (= jng)",
+     "if less or equal (<=)",
+     "`jbe Label` (= jna)",
+     "if below or equal (<=)"
+    ]
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Conditional Jumps Example",
+   "code": "checkEquals(long, long):\n\tpushq   %rbp\n\tmovq    %rsp, %rbp\n\tmovq    %rdi, -8(%rbp)\n\tmovq    %rsi, -16(%rbp)\n\tmovq    -8(%rbp), %rax\n\tcmpq    -16(%rbp), %rax\n\tjne     .L2\n\tmovl    $1, %eax\n\tjmp     .L3\n.L2:\n\tmovl    $0, %eax\n.L3:\n\tpopq    %rbp\n\tret",
+   "points": [
+    "C: `long checkEquals(long x, long y) { if (x == y) return 1; else return 0; }`",
+    "Where do the arguments go? x → %rdi, y → %rsi"
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Loop Example",
+   "callout": {
+    "text": "What goes in place of the ???"
+   },
+   "code": "long obscureCounter(long x) {\n  do {\n    ???\n  } while (???);\n}\n\nobscureCounter(long):\n        pushq   %rbp\n        movq    %rsp, %rbp\n        movq    %rdi, -8(%rbp)\n.L3:\n        subq    $3, -8(%rbp)\n        cmpq    $0, -8(%rbp)\n        jle     .L2\n        jmp     .L3\n.L2:\n        nop",
+   "points": [
+    "Argument x goes into register %rdi"
+   ],
+   "notes": "do { x = x - 3; } while (x > 0);"
+  },
+  {
+   "layout": "code",
+   "title": "Extensive Conditional Jumps Exercise",
+   "callout": {
+    "text": "Homework! Write the C code of inkognito"
+   },
+   "lead": "This is NOT an example of a good exam question, but it's good for training.",
+   "code": "inkognito(long, long):\n  pushq %rbp\n  movq  %rsp, %rbp\n  movq  $0, -8(%rbp)\n.L3:\n  cmpq  $0, %rdi\n  jle   .L2\n  movq  %rsi, %rax\n  addq  %rax, -8(%rbp)\n  subq  $1, %rdi\n  jmp   .L3\n.L2:\n  movq  -8(%rbp), %rax\n  popq  %rbp\n  ret",
+   "points": [
+    "`long inkognito(long x, long y) { … }`",
+    "Remember: arguments are assigned to registers in order: %rdi → %rsi → %rdx → %rcx → %r8 → %r9"
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Extensive Conditional Jumps Exercise: Step by Step",
+   "code": "inkognito(long, long):\n  pushq %rbp\n  movq  %rsp, %rbp\n  movq  $0, -8(%rbp)    # store a $0 in memory\n.L3:\n  cmpq  $0, %rdi        # CCs from (%rdi - $0)\n  jle   .L2             # jump if less or equal…\n  movq  %rsi, %rax      # %rax = y\n  addq  %rax, -8(%rbp)  # add %rax to the value in memory\n  subq  $1, %rdi        # %rdi = %rdi - 1\n  jmp   .L3             # jump!\n.L2:\n  movq  -8(%rbp), %rax  # move the value from memory to %rax\n  popq  %rbp\n  ret"
+  },
+  {
+   "layout": "code",
+   "title": "Extensive Conditional Jumps Exercise: Cleaned Up…",
+   "code": "long inkognito(long x, long y) {\n  long val = 0;\n  while (x > 0) {\n    val = val + y;\n    x = x - 1;\n  }\n  return val;\n}",
+   "points": [
+    "For x > 0, inkognito adds y to itself x times: it multiplies x and y",
+    "Remember: multiplying is just repeated adding ([lecture 1](https://hyperdecks.github.io/computersystems/01-information/html/#/19))"
+   ]
+  },
+  {
+   "layout": "questions",
+   "title": "Any Questions / Comments / Doubts / Concerns?",
+   "heading": "Take-Homes",
+   "points": [
+    "You have seen many frequently occurring assembly instructions in the x86-64 ISA",
+    "Conditionals and loops are simply implemented as «jumps» on the machine. In C, we call these «gotos»; the ARMv8 ISA calls them «branches»",
+    "Get a feeling for assembly by training, and by experimenting with the compiler explorer at [godbolt.org](https://godbolt.org/)",
+    "Exercise 2 gives you an opportunity to train: among other tasks, you will reverse-engineer a program from assembly"
+   ]
+  },
+  {
+   "layout": "study",
+   "title": "How to Study this Material?",
+   "groups": [
+    {
+     "heading": "Basic Depth",
+     "points": [
+      "Read up on assembly in the Bryant and O'Hallaron book: chapter 3, from 3.0 to 3.6",
+      "Work diligently on Exercise 2",
+      "Go back over [lecture 1](https://hyperdecks.github.io/computersystems/01-information/html/), [lecture 2](https://hyperdecks.github.io/computersystems/02-circuits/html/) and [lecture 3](https://hyperdecks.github.io/computersystems/03-processors/html/): it all comes together here"
+     ]
+    },
+    {
+     "heading": "Advanced Depth",
+     "points": [
+      "Really, it's enough if you understand Bryant and O'Hallaron up to chapter 3.6 and all slide contents"
+     ]
+    }
+   ],
+   "aside": {
+    "image": "img/book-chapter3-toc.png",
+    "alt": "Table of contents of chapter 3 of the book, sections 3.4 to 3.6: accessing information, arithmetic and logical operations, control",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "menu",
+   "title": "Our Menu for Today",
+   "items": [
+    "Introduction to Assembly Language",
+    "Registers and Memory",
+    "Assembly Operands",
+    "Common Assembly Instructions",
+    "Conditionals and Loops",
+    "A simple Exploit"
+   ],
+   "current": 6
+  },
+  {
+   "layout": "code",
+   "title": "Demo: Read out lots of memory…",
+   "code": "#include <iostream>\nusing namespace std;\nint main() {\n  char caArray[] = \"Hello World\";\n  int iIndex = 0;\n  while(true) {\n    cout << \"Address: \"\n         << (int*)(&(caArray[iIndex]));\n    cout << \"  Char: \" << caArray[iIndex]\n         << endl;\n    iIndex = iIndex + 1;\n  }\n  return 0;\n}",
+   "points": [
+    "Write «Hello World» to memory",
+    "Print the memory location of caArray[iIndex], and the memory contents at caArray[iIndex]",
+    "Increase the array index",
+    "Keep running forever (i.e., until you're stopped…)"
+   ]
+  },
+  {
+   "layout": "code",
+   "title": "Demo: Stack Exploit!",
+   "code": "int bar() {\n  // Let's try to find foo's secret number...\n}\n\nint foo() {\n  int fooSecretNumber = 0xAFFE;\n  bar();\n  return 0;\n}\n\nint main() {\n  foo();\n}"
+  },
+  {
+   "layout": "code",
+   "title": "For the Interested: Double-Pointer Example",
+   "callout": {
+    "text": "How to put a 9 into the location that sPointer points at without using the sPointer variable?"
+   },
+   "code": "int* sPointer = (int*)0x100;\nint** fPointer = (int**)0x10c;\n*sPointer = 5;\n*fPointer = sPointer;\n\nfPointer = 0x100;\n*fPointer = 9;   // This would work!\n**fPointer = 9;"
+  },
+  {
+   "layout": "text",
+   "title": "For the Interested: What happens for more than 6 arguments?",
+   "paragraphs": [
+    "`long myfunc(long a, long b, long c, long d, long e, long f, long g, long h)`"
+   ],
+   "points": [
+    "Arguments are assigned to registers in order: %rdi → %rsi → %rdx → %rcx → %r8 → %r9",
+    "The remaining arguments g and h are on the stack, above the return address"
+   ],
+   "aside": {
+    "image": "img/stack-frame.png",
+    "alt": "Stack diagram from high to low addresses: h at RBP+24, g at RBP+16, return address at RBP+8, saved RBP, then the local variables xx, yy, zz and a red zone of 128 bytes; registers RDI to R9 hold a to f",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "questions",
+   "title": "Any Questions / Comments / Doubts / Concerns?"
+  }
+ ]
+}
