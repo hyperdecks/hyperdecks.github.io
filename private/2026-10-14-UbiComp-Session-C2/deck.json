@@ -1,0 +1,49 @@
+{
+  "title": "UbiComp 2026 Session C2: Proactive AI assistants",
+  "lang": "en",
+  "footer": "UbiComp 2026 | Session C2 | Proactive AI assistants",
+  "slides": [
+    {
+      "layout": "table",
+      "title": "Welcome to Session C2: **Proactive AI assistants**",
+      "lead": "Talks: 10min; Q&A: 3min",
+      "callout": {
+        "style": "outline",
+        "text": "Chair: **Simon Mayer**\nUniversity of St.Gallen\nStudent volunteer: **Molly Zhuangtong Huang**\nUniversity of Macau"
+      },
+      "columns": [
+        "Time",
+        "Talk",
+        "Speaker"
+      ],
+      "rows": [
+        [
+          "14:00",
+          "After Talking with 1,000 Personas: Learning Preference-Aligned Proactive Assistants from Large-Scale Simulated Persona Interactions",
+          "**Ziyi Xuan**, Lehigh University"
+        ],
+        [
+          "14:13",
+          "MemAura: Structured Context Memory for Personalized LLM Reasoning in Smart Environments",
+          "**Siyuan Liu**, Hong Kong University of Science and Technology (Guangzhou)"
+        ],
+        [
+          "14:26",
+          "JARVIS for HVAC: LLM-based Question-Answer Framework for Sensor-driven HVAC System Interaction",
+          "**Sungmin Lee**, KAIST and Yonsei University"
+        ],
+        [
+          "14:39",
+          "Enhancing Smartphone-based Inertial Indoor Tracking with Conversational User Input",
+          "**Smitha Sheshadri**, Singapore Management University"
+        ],
+        [
+          "14:52",
+          "Exploring LLMs for Generating Communicational Actions of External Interfaces on Autonomous Vehicles",
+          "**Xinyue Gui**, The University of Tokyo"
+        ]
+      ],
+      "notes": "Welcome, introduce yourself as session chair and introduce Molly Zhuangtong Huang (University of Macau; she prefers to be called Molly), the student volunteer (right-hand side of the room; can copy slides to the session computer by USB). Molly speaks Chinese and offers to help with any communication with local staff. Five talks, 10 minutes each plus 3 minutes of questions; time signals from the front. Theme: systems that understand people well enough to know when to listen, what to remember and when to speak up. 122 human participants across the five papers, plus 1,000 simulated personas in the first one. Full opening in Session-C2_chair_script.md."
+    }
+  ]
+}

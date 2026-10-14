@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UbiComp 2026 Session C2: Proactive AI assistants | University of St.Gallen</title>
+<style>@font-face{font-family:HSGSans;font-weight:300;font-style:normal;font-display:swap;src:local("Gill Sans MT Pro Light"),local("GillSansMTPro-Light"),local("Gill Sans Nova Light"),local("GillSansNova-Light"),local("Gill Sans Light"),local("GillSans-Light"),url(assets/GilliusADFNo2-Regular.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:300;font-style:italic;font-display:swap;src:local("Gill Sans MT Pro Light Italic"),local("GillSansMTPro-LightItalic"),local("Gill Sans Nova Light Italic"),local("GillSansNova-LightItalic"),local("Gill Sans Light Italic"),local("GillSans-LightItalic"),url(assets/GilliusADFNo2-Italic.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:600;font-style:normal;font-display:swap;src:local("Gill Sans MT Pro Medium"),local("GillSansMTPro-Medium"),local("Gill Sans Nova Medium"),local("GillSansNova-Medium"),local("Gill Sans SemiBold"),local("GillSans-SemiBold"),url(assets/GilliusADFNo2-Bold.otf) format('opentype')}
+@font-face{font-family:HSGSans;font-weight:600;font-style:italic;font-display:swap;src:local("Gill Sans MT Pro Medium Italic"),local("GillSansMTPro-MediumItalic"),local("Gill Sans Nova Medium Italic"),local("Gill Sans SemiBold Italic"),local("GillSans-SemiBoldItalic"),url(assets/GilliusADFNo2-BoldItalic.otf) format('opentype')}
+@font-face{font-family:HSGSerif;font-weight:400;font-style:normal;font-display:swap;src:local("Palatino Linotype"),local("PalatinoLinotype-Roman"),local("Palatino"),local("Palatino-Roman"),local("Book Antiqua"),url(assets/texgyrepagella-regular.otf) format('opentype')}
+@font-face{font-family:HSGSerif;font-weight:400;font-style:italic;font-display:swap;src:local("Palatino Linotype Italic"),local("PalatinoLinotype-Italic"),local("Palatino Italic"),local("Palatino-Italic"),url(assets/texgyrepagella-italic.otf) format('opentype')}
+
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+/* One unit (U) is 1% of a 16:9 slide; the template slide is 13.33in wide, so calc(1*var(--u)) = 9.6pt.
+   Type scale of the HSG template, fixed for every deck: headline 32pt (calc(3.33*var(--u))), body 18.7pt (calc(1.94*var(--u))), sub-points 14pt (calc(1.46*var(--u))),
+   small 12pt (calc(1.25*var(--u))), source 8pt (calc(.83*var(--u))). Text is Gill Sans Light; bold is Gill Sans Medium. */
+:root{--ctl:60px;--bar:var(--ctl);--u:min(1vw,calc((100vh - var(--bar))/56.25));--u:min(1vw,calc((100dvh - var(--bar))/56.25));
+  --s-h1:calc(5.2*var(--u));--s-h2:calc(3.33*var(--u));--s-kick:calc(2.1*var(--u));--s-body:calc(1.94*var(--u));--s-mid:calc(1.6*var(--u));--s-sub:calc(1.46*var(--u));--s-small:calc(1.25*var(--u));--s-tiny:calc(.83*var(--u));
+  --green:#00802F;--dgreen:#0A5F2D;--salmon:#EB6969;--teal:#73A5AF;--row-a:#CBD8CD;--row-b:#E7EDE8;--yellow:#FFF04B;
+  --fg:#000000;--body:#1a1a1a;--quiet:#595959;--line:#d9d9d9;--k-stage:#e4e4e4}
+body{font-family:HSGSans,"Gill Sans MT Pro","Gill Sans MT","Gill Sans","Gill Sans Nova",Calibri,sans-serif;font-weight:300;
+  -webkit-font-smoothing:antialiased;overflow:hidden;background:var(--k-stage);color:var(--fg)}
+h1,h2,h3,p,ul,ol,dl,dd,figure,pre{margin:0;padding:0}
+b,strong,th{font-weight:600}
+a{color:var(--green);text-underline-offset:.15em}
+a:focus-visible,button:focus-visible{outline:2px solid currentColor;outline-offset:2px}
+code,pre{font-family:"Courier New",Courier,"Liberation Mono",monospace;font-weight:400}
+mark{background:var(--yellow);color:inherit;padding:0 .1em}
+sub,sup{font-size:.65em;line-height:0}
+
+.slide{position:absolute;left:50%;top:calc((100% - var(--bar))/2);width:calc(100*var(--u));height:calc(56.25*var(--u));transform:translate(-50%,-50%);
+  overflow:hidden;visibility:hidden;background:#fff;color:var(--fg)}
+.slide.active{visibility:visible}
+/* the title sits in the template's title box (calc(4.1*var(--u)) to calc(10.8*var(--u)), text on its bottom line); content starts at calc(14*var(--u)) */
+.frame{position:relative;z-index:1;width:100%;height:100%;padding:calc(4.1*var(--u)) calc(3.92*var(--u)) calc(5*var(--u));display:flex;flex-direction:column;min-width:0}
+.headrow{display:flex;justify-content:space-between;align-items:flex-end;gap:calc(3*var(--u));min-height:calc(6.7*var(--u));flex:none}
+h2{font-size:var(--s-h2);font-weight:300;line-height:1.08;letter-spacing:-.005em;color:var(--fg);max-width:calc(78*var(--u));text-wrap:balance}
+.lead{font-size:var(--s-body);line-height:1.25;margin-top:calc(3.2*var(--u));max-width:calc(86*var(--u));color:var(--body)}
+.main{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:flex-start;padding:calc(3.2*var(--u)) 0 calc(.6*var(--u))}
+.l-menu .main,.l-quiz .main,.l-image .main,.l-gallery .main,.l-people .main,.l-syllabus .main{justify-content:safe center}
+.lead+.main{padding-top:calc(2.6*var(--u))}
+.source{position:absolute;left:calc(3.92*var(--u));bottom:calc(2.1*var(--u));max-width:calc(84*var(--u));font-size:var(--s-tiny);line-height:1.3;color:var(--quiet);z-index:2}
+.dfoot{position:absolute;left:calc(3.92*var(--u));bottom:calc(2.1*var(--u));font-size:var(--s-tiny);color:var(--quiet);z-index:2}
+.source~.dfoot{display:none}
+/* the slide number in the green HSG tab, bottom right */
+.pn{position:absolute;right:calc(3.94*var(--u));top:calc(51.41*var(--u));width:calc(2.33*var(--u));height:calc(2.56*var(--u));z-index:3;display:grid;place-items:center;padding:calc(.45*var(--u)) 0 0 calc(.45*var(--u));
+  font-size:calc(1.1*var(--u));font-weight:300;color:#fff;font-variant-numeric:tabular-nums}
+.pn svg{position:absolute;inset:0;width:100%;height:100%;fill:var(--green);z-index:-1}
+
+/* running text: paragraphs without a mark, points with a dash as on the template */
+.copy{display:grid;gap:calc(1.5*var(--u));align-content:start;min-width:0}
+.copy p{font-size:var(--s-body);line-height:1.25;color:var(--body)}
+ul.dash{list-style:none;display:grid;gap:calc(.9*var(--u))}
+ul.dash>li{position:relative;padding-left:calc(2.2*var(--u));font-size:var(--s-body);line-height:1.25;color:var(--body)}
+ul.dash>li::before{content:"-";position:absolute;left:calc(.1*var(--u))}
+ul.dash ul{list-style:none;display:grid;gap:calc(.25*var(--u));margin-top:calc(.35*var(--u))}
+ul.dash ul li{position:relative;padding-left:calc(1.8*var(--u));font-size:var(--s-sub);line-height:1.25;color:var(--body)}
+ul.dash ul li::before{content:"-";position:absolute;left:0}
+.dense ul.dash>li,.dense .copy p{font-size:var(--s-mid)}
+.dense ul.dash{gap:calc(.6*var(--u))}
+.group h3{font-size:calc(2.4*var(--u));font-weight:300;line-height:1.15;color:var(--fg);margin-bottom:calc(.5*var(--u))}
+.group ul.dash{gap:calc(.2*var(--u))}
+.dense .group ul.dash>li,.dense .group p{font-size:var(--s-mid)}
+.groups{display:grid;gap:calc(3*var(--u))}
+.defs{display:grid;grid-template-columns:auto 1fr;gap:calc(.45*var(--u)) calc(4*var(--u));font-size:var(--s-mid);line-height:1.25;color:var(--body)}
+.defs dt{position:relative;padding-left:calc(2.2*var(--u))}
+.defs dt::before{content:"-";position:absolute;left:calc(.1*var(--u))}
+.after{font-size:var(--s-body);line-height:1.3;color:var(--body);margin-top:calc(2.6*var(--u));padding-left:calc(24*var(--u))}
+
+/* copy on the left, picture, box or code on the right */
+.split{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(0,1fr);gap:calc(4*var(--u));align-items:center}
+.split.wide{grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+.l-code .split{align-items:start}
+.pic{display:flex;flex-direction:column;align-items:center;min-height:0}
+.pic img{display:block;max-width:100%;max-height:calc(34*var(--u));width:auto;height:auto;object-fit:contain}
+.pic.shadow img{filter:drop-shadow(calc(.35*var(--u)) calc(.35*var(--u)) calc(.55*var(--u)) rgba(0,0,0,.38))}
+.pic figcaption{font-size:var(--s-tiny);color:var(--quiet);margin-top:calc(.9*var(--u));text-align:center;max-width:calc(44*var(--u))}
+
+/* boxes: green for a question to the room, an outline for an example or a note, teal for a remark */
+.box{border-radius:calc(.9*var(--u));padding:calc(1.3*var(--u)) calc(2*var(--u));font-size:var(--s-mid);line-height:1.25;text-wrap:balance}
+.box.green{background:var(--green);border:calc(.12*var(--u)) solid var(--dgreen);color:#fff;text-align:center}
+.box.outline{background:#fff;border:calc(.12*var(--u)) solid var(--green);color:var(--body);border-radius:0}
+.box.teal{background:var(--teal);border:calc(.12*var(--u)) solid #5d8f99;color:#fff;border-radius:0}
+.box h3{font-size:var(--s-mid);font-weight:600;margin-bottom:calc(.4*var(--u))}
+.box a{color:inherit}
+.callout{flex:none;max-width:calc(34*var(--u));margin-bottom:calc(-1*var(--u))}
+.callout.box{font-size:var(--s-sub)}
+
+pre.code{font-size:calc(1.3*var(--u));line-height:1.35;padding:calc(1.6*var(--u)) calc(2*var(--u));white-space:pre;overflow:hidden;tab-size:4}
+pre.code.small{font-size:calc(1.05*var(--u))}
+pre.code.outline{background:#fff;border:calc(.12*var(--u)) solid var(--green);color:#262626}
+pre.code.teal{background:var(--teal);border:calc(.12*var(--u)) solid #5d8f99;color:#fff}
+.codecap{font-size:var(--s-tiny);color:var(--quiet);margin-top:calc(.8*var(--u))}
+
+/* table: green header, rows in two green tints, white rules */
+table.t{width:100%;border-collapse:collapse;font-size:var(--s-mid);line-height:1.2}
+.t th{background:var(--green);color:#fff;text-align:left;padding:calc(.75*var(--u)) calc(1*var(--u))}
+.t td{padding:calc(.65*var(--u)) calc(1*var(--u));color:var(--body);vertical-align:top}
+.t tr:nth-child(odd) td{background:var(--row-a)}
+.t tr:nth-child(even) td{background:var(--row-b)}
+.t th+th,.t td+td{border-left:calc(.15*var(--u)) solid #fff}
+.t tr+tr td{border-top:calc(.15*var(--u)) solid #fff}
+.t td:first-child{font-weight:600;color:var(--fg)}
+.t.many{font-size:var(--s-sub)}
+.t.many td{padding:calc(.45*var(--u)) calc(1*var(--u))}
+
+/* menu: the topics of the day in a thin green frame */
+.menu{border:calc(.12*var(--u)) solid var(--green);padding:calc(2.6*var(--u)) calc(2.4*var(--u));width:calc(66*var(--u));display:grid;gap:calc(.35*var(--u))}
+.menu p{font-size:var(--s-sub);line-height:1.3;color:var(--body)}
+.menu p.cur{font-weight:600;color:var(--green)}
+
+/* quiz: questions in green boxes, staggered in two columns */
+.quiz{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:calc(2.6*var(--u)) calc(3*var(--u));align-items:center}
+.quiz .box{justify-self:start;max-width:calc(40*var(--u))}
+.quiz .box:nth-child(even){justify-self:end}
+.quiz.n3 .box:last-child{grid-column:1/-1;justify-self:center}
+
+/* task: a salmon label set at an angle, as on the template's homework slides */
+.task{position:relative;flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr);align-items:center;gap:calc(4*var(--u))}
+.task .copy{align-self:start}
+.stamp{justify-self:center;background:var(--salmon);border:calc(.12*var(--u)) solid #d65b5b;border-radius:calc(1.1*var(--u));color:#fff;font-size:calc(3*var(--u));line-height:1.2;
+  padding:calc(1.7*var(--u)) calc(2.8*var(--u));transform:rotate(-9deg);text-align:center;max-width:calc(44*var(--u));text-wrap:balance}
+.task .go{position:absolute;right:calc(4*var(--u));bottom:calc(2*var(--u));font-size:var(--s-sub)}
+.task.solo{grid-template-columns:1fr}
+
+.gallery{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:calc(3*var(--u));align-items:end}
+.gallery .pic img{max-height:calc(30*var(--u))}
+.people{display:grid;grid-template-columns:repeat(var(--n),minmax(0,1fr));gap:calc(3*var(--u));align-items:end;justify-items:center}
+.person{display:flex;flex-direction:column;align-items:center;text-align:center;gap:calc(1.4*var(--u))}
+.person img{width:calc(13*var(--u));height:calc(16*var(--u));object-fit:cover;display:block;filter:drop-shadow(calc(.35*var(--u)) calc(.35*var(--u)) calc(.55*var(--u)) rgba(0,0,0,.38))}
+.person .name{font-size:var(--s-small);line-height:1.25;color:var(--fg)}
+.person .role{font-size:var(--s-small);line-height:1.25;color:var(--body)}
+.people.n1 img,.people.n2 img{width:calc(17*var(--u));height:calc(21*var(--u))}
+
+/* quote: the quote is the headline, right aligned, the picture below on the left */
+.l-quote .headrow{justify-content:flex-end}
+.l-quote h2{text-align:right;max-width:calc(64*var(--u));line-height:1.15;text-wrap:balance}
+.attr{font-size:var(--s-mid);text-align:right;color:var(--body);margin-top:calc(1*var(--u))}
+.qbody{flex:1;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:calc(4*var(--u));align-items:end;padding:calc(2*var(--u)) 0 calc(1*var(--u))}
+.qbody .pic{align-items:flex-start}
+.qbody .pic img{width:100%;max-height:calc(30*var(--u));object-position:left bottom}
+.qbody ul.dash>li{font-size:var(--s-sub)}
+
+/* questions and study slides carry the template's pictures: the figure on the question mark and the light bulb */
+.figure{display:flex;justify-content:center;align-items:center}
+.figure img{width:calc(22*var(--u));height:auto;display:block}
+.bulb{position:absolute;right:calc(4*var(--u));top:calc(2.2*var(--u));width:calc(10*var(--u));height:auto;z-index:2}
+.l-study .headrow{padding-right:calc(12*var(--u))}
+.l-questions .split{grid-template-columns:minmax(0,1fr) calc(24*var(--u))}
+.takeh{font-size:var(--s-mid);color:var(--body);margin-bottom:calc(1.6*var(--u))}
+.l-questions ul.dash{gap:calc(1.5*var(--u))}
+
+.l-questions .after{padding-left:calc(30*var(--u))}
+.l-questions.bare .main{justify-content:flex-end}
+.l-questions.bare .figure{justify-content:flex-end;padding-right:calc(2*var(--u))}
+.l-questions.bare .figure img{width:calc(24*var(--u))}
+
+/* syllabus: the course plan, one bar per session; the current one is teal; assignments in salmon on the right */
+.plan{display:grid;grid-template-columns:calc(11*var(--u)) calc(6*var(--u)) minmax(0,1fr) calc(23*var(--u));column-gap:calc(1.6*var(--u));align-items:center}
+.legend{grid-column:1;display:grid;gap:calc(1*var(--u));align-self:center}
+.legend span{display:grid;place-items:center;height:calc(3.4*var(--u));font-size:calc(1.05*var(--u));color:#fff}
+.lg-l{background:var(--green)}.lg-e{background:var(--dgreen)}.lg-a{background:var(--salmon)}
+.rows{grid-column:2/4;display:grid;grid-template-columns:calc(6*var(--u)) minmax(0,1fr);column-gap:calc(1.6*var(--u));row-gap:calc(.4*var(--u));align-items:center}
+.l-syllabus .main{padding-top:calc(1.4*var(--u))}
+.rows .date{font-size:calc(.72*var(--u));color:var(--quiet);text-align:right;font-variant-numeric:tabular-nums}
+.rows .bar{height:calc(2.15*var(--u));display:grid;place-items:center;font-size:calc(1.1*var(--u));color:#fff;background:var(--green);border-bottom:calc(.15*var(--u)) solid #00591f;padding:0 calc(1*var(--u));
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rows .bar.ex{background:var(--dgreen)}
+.rows .bar.cur{background:var(--teal);border-color:#5d8f99}
+.rows .brk{grid-column:2;height:calc(.45*var(--u));background:#111;margin:calc(.3*var(--u)) 0}
+.assign{grid-column:4;display:grid;row-gap:calc(.4*var(--u));align-self:stretch}
+.assign div{background:var(--salmon);color:#fff;font-size:calc(1.05*var(--u));display:grid;place-items:center;text-align:center;padding:calc(1*var(--u));margin:calc(.3*var(--u)) 0}
+
+/* title slide: logo, title and the course on the left, the gear on the right, the green wedge at the foot */
+.l-title .frame,.l-section .frame{padding:0;display:block}
+.logo{position:absolute;left:calc(3.9*var(--u));top:calc(3.4*var(--u));width:calc(24.3*var(--u));height:auto;z-index:2}
+.art{position:absolute;inset:0;overflow:hidden;z-index:0}
+.gear{position:absolute;left:calc(47.65*var(--u));top:calc(-1.9*var(--u));width:calc(53.2*var(--u));height:calc(53.2*var(--u));object-fit:contain}
+.veil{position:absolute;inset:0;z-index:1;background:linear-gradient(to top right,#fff 0%,rgba(255,255,255,.6) 50%,rgba(255,255,255,0) 100%)}
+.wedge{position:absolute;left:calc(50*var(--u));top:calc(34.65*var(--u));width:calc(50*var(--u));height:calc(21.6*var(--u));background:var(--green);z-index:2;
+  clip-path:polygon(100% 0,100% 100%,3.65% 100%,0 52.9%)}
+.tagline{position:absolute;right:calc(4*var(--u));top:calc(15.65*var(--u));z-index:3;font-family:HSGSerif,"Palatino Linotype",Palatino,serif;font-size:calc(1.39*var(--u));color:#fff}
+.tblock{position:absolute;left:calc(9*var(--u));top:calc(12*var(--u));width:calc(44*var(--u));height:calc(19.6*var(--u));z-index:2;display:flex;flex-direction:column;justify-content:flex-end}
+.kicker{font-size:var(--s-kick);line-height:1.2;color:var(--fg);margin-bottom:calc(2.2*var(--u))}
+h1{font-size:var(--s-h1);font-weight:300;line-height:1.08;letter-spacing:-.01em;color:var(--fg);text-wrap:balance}
+.tbody{position:absolute;left:calc(9*var(--u));top:calc(34.2*var(--u));width:calc(40*var(--u));z-index:2;font-size:calc(1.67*var(--u));line-height:1.3;color:var(--fg)}
+.tbody p+p{margin-top:calc(2.2*var(--u))}
+.l-section .tblock{top:calc(14*var(--u));height:calc(20*var(--u));width:calc(70*var(--u))}
+.l-section .wedge{left:calc(62*var(--u));width:calc(38*var(--u));top:calc(40.25*var(--u));height:calc(16*var(--u))}
+
+/* the controls: a pill that floats under the slide, as in the FuSo decks, in HSG green */
+.controls{position:fixed;left:0;right:0;bottom:0;height:var(--ctl);display:grid;place-items:center;z-index:7;pointer-events:none;
+  color:#111;font-family:system-ui,sans-serif;font-size:13px;font-weight:600}
+.pill{pointer-events:auto;display:flex;align-items:center;height:44px;padding:0 6px;border-radius:22px;background:#fff;
+  border:1px solid #ddd;box-shadow:0 4px 18px rgba(0,0,0,.1);transition:opacity .25s,transform .25s}
+.pill>div{display:flex;align-items:center;gap:2px}
+.pill .sep{width:1px;height:20px;background:#ddd;margin:0 8px}
+.controls button{border:0;background:transparent;color:inherit;font:inherit;height:34px;padding:0 12px;border-radius:17px;cursor:pointer;
+  display:flex;align-items:center;justify-content:center;gap:7px;white-space:nowrap}
+.controls [hidden]{display:none}
+.controls svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.75;stroke-linecap:round;stroke-linejoin:round;flex:none}
+.controls button:hover,body.show-notes #notesBtn,body:has(.overview.open) #ovBtn{background:#f0f0f0}
+.controls button:focus-visible{outline:2px solid #00802F;outline-offset:2px}
+.controls .nav button{width:32px;height:32px;padding:0;background:#00802F;color:#fff}
+.controls .nav button:not(:disabled):hover{background:#0A5F2D}
+.controls .nav button:disabled{opacity:.3;cursor:default}
+.nav svg{stroke-width:2.25}
+.count{min-width:60px;text-align:center;font-variant-numeric:tabular-nums}
+:root:not(:fullscreen) .fs-on,:root:fullscreen .fs-off{display:none}
+.progress{position:fixed;left:0;right:0;bottom:0;height:3px;background:#ddd}
+.progress span{display:block;height:100%;width:0;background:#00802F;transition:width .3s}
+:root:fullscreen{--bar:0px}
+:root:fullscreen .progress{bottom:0;background:transparent}
+:root:fullscreen .pill{opacity:0;transform:translateY(10px);pointer-events:none}
+:root:fullscreen body.awake .pill,:root:fullscreen .pill:has(:focus-visible){opacity:1;transform:none;pointer-events:auto}
+:root:fullscreen body:not(.awake){cursor:none}
+
+.overview{position:fixed;inset:0;z-index:10;display:none;overflow:auto;padding:calc(5*var(--u)) calc(5*var(--u)) calc(8*var(--u));background:#fff}
+.overview.open{display:block}
+.overview h2{font-size:calc(3*var(--u))}
+.ov-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(calc(20*var(--u)),1fr));gap:calc(1.4*var(--u));margin-top:calc(3*var(--u))}
+.ov-grid button{all:unset;cursor:pointer;box-sizing:border-box;min-height:calc(10*var(--u));padding:calc(1.6*var(--u));background:#f2f2f2;border-left:calc(.5*var(--u)) solid var(--green);
+  color:#111;font-size:calc(1.25*var(--u));line-height:1.25;display:flex;flex-direction:column;gap:calc(.6*var(--u))}
+.ov-grid button:focus-visible{outline:2px solid currentColor}
+.ov-grid small{font-size:calc(.9*var(--u));color:var(--quiet)}
+.notes-view{position:fixed;left:0;right:0;bottom:var(--bar);z-index:6;display:none;max-height:42%;overflow:auto;padding:calc(2*var(--u)) calc(5*var(--u));
+  background:#f2f2f2;color:#111;border-top:1px solid #ddd;font-size:calc(1.4*var(--u));line-height:1.45;white-space:pre-wrap}
+body.show-notes .notes-view{display:block}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%)}
+
+/* windows narrower than 1000px: still one slide at a time, but the slide fills the window and its content
+   reflows into one column; a slide taller than the window scrolls within itself */
+@media (max-width:999px),(max-height:480px){
+  :root{--u:8px;--s-h1:34px;--s-h2:25px;--s-kick:17px;--s-body:17px;--s-mid:16px;--s-sub:15px;--s-small:14px;--s-tiny:12px}
+  body{background:#fff}
+  .slide{left:0;top:0;width:100%;height:calc(100% - var(--bar));transform:none;overflow-y:auto}
+  .frame{height:auto;min-height:100%;display:block;padding:30px 20px 70px}
+  .headrow{display:block;min-height:0}
+  .callout{margin:16px 0 0;max-width:none}
+  .lead{margin-top:16px}
+  .main{display:block;padding:22px 0 0}
+  .split,.split.wide,.task,.qbody,.quiz,.gallery,.people,.l-questions .split{grid-template-columns:1fr;gap:24px}
+  .quiz .box,.quiz .box:nth-child(even){justify-self:stretch;max-width:none}
+  .after,.l-questions .after{padding-left:0}
+  .defs{grid-template-columns:1fr;gap:2px}.defs dd{padding-left:22px;margin-bottom:8px}
+  .menu{width:auto;padding:18px}
+  .pic img{max-height:none}
+  .figure img{width:150px}
+  .bulb{width:64px;top:16px;right:16px}
+  .l-study .headrow{padding-right:72px}
+  table.t{font-size:14px}.t th,.t td{padding:6px 7px}
+  .tablewrap{overflow-x:auto}
+  pre.code,pre.code.small{font-size:12px;overflow-x:auto}
+  .stamp{font-size:22px;transform:rotate(-5deg);margin:20px 0}
+  .task .go{position:static;display:block;margin-top:20px}
+  .plan{display:block}.legend{display:flex;gap:8px;margin-bottom:16px}.legend span{flex:1;height:30px;font-size:12px}
+  .rows{grid-template-columns:62px 1fr;row-gap:5px}.rows .date{font-size:10px}.rows .bar{height:26px;font-size:12px;white-space:normal}
+  .assign{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}.assign div{font-size:12px;padding:8px;margin:0}
+  .person img{width:120px;height:148px}
+  .l-quote h2{text-align:left}.attr{text-align:left}
+  .l-title .frame,.l-section .frame{display:flex;flex-direction:column;padding:24px 20px 0}
+  .logo,.tblock,.tbody,.tagline{position:static;width:auto;height:auto}
+  .logo{width:190px;margin-bottom:44px}
+  .tbody{margin:26px 0 30px;font-size:15px}
+  .gear{left:auto;right:-70px;top:-50px;width:210px;height:210px}
+  .l-title .frame,.l-section .frame{overflow:hidden}
+  .wedge{position:static;width:auto;height:auto;clip-path:none;margin:auto -20px 0;padding:26px 20px 18px;display:flex;justify-content:flex-end;
+    clip-path:polygon(100% 0,100% 100%,0 100%,0 40%)}
+  .tagline{font-size:15px}
+  .l-section .wedge{width:auto;height:90px;margin-top:40px}
+  .source,.dfoot{position:static;display:block;margin-top:24px}
+  .pn{position:absolute;top:auto;bottom:16px;right:16px;width:30px;height:33px;font-size:12px}
+  .pill{width:100%;height:100%;padding:3px 10px 0;border-radius:0;border:0;box-shadow:none;justify-content:space-between}
+  .pill .sep{display:none}
+  .tools button{flex-direction:column;gap:3px;height:48px;min-width:56px;padding:0 6px;border-radius:10px;font-size:10.5px}
+  .tools svg{width:20px;height:20px}
+  .controls .nav button{width:38px;height:38px}
+  .progress{bottom:calc(var(--ctl) - 3px)}
+}
+@media print{
+  @page{size:13.333in 7.5in;margin:0}
+  :root{--u:.13333in;--bar:0px}
+  html,body{height:auto}
+  body{overflow:visible;background:#fff}
+  .slide{position:relative;left:auto;top:auto;transform:none;visibility:visible;height:7.5in;width:100%;break-after:page}
+  .controls,.overview,.notes-view{display:none!important}
+  *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<main aria-label="UbiComp 2026 Session C2: Proactive AI assistants">
+<section class="slide l-table active" id="s1" data-title="Welcome to Session C2: Proactive AI assistants" aria-label="Slide 1 of 1"><div class="frame"><div class="headrow"><div><h2>Welcome to Session C2: <strong>Proactive AI assistants</strong></h2></div><aside class="callout box outline">Chair: <strong>Simon Mayer</strong><br>University of St.Gallen<br>Student volunteer: <strong>Molly Zhuangtong Huang</strong><br>University of Macau</aside></div><p class="lead">Talks: 10min; Q&amp;A: 3min</p><div class="main"><div class="tablewrap"><table class="t"><thead><tr><th>Time</th><th>Talk</th><th>Speaker</th></tr></thead><tbody><tr><td>14:00</td><td>After Talking with 1,000 Personas: Learning Preference-Aligned Proactive Assistants from Large-Scale Simulated Persona Interactions</td><td><strong>Ziyi Xuan</strong>, Lehigh University</td></tr><tr><td>14:13</td><td>MemAura: Structured Context Memory for Personalized LLM Reasoning in Smart Environments</td><td><strong>Siyuan Liu</strong>, Hong Kong University of Science and Technology (Guangzhou)</td></tr><tr><td>14:26</td><td>JARVIS for HVAC: LLM-based Question-Answer Framework for Sensor-driven HVAC System Interaction</td><td><strong>Sungmin Lee</strong>, KAIST and Yonsei University</td></tr><tr><td>14:39</td><td>Enhancing Smartphone-based Inertial Indoor Tracking with Conversational User Input</td><td><strong>Smitha Sheshadri</strong>, Singapore Management University</td></tr><tr><td>14:52</td><td>Exploring LLMs for Generating Communicational Actions of External Interfaces on Autonomous Vehicles</td><td><strong>Xinyue Gui</strong>, The University of Tokyo</td></tr></tbody></table></div></div></div><p class="dfoot">UbiComp 2026 | Session C2 | Proactive AI assistants</p><span class="pn" aria-hidden="true"><svg viewBox="0 0 3106057 3403600" preserveAspectRatio="none" aria-hidden="true"><path d="M0 711200L3106057 0V3403600L449943 3222171Z"/></svg>1</span><template class="notes">Welcome, introduce yourself as session chair and introduce Molly Zhuangtong Huang (University of Macau; she prefers to be called Molly), the student volunteer (right-hand side of the room; can copy slides to the session computer by USB). Molly speaks Chinese and offers to help with any communication with local staff. Five talks, 10 minutes each plus 3 minutes of questions; time signals from the front. Theme: systems that understand people well enough to know when to listen, what to remember and when to speak up. 122 human participants across the five papers, plus 1,000 simulated personas in the first one. Full opening in Session-C2_chair_script.md.</template></section>
+</main>
+<div class="controls" role="navigation" aria-label="Presentation controls"><div class="pill"><div class="nav"><button id="prev" title="Previous slide (←)" aria-label="Previous slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg></button><span class="count" id="count">1 / 1</span><button id="next" title="Next slide (→)" aria-label="Next slide"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg></button></div><i class="sep"></i><div class="tools"><button id="ovBtn" title="All slides (O)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="7" height="7" rx="1.5"/><rect x="4" y="13" width="7" height="7" rx="1.5"/><rect x="13" y="4" width="7" height="7" rx="1.5"/><rect x="13" y="13" width="7" height="7" rx="1.5"/></svg>Overview</button><button id="notesBtn" title="Speaker notes (N)"><svg viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="2.5"/><path d="M8 9h8M8 12.5h8M8 16h4"/></svg>Notes</button><button id="fsBtn" title="Full screen (F)"><svg class="fs-off" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5"/></svg><span class="fs-off">Full screen</span><svg class="fs-on" viewBox="0 0 24 24" aria-hidden="true"><path d="M9 4v5H4M15 4v5h5M9 20v-5H4M15 20v-5h5"/></svg><span class="fs-on">Exit</span></button></div></div><div class="progress" aria-label="Slide progress"><span id="progress"></span></div></div>
+<div class="overview" id="overview" role="dialog" aria-label="Slide overview"><h2>UbiComp 2026 Session C2: Proactive AI assistants</h2><div class="ov-grid"></div></div>
+<div class="notes-view" id="notesView" aria-label="Speaker notes"></div>
+<script>
+(()=>{const slides=[...document.querySelectorAll('.slide')],root=document.documentElement,body=document.body,
+ ov=document.getElementById('overview'),nv=document.getElementById('notesView');
+const by=id=>document.getElementById(id);
+let cur=0;const m=location.hash.match(/(\d+)$/);if(m&&+m[1]>=1&&+m[1]<=slides.length)cur=+m[1]-1;
+function go(n){cur=Math.max(0,Math.min(slides.length-1,n));
+ slides.forEach((s,i)=>{s.classList.toggle('active',i===cur);s.setAttribute('aria-hidden',i!==cur)});
+ slides[cur].scrollTop=0;
+ by('count').textContent=(cur+1)+' / '+slides.length;by('prev').disabled=cur===0;by('next').disabled=cur===slides.length-1;
+ by('progress').style.width=((cur+1)/slides.length*100)+'%';
+ const t=slides[cur].querySelector('.notes');nv.textContent=t?t.textContent:'';
+ history.replaceState(null,'','#/'+(cur+1));ov.classList.remove('open');
+}
+by('prev').onclick=()=>go(cur-1);by('next').onclick=()=>go(cur+1);
+by('ovBtn').onclick=()=>ov.classList.toggle('open');
+const notes=()=>body.classList.toggle('show-notes');if(by('notesBtn'))by('notesBtn').onclick=notes;
+if(!document.fullscreenEnabled)by('fsBtn').hidden=true;
+let idle;const pill=document.querySelector('.pill'),wake=()=>{body.classList.add('awake');clearTimeout(idle);
+ idle=setTimeout(()=>{if(!pill.matches(':hover'))body.classList.remove('awake')},2500)};
+['mousemove','touchstart'].forEach(t=>document.addEventListener(t,wake,{passive:true}));
+by('fsBtn').onclick=()=>document.fullscreenElement?document.exitFullscreen():root.requestFullscreen();
+const grid=ov.querySelector('.ov-grid');
+slides.forEach((s,i)=>{const b=document.createElement('button'),sm=document.createElement('small');
+ sm.textContent=(i+1)+(s.dataset.time?'  ·  '+s.dataset.time:'');b.append(sm,s.dataset.title);b.onclick=()=>go(i);grid.append(b)});
+document.addEventListener('keydown',e=>{if(e.ctrlKey||e.metaKey||e.altKey)return;
+ const inCtl=e.target instanceof Element&&e.target.closest('a,button');const k=e.key;
+ if(['ArrowRight','PageDown'].includes(k)||(k===' '&&!inCtl)){e.preventDefault();go(cur+1)}
+ else if(['ArrowLeft','PageUp'].includes(k)){e.preventDefault();go(cur-1)}
+ else if(k==='Home')go(0);else if(k==='End')go(slides.length-1);
+ else if(k==='o'||k==='O')ov.classList.toggle('open');else if(k==='Escape')ov.classList.remove('open');
+ else if(k==='f'||k==='F')by('fsBtn').click();else if(k==='n'||k==='N')notes()});
+let x0=null;document.addEventListener('touchstart',e=>{x0=e.touches[0].clientX},{passive:true});
+document.addEventListener('touchend',e=>{if(x0===null)return;const d=e.changedTouches[0].clientX-x0;x0=null;
+ if(Math.abs(d)>60)go(cur+(d<0?1:-1))},{passive:true});
+window.hsgDeck={go,count:slides.length};go(cur)})();
+</script>
+</body>
+</html>
