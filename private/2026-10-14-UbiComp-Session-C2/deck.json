@@ -9,7 +9,8 @@
       "lead": "Talks: 10min; Q&A: 3min",
       "callout": {
         "style": "outline",
-        "text": "Chair: **Simon Mayer**\nUniversity of St.Gallen\nStudent volunteer: **Molly Zhuangtong Huang**\nUniversity of Macau"
+        "wide": true,
+        "text": "Chair: **Simon Mayer**, University of St.Gallen\nStudent volunteer: **Molly Zhuangtong Huang**, University of Macau"
       },
       "columns": [
         "Time",
