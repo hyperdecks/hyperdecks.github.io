@@ -2,8 +2,8 @@
  "title": "Principled Architectural Design for Distributed Information Systems",
  "lang": "en",
  "footer": "Advanced Software and Systems Engineering | Institute of Computer Science | University of St.Gallen",
- "pdf": "../ASSE-07b-Principled-Design-2026-11-09.pdf",
- "pdf_version": "09.11.2026",
+ "pdf": "../ASSE-07b-Principled-Design-2026-11-11.pdf",
+ "pdf_version": "11.11.2026",
  "slides": [
   {
    "layout": "title",
@@ -590,14 +590,6 @@
     {"k": "pic", "src": "img/ae3dc0b3b4.png", "alt": "Short biography of Mark Frisse, Professor Emeritus of Biomedical Informatics at Vanderbilt University", "x": 54.7, "y": 46.2, "w": 31.5, "h": 7.63},
     {"k": "shape", "x": 81.396, "y": 31.875, "w": 16.522, "h": 3.786, "g": "rect", "tx": {"p": [{"al": "r", "r": [{"t": "Very different emphasis and non-functional profile!", "sz": 1.25, "c": "#000000"}]}], "a": "t", "i": [0.75, 0.375, 0.75, 0.375]}},
     {"k": "shape", "x": 42.234, "y": 33.769, "w": 40.463, "h": 1.076, "fx": true, "g": "straightConnector1", "ln": "#00802f", "lw": 0.104, "tail": "triangle"}
-   ]
-  },
-  {
-   "layout": "canvas",
-   "title": "It‘s again about Trade-offs!",
-   "items": [
-    {"k": "pic", "src": "img/c0eab2b991.png", "alt": "Email from Mark Frisse to Simon Mayer: your class and your slides look exciting, but I am no longer active in this field", "x": 20.073, "y": 13.021, "w": 54.084, "h": 29.257, "shadow": true},
-    {"k": "pic", "src": "img/ae3dc0b3b4.png", "alt": "Short biography of Mark Frisse, Professor Emeritus of Biomedical Informatics at Vanderbilt University", "x": 54.7, "y": 46.2, "w": 31.5, "h": 7.63}
    ]
   },
   {
