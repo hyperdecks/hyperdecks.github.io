@@ -270,7 +270,7 @@ h1{font-size:var(--s-h1);font-weight:300;line-height:1.08;letter-spacing:-.01em;
 .cv .tx{position:absolute;inset:0;display:flex;flex-direction:column;color:var(--fg);line-height:1.2;font-weight:400}
 .cv .tx.m{justify-content:center}.cv .tx.b{justify-content:flex-end}
 .cv .tx.nw{white-space:nowrap}
-.cv .tx p{margin:0;min-height:1.2em}
+.cv .tx p{margin:0;min-height:1.2em;flex:none}
 .cv .tx .bu{display:inline-block}
 .cv .tx b{font-weight:700}
 .cv .tx .mono{font-family:"Courier New",Courier,"Liberation Mono",monospace;font-weight:400}
@@ -709,8 +709,10 @@ def shape_paths(g, w, h, adj):
         return [f"M{_f(w)} 0C{_f(w * .4)} 0 {_f(w * .5)} {_f(h * .1)} {_f(w * .5)} {_f(h * .25)}V{_f(h * .4)}C{_f(w * .5)} {_f(h * .45)} {_f(w * .3)} {_f(h * .5)} 0 {_f(h * .5)}"
                 f"C{_f(w * .3)} {_f(h * .5)} {_f(w * .5)} {_f(h * .55)} {_f(w * .5)} {_f(h * .6)}V{_f(h * .75)}C{_f(w * .5)} {_f(h * .9)} {_f(w * .4)} {_f(h)} {_f(w)} {_f(h)}"]
     if g == "mathEqual":
-        t = h * .2
-        return [f"M0 {_f(h * .2)}H{_f(w)}V{_f(h * .2 + t)}H0Z", f"M0 {_f(h * .6)}H{_f(w)}V{_f(h * .6 + t)}H0Z"]
+        th, gap = h * A("adj1", 23520), h * A("adj2", 11760)
+        x0, x1 = w * (1 - .7349) / 2, w * (1 + .7349) / 2
+        y2, y3 = (h - gap) / 2, (h + gap) / 2
+        return [f"M{_f(x0)} {_f(y2 - th)}H{_f(x1)}V{_f(y2)}H{_f(x0)}Z", f"M{_f(x0)} {_f(y3)}H{_f(x1)}V{_f(y3 + th)}H{_f(x0)}Z"]
     if g == "arc":
         return [f"M{_f(w / 2)} 0A{_f(w / 2)} {_f(h / 2)} 0 0 1 {_f(w)} {_f(h / 2)}"]
     if g in ("line", "straightConnector1"):
@@ -1070,7 +1072,7 @@ class Html:
             if g == "path":
                 paths = [(p["d"], p["fill"], p["stroke"]) for p in it["paths"]]
             else:
-                paths = [(d, k == 0, True) for k, d in enumerate(shape_paths(g, w, h, it.get("adj", {})))]
+                paths = [(d, k == 0 or g == "mathEqual", True) for k, d in enumerate(shape_paths(g, w, h, it.get("adj", {})))]
             col, lw = it.get("ln"), it.get("lw", .1)
             is_line = g in ("line", "straightConnector1", "curvedConnector2", "curvedConnector3", "bentConnector2", "bentConnector3", "arc")
             defs, marks = "", ""
