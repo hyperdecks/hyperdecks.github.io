@@ -5,7 +5,8 @@
   "08": "Lecture 8",
   "09": "Lecture 9",
   "10": "Lecture 10",
-  "11": "Lecture 11"
+  "11": "Lecture 11",
+  "8b": "Lecture 8b"
  },
  "ids": [
   [
@@ -145,11 +146,6 @@
   ],
   [
    "08",
-   "Let’s Talk NFPs",
-   "nfps"
-  ],
-  [
-   "08",
    "Smart Things and their Ecosystems#1",
    "smart-things"
   ],
@@ -220,17 +216,12 @@
   ],
   [
    "08",
-   "Reminder on HTTP/1.1 vs. HTTP/2#1",
-   "http2"
-  ],
-  [
-   "08",
    "What about MCPbot",
    "mcp-bot"
   ],
   [
    "08",
-   "Towards the Exercise: Event-driven",
+   "=Towards the Exercise",
    "exercise-events"
   ],
   [
@@ -452,6 +443,111 @@
    "11",
    "The Constrained Application Protocol",
    "coap"
+  ],
+  [
+   "8b",
+   "Interaction Styles#1",
+   "start"
+  ],
+  [
+   "8b",
+   "Let’s Talk NFPs",
+   "nfps"
+  ],
+  [
+   "8b",
+   "Smart Things and their Ecosystems#1",
+   "smart-things"
+  ],
+  [
+   "8b",
+   "Agenda: Interaction Styles",
+   "agenda"
+  ],
+  [
+   "8b",
+   "Taking a step back: Core OOP",
+   "oop"
+  ],
+  [
+   "8b",
+   "Remote Procedure Calls",
+   "rpc"
+  ],
+  [
+   "8b",
+   "Interface Definition/Description Languages",
+   "idl"
+  ],
+  [
+   "8b",
+   "Common ORB Architecture (CORBA)#1",
+   "corba"
+  ],
+  [
+   "8b",
+   "W3C / OASIS Web Services#1",
+   "webservices"
+  ],
+  [
+   "8b",
+   "From WS-* to CRUD-over-HTTP",
+   "crud-over-http"
+  ],
+  [
+   "8b",
+   "Resource-oriented Architecture",
+   "roa"
+  ],
+  [
+   "8b",
+   "Example: CRUD-over-HTTP11-bot",
+   "crud-bot"
+  ],
+  [
+   "8b",
+   "Long-running Requests",
+   "long-running"
+  ],
+  [
+   "8b",
+   "URIs and Statelessness",
+   "uris"
+  ],
+  [
+   "8b",
+   "gRPC: RPC for the 2020s#1",
+   "grpc"
+  ],
+  [
+   "8b",
+   "Example: gRPCBot",
+   "grpc-bot"
+  ],
+  [
+   "8b",
+   "Reminder on HTTP/1.1 vs. HTTP/2#1",
+   "http2"
+  ],
+  [
+   "8b",
+   "What about MCPbot",
+   "mcp-bot"
+  ],
+  [
+   "8b",
+   "Towards the Exercise: Event-driven",
+   "exercise-events"
+  ],
+  [
+   "8b",
+   "Publish/Subscribe on the Web",
+   "pubsub-web"
+  ],
+  [
+   "08",
+   "gRPC: RPC for the 2020s#2",
+   "http2"
   ]
  ],
  "refs": [
@@ -592,51 +688,11 @@
   ],
   [
    "08",
-   "Let’s Talk NFPs",
-   [
-    [
-     "07b#nfps",
-     "recap"
-    ]
-   ]
-  ],
-  [
-   "08",
    "Smart Things and their Ecosystems#1",
    [
     [
      "10#smart-things",
      "next"
-    ]
-   ]
-  ],
-  [
-   "08",
-   "Copied from last week",
-   [
-    [
-     "07b#client-server",
-     "recap"
-    ]
-   ]
-  ],
-  [
-   "08",
-   "Remember?",
-   [
-    [
-     "07b#evaluating-styles",
-     "recap"
-    ]
-   ]
-  ],
-  [
-   "08",
-   "Reminder on HTTP/1.1 vs. HTTP/2#1",
-   [
-    [
-     "07a#http-stack",
-     "recap"
     ]
    ]
   ],
@@ -657,100 +713,6 @@
     [
      "08#agenda",
      "recap"
-    ]
-   ]
-  ],
-  [
-   "09",
-   "Resource-oriented Architecture",
-   [
-    [
-     "08#roa",
-     "recap"
-    ]
-   ]
-  ],
-  [
-   "09",
-   "Example: CRUD-over-HTTP11-bot",
-   [
-    [
-     "08#crud-bot",
-     "recap"
-    ]
-   ]
-  ],
-  [
-   "09",
-   "Long-running Requests",
-   [
-    [
-     "08#long-running",
-     "recap"
-    ]
-   ]
-  ],
-  [
-   "09",
-   "URIs and Statelessness#1",
-   [
-    [
-     "08#uris",
-     "recap"
-    ]
-   ]
-  ],
-  [
-   "09",
-   "gRPC: RPC for the 2020s#1",
-   [
-    [
-     "08#grpc",
-     "recap"
-    ]
-   ]
-  ],
-  [
-   "09",
-   "Example: gRPCBot",
-   [
-    [
-     "08#grpc-bot",
-     "recap"
-    ]
-   ]
-  ],
-  [
-   "09",
-   "Remember?",
-   [
-    [
-     "07b#evaluating-styles",
-     "recap"
-    ]
-   ]
-  ],
-  [
-   "09",
-   "Reminder on HTTP/1.1 vs. HTTP/2#1",
-   [
-    [
-     "08#http2",
-     "recap"
-    ]
-   ]
-  ],
-  [
-   "09",
-   "What about MCPbot",
-   [
-    [
-     "08#mcp-bot",
-     "recap"
-    ],
-    [
-     "11#mcp-overview",
-     "next"
     ]
    ]
   ],
@@ -780,7 +742,7 @@
   ],
   [
    "09",
-   "URIs and Statelessness#2",
+   "URIs and Statelessness",
    [
     [
      "08#uris",
@@ -1084,6 +1046,96 @@
      "recap"
     ]
    ]
+  ],
+  [
+   "8b",
+   "Review: Principled Architectural Design#1",
+   [
+    [
+     "07b#principled-design",
+     "recap"
+    ]
+   ]
+  ],
+  [
+   "8b",
+   "Let’s Talk NFPs",
+   [
+    [
+     "07b#nfps",
+     "recap"
+    ]
+   ]
+  ],
+  [
+   "8b",
+   "Smart Things and their Ecosystems#1",
+   [
+    [
+     "10#smart-things",
+     "next"
+    ]
+   ]
+  ],
+  [
+   "8b",
+   "Copied from last week",
+   [
+    [
+     "07b#client-server",
+     "recap"
+    ]
+   ]
+  ],
+  [
+   "8b",
+   "Remember?",
+   [
+    [
+     "07b#evaluating-styles",
+     "recap"
+    ]
+   ]
+  ],
+  [
+   "8b",
+   "Reminder on HTTP/1.1 vs. HTTP/2#1",
+   [
+    [
+     "07a#http-stack",
+     "recap"
+    ]
+   ]
+  ],
+  [
+   "8b",
+   "What about MCPbot",
+   [
+    [
+     "11#mcp-overview",
+     "next"
+    ]
+   ]
+  ],
+  [
+   "8b",
+   "=Remote Data Access",
+   [
+    [
+     "07b#client-server",
+     "recap"
+    ]
+   ]
+  ],
+  [
+   "08",
+   "=What Must the Client Know in Advance?",
+   [
+    [
+     "07a#multilevel",
+     "recap"
+    ]
+   ]
   ]
  ],
  "inline": [
@@ -1101,7 +1153,7 @@
   ],
   [
    "08",
-   "Different Market – Same Narrative",
+   "Same Task, Different Protocols",
    "See Exercise 8",
    "08#exercise-events"
   ],
@@ -1275,27 +1327,9 @@
   ],
   [
    "08",
-   "~https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2575",
-   "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2575",
-   "https://github.com/modelcontextprotocol/modelcontextprotocol/pull/2575"
-  ],
-  [
-   "08",
-   "~http://www.vlib.us/web/worldwideweb3d.html",
-   "http://www.vlib.us/web/worldwideweb3d.html",
-   "http://www.vlib.us/web/worldwideweb3d.html"
-  ],
-  [
-   "08",
    "~https://www.computer.org/profiles/per-hansen",
    "https://www.computer.org/profiles/per-hansen",
    "https://www.computer.org/profiles/per-hansen"
-  ],
-  [
-   "08",
-   "~https://www.researchgate.net/figure/The-different-layers-of-the-Java-remote-method-invocation-RMI-architecture_fig6_3453277",
-   "https://www.researchgate.net/figure/The-different-layers-of-the-Java-remote-method-invocation-RMI-architecture_fig6_3453277",
-   "https://www.researchgate.net/figure/The-different-layers-of-the-Java-remote-method-invocation-RMI-architecture_fig6_3453277"
   ],
   [
    "08",
@@ -1341,24 +1375,6 @@
   ],
   [
    "08",
-   "~https://cloud.google.com/endpoints/docs/grpc/transcoding",
-   "https://cloud.google.com/endpoints/docs/grpc/transcoding",
-   "https://cloud.google.com/endpoints/docs/grpc/transcoding"
-  ],
-  [
-   "08",
-   "~https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/",
-   "https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/",
-   "https://web.archive.org/web/20251119132828/https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/"
-  ],
-  [
-   "08",
-   "~https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/#2",
-   "https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/",
-   "https://web.archive.org/web/20251119132828/https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/"
-  ],
-  [
-   "08",
    "~https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html",
    "https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html",
    "https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html"
@@ -1374,138 +1390,6 @@
    "~https://www.hivemq.com/blog/mqtt-sn-smart-choice-for-iiot/",
    "https://www.hivemq.com/blog/mqtt-sn-smart-choice-for-iiot/",
    "https://www.hivemq.com/blog/mqtt-sn-smart-choice-for-iiot/"
-  ],
-  [
-   "08",
-   "~https://www.hivemq.com/blog/mqtt-essentials-part2-publish-subscribe/",
-   "https://www.hivemq.com/blog/mqtt-essentials-part2-publish-subscribe/",
-   "https://www.hivemq.com/blog/mqtt-essentials-part2-publish-subscribe/"
-  ],
-  [
-   "08",
-   "~https://connectedplaces.online/",
-   "https://connectedplaces.online/",
-   "https://connectedplaces.online/"
-  ],
-  [
-   "08",
-   "~https://fediversereport.com/all-posts-archive/6/",
-   "https://fediversereport.com/all-posts-archive/6/",
-   "https://fediversereport.com/all-posts-archive/6/"
-  ],
-  [
-   "08",
-   "~https://fedipact.online/",
-   "https://fedipact.online/",
-   "https://fedipact.online/"
-  ],
-  [
-   "08",
-   "~https://connectedplaces.online/reports/fediverse-report-122/",
-   "https://connectedplaces.online/reports/fediverse-report-122/",
-   "https://connectedplaces.online/reports/fediverse-report-122/"
-  ],
-  [
-   "08",
-   "~https://anew.social/",
-   "https://anew.social/",
-   "https://anew.social/"
-  ],
-  [
-   "08",
-   "~https://fed.brid.gy/",
-   "https://fed.brid.gy/",
-   "https://fed.brid.gy/"
-  ],
-  [
-   "08",
-   "~https://bounce.anew.social/",
-   "https://bounce.anew.social/",
-   "https://bounce.anew.social/"
-  ],
-  [
-   "08",
-   "~https://bonfirenetworks.org/",
-   "https://bonfirenetworks.org/",
-   "https://bonfirenetworks.org/"
-  ],
-  [
-   "08",
-   "~https://openscience.network/",
-   "https://openscience.network/",
-   "https://openscience.network/"
-  ],
-  [
-   "08",
-   "~https://about.surf.social/",
-   "https://about.surf.social/",
-   "https://about.surf.social/"
-  ],
-  [
-   "08",
-   "~https://openvibe.social/",
-   "https://openvibe.social/",
-   "https://openvibe.social/"
-  ],
-  [
-   "08",
-   "~https://techcrunch.com/2025/06/13/beyond-bluesky-these-are-the-apps-building-social-experiences-on-the-at-protocol/",
-   "https://techcrunch.com/2025/06/13/beyond-bluesky-these-are-the-apps-building-social-experiences-on-the-at-protocol/",
-   "https://techcrunch.com/2025/06/13/beyond-bluesky-these-are-the-apps-building-social-experiences-on-the-at-protocol/"
-  ],
-  [
-   "08",
-   "~https://connectedplaces.leaflet.pub/3m5gygipuxc2q",
-   "https://connectedplaces.leaflet.pub/3m5gygipuxc2q",
-   "https://connectedplaces.leaflet.pub/3m5gygipuxc2q"
-  ],
-  [
-   "08",
-   "~https://www.w3.org/TR/activitypub/",
-   "https://www.w3.org/TR/activitypub/",
-   "https://www.w3.org/TR/activitypub/"
-  ],
-  [
-   "09",
-   "~https://medium.com/@moulayjam/what-are-webhooks-and-how-to-use-them-in-ruby-on-rails-51ff87278160",
-   "https://medium.com/@moulayjam/what-are-webhooks-and-how-to-use-them-in-ruby-on-rails-51ff87278160",
-   "https://medium.com/@moulayjam/what-are-webhooks-and-how-to-use-them-in-ruby-on-rails-51ff87278160"
-  ],
-  [
-   "09",
-   "~https://developers.google.com/protocol-buffers/docs/proto3",
-   "https://developers.google.com/protocol-buffers/docs/proto3",
-   "https://developers.google.com/protocol-buffers/docs/proto3"
-  ],
-  [
-   "09",
-   "~https://stackoverflow.com/questions/31801257/why-required-and-optional-is-removed-in-protocol-buffers-3",
-   "https://stackoverflow.com/questions/31801257/why-required-and-optional-is-removed-in-protocol-buffers-3",
-   "https://stackoverflow.com/questions/31801257/why-required-and-optional-is-removed-in-protocol-buffers-3"
-  ],
-  [
-   "09",
-   "~https://cloud.google.com/endpoints/docs/grpc/transcoding",
-   "https://cloud.google.com/endpoints/docs/grpc/transcoding",
-   "https://cloud.google.com/endpoints/docs/grpc/transcoding"
-  ],
-  [
-   "09",
-   "~https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/",
-   "https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/",
-   "https://web.archive.org/web/20251119132828/https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/"
-  ],
-  [
-   "09",
-   "~https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/#2",
-   "https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/",
-   "https://web.archive.org/web/20251119132828/https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/"
-  ],
-  [
-   "09",
-   "~https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html",
-   "https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html",
-   "https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html"
   ],
   [
    "09",
@@ -1824,6 +1708,210 @@
    "~https://www.electronicdesign.com/iot/engineering-essentials-iot-standards-and-frameworks",
    "https://www.electronicdesign.com/iot/engineering-essentials-iot-standards-and-frameworks",
    "https://www.electronicdesign.com/iot/engineering-essentials-iot-standards-and-frameworks"
+  ],
+  [
+   "8b",
+   "Different Market – Same Narrative",
+   "See Exercise 8",
+   "08#exercise-events"
+  ],
+  [
+   "8b",
+   "From WS-* to CRUD-over-HTTP",
+   "REST’s Uniform Interface",
+   "07b#uniform-interface"
+  ],
+  [
+   "8b",
+   "Publish/Subscribe on the Web",
+   "Week 11",
+   "11#coap"
+  ],
+  [
+   "8b",
+   "~http://www.vlib.us/web/worldwideweb3d.html",
+   "http://www.vlib.us/web/worldwideweb3d.html",
+   "http://www.vlib.us/web/worldwideweb3d.html"
+  ],
+  [
+   "8b",
+   "~https://www.computer.org/profiles/per-hansen",
+   "https://www.computer.org/profiles/per-hansen",
+   "https://www.computer.org/profiles/per-hansen"
+  ],
+  [
+   "8b",
+   "~https://www.researchgate.net/figure/The-different-layers-of-the-Java-remote-method-invocation-RMI-architecture_fig6_3453277",
+   "https://www.researchgate.net/figure/The-different-layers-of-the-Java-remote-method-invocation-RMI-architecture_fig6_3453277",
+   "https://www.researchgate.net/figure/The-different-layers-of-the-Java-remote-method-invocation-RMI-architecture_fig6_3453277"
+  ],
+  [
+   "8b",
+   "~https://en.wikipedia.org/wiki/Common_Object_Request_Broker_Architecture",
+   "https://en.wikipedia.org/wiki/Common_Object_Request_Broker_Architecture",
+   "https://en.wikipedia.org/wiki/Common_Object_Request_Broker_Architecture"
+  ],
+  [
+   "8b",
+   "~https://www.w3.org/TR/2004/NOTE-ws-gloss-20040211/#webservice",
+   "https://www.w3.org/TR/2004/NOTE-ws-gloss-20040211/#webservice",
+   "https://www.w3.org/TR/2004/NOTE-ws-gloss-20040211/#webservice"
+  ],
+  [
+   "8b",
+   "~https://google.aip.dev/127",
+   "https://google.aip.dev/127",
+   "https://google.aip.dev/127"
+  ],
+  [
+   "8b",
+   "~https://google.aip.dev/131",
+   "https://google.aip.dev/131",
+   "https://google.aip.dev/131"
+  ],
+  [
+   "8b",
+   "~https://medium.com/@moulayjam/what-are-webhooks-and-how-to-use-them-in-ruby-on-rails-51ff87278160",
+   "https://medium.com/@moulayjam/what-are-webhooks-and-how-to-use-them-in-ruby-on-rails-51ff87278160",
+   "https://medium.com/@moulayjam/what-are-webhooks-and-how-to-use-them-in-ruby-on-rails-51ff87278160"
+  ],
+  [
+   "8b",
+   "~https://developers.google.com/protocol-buffers/docs/proto3",
+   "https://developers.google.com/protocol-buffers/docs/proto3",
+   "https://developers.google.com/protocol-buffers/docs/proto3"
+  ],
+  [
+   "8b",
+   "~https://stackoverflow.com/questions/31801257/why-required-and-optional-is-removed-in-protocol-buffers-3",
+   "https://stackoverflow.com/questions/31801257/why-required-and-optional-is-removed-in-protocol-buffers-3",
+   "https://stackoverflow.com/questions/31801257/why-required-and-optional-is-removed-in-protocol-buffers-3"
+  ],
+  [
+   "8b",
+   "~https://cloud.google.com/endpoints/docs/grpc/transcoding",
+   "https://cloud.google.com/endpoints/docs/grpc/transcoding",
+   "https://cloud.google.com/endpoints/docs/grpc/transcoding"
+  ],
+  [
+   "8b",
+   "~https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/",
+   "https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/",
+   "https://web.archive.org/web/20251119132828/https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/"
+  ],
+  [
+   "8b",
+   "~https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/#2",
+   "https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/",
+   "https://web.archive.org/web/20251119132828/https://freecontent.manning.com/animation-http-1-1-vs-http-2-vs-http-2-with-push/"
+  ],
+  [
+   "8b",
+   "~https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html",
+   "https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html",
+   "https://www.w3.org/Protocols/rfc2616/rfc2616-sec8.html"
+  ],
+  [
+   "8b",
+   "~https://www.hivemq.com/blog/mqtt-essentials-part-5-mqtt-topics-best-practices/",
+   "https://www.hivemq.com/blog/mqtt-essentials-part-5-mqtt-topics-best-practices/",
+   "https://www.hivemq.com/blog/mqtt-essentials-part-5-mqtt-topics-best-practices/"
+  ],
+  [
+   "8b",
+   "~https://www.hivemq.com/blog/mqtt-sn-smart-choice-for-iiot/",
+   "https://www.hivemq.com/blog/mqtt-sn-smart-choice-for-iiot/",
+   "https://www.hivemq.com/blog/mqtt-sn-smart-choice-for-iiot/"
+  ],
+  [
+   "8b",
+   "~https://www.hivemq.com/blog/mqtt-essentials-part2-publish-subscribe/",
+   "https://www.hivemq.com/blog/mqtt-essentials-part2-publish-subscribe/",
+   "https://www.hivemq.com/blog/mqtt-essentials-part2-publish-subscribe/"
+  ],
+  [
+   "8b",
+   "~https://connectedplaces.online/",
+   "https://connectedplaces.online/",
+   "https://connectedplaces.online/"
+  ],
+  [
+   "8b",
+   "~https://fediversereport.com/all-posts-archive/6/",
+   "https://fediversereport.com/all-posts-archive/6/",
+   "https://fediversereport.com/all-posts-archive/6/"
+  ],
+  [
+   "8b",
+   "~https://fedipact.online/",
+   "https://fedipact.online/",
+   "https://fedipact.online/"
+  ],
+  [
+   "8b",
+   "~https://connectedplaces.online/reports/fediverse-report-122/",
+   "https://connectedplaces.online/reports/fediverse-report-122/",
+   "https://connectedplaces.online/reports/fediverse-report-122/"
+  ],
+  [
+   "8b",
+   "~https://anew.social/",
+   "https://anew.social/",
+   "https://anew.social/"
+  ],
+  [
+   "8b",
+   "~https://fed.brid.gy/",
+   "https://fed.brid.gy/",
+   "https://fed.brid.gy/"
+  ],
+  [
+   "8b",
+   "~https://bounce.anew.social/",
+   "https://bounce.anew.social/",
+   "https://bounce.anew.social/"
+  ],
+  [
+   "8b",
+   "~https://bonfirenetworks.org/",
+   "https://bonfirenetworks.org/",
+   "https://bonfirenetworks.org/"
+  ],
+  [
+   "8b",
+   "~https://openscience.network/",
+   "https://openscience.network/",
+   "https://openscience.network/"
+  ],
+  [
+   "8b",
+   "~https://about.surf.social/",
+   "https://about.surf.social/",
+   "https://about.surf.social/"
+  ],
+  [
+   "8b",
+   "~https://openvibe.social/",
+   "https://openvibe.social/",
+   "https://openvibe.social/"
+  ],
+  [
+   "8b",
+   "~https://techcrunch.com/2025/06/13/beyond-bluesky-these-are-the-apps-building-social-experiences-on-the-at-protocol/",
+   "https://techcrunch.com/2025/06/13/beyond-bluesky-these-are-the-apps-building-social-experiences-on-the-at-protocol/",
+   "https://techcrunch.com/2025/06/13/beyond-bluesky-these-are-the-apps-building-social-experiences-on-the-at-protocol/"
+  ],
+  [
+   "8b",
+   "~https://connectedplaces.leaflet.pub/3m5gygipuxc2q",
+   "https://connectedplaces.leaflet.pub/3m5gygipuxc2q",
+   "https://connectedplaces.leaflet.pub/3m5gygipuxc2q"
+  ],
+  [
+   "8b",
+   "~https://www.w3.org/TR/activitypub/",
+   "https://www.w3.org/TR/activitypub/",
+   "https://www.w3.org/TR/activitypub/"
   ]
  ],
  "syllabus": {
