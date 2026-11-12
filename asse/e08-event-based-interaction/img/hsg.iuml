@@ -1,0 +1,61 @@
+' Shared look of the deck's diagrams: HSG green, quiet grey operator frames
+skinparam defaultFontName sans-serif
+skinparam defaultFontSize 15
+skinparam shadowing false
+skinparam ArrowColor #1a1a1a
+skinparam rectangle {
+  BorderColor #595959
+  BackgroundColor #FFFFFF
+  FontStyle bold
+  StereotypeFontColor #595959
+}
+skinparam node {
+  BorderColor #00802F
+  BackgroundColor #FFFFFF
+}
+skinparam component {
+  BorderColor #00802F
+  BackgroundColor #E7EDE8
+  StereotypeFontColor #1a1a1a
+}
+skinparam component<<counts>> {
+  BackgroundColor #00802F
+  FontColor #FFFFFF
+  StereotypeFontColor #FFFFFF
+}
+skinparam component<<self-hosted>> {
+  BackgroundColor #00802F
+  FontColor #FFFFFF
+  StereotypeFontColor #FFFFFF
+}
+skinparam component<<not counted>> {
+  BorderColor #EB6969
+  BackgroundColor #FFFFFF
+}
+skinparam rectangle<<foreign provider>> {
+  BackgroundColor #DCE9EC
+  BorderColor #73A5AF
+  BorderThickness 2.5
+}
+skinparam note {
+  BorderColor #73A5AF
+  BackgroundColor #FFFFFF
+}
+hide stereotype
+show <<counts>> stereotype
+skinparam component<<fallback>> {
+  BackgroundColor #00802F
+  FontColor #FFFFFF
+  StereotypeFontColor #FFFFFF
+}
+skinparam component<<designated>> {
+  BackgroundColor #00802F
+  FontColor #FFFFFF
+  StereotypeFontColor #FFFFFF
+}
+skinparam component<<no fallback>> {
+  BackgroundColor #DCE9EC
+  BorderColor #73A5AF
+  BorderThickness 2.5
+  BorderStyle dashed
+}

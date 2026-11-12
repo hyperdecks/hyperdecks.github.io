@@ -1,0 +1,4 @@
+@startuml
+!include hsg.iuml
+!include ecosystem.iuml
+@enduml

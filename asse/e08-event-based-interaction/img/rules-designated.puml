@@ -1,0 +1,25 @@
+@startuml
+!include hsg.iuml
+show <<designated>> stereotype
+component "PITAS app\nof Group 1" as a1
+component "PITAS app\nof Group 2" as a2
+component "PITAS app\nof Group 3" as a3
+component "PITAS app\nof Group 4" as a4
+component "PITAS app\nof Group 5" as a5
+component "PITAS app\nof Group 6" as a6
+rectangle "Operator: HiveMQ" {
+  node "HiveMQ cloud" {
+    component "MQTT broker" as b <<designated>>
+  }
+}
+a1 .up.> b
+a2 .up.> b
+a3 .up.> b
+a4 .up.> b
+a5 .up.> b
+a6 .up.> b
+note right of b
+  the only counting
+  MQTT broker
+end note
+@enduml

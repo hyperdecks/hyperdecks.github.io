@@ -1,0 +1,35 @@
+' The instances the course provides, as Group 5's app uses them (fallback slides).
+' The answer diagram sets the stereotypes and the arrow to the second hub.
+!if %not(%variable_exists("$HUB2"))
+!$HUB2 = ""
+!endif
+!if %not(%variable_exists("$NONE"))
+!$NONE = ""
+!endif
+!if %not(%variable_exists("$USE2"))
+!$USE2 = "-->"
+!endif
+!if %not(%variable_exists("$USE2LABEL"))
+!$USE2LABEL = ""
+!endif
+left to right direction
+' Machines are left out: Rule 8 depends on operators only.
+rectangle "Operator: Group 5" {
+  component "PITAS app" as app5
+}
+rectangle "Operator: Google" {
+  component "WebSub hub" as hubG
+}
+rectangle "Operator: Switchboard" {
+  component "WebSub hub" as hubS $HUB2
+}
+rectangle "Operator: HiveMQ" {
+  component "MQTT broker" as mqttH $NONE
+}
+rectangle "Operator: the course" {
+  component "resource directory" as dir $NONE
+}
+app5 --> hubG
+app5 $USE2 hubS $USE2LABEL
+app5 --> mqttH
+app5 --> dir

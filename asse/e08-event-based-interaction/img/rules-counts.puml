@@ -1,0 +1,20 @@
+@startuml
+!include hsg.iuml
+left to right direction
+show <<not counted>> stereotype
+rectangle "Operator: Group 5" {
+  node "Group 5 VM" {
+    component "PITAS app" as app5
+  }
+}
+rectangle "Operator: Group 2" {
+  node "Group 2 VM" {
+    component "MQTT broker" as b1 <<counts>>
+  }
+  node "Group 2 laptop" {
+    component "MQTT broker" as b2 <<not counted>>
+  }
+}
+app5 ..> b1 : uses
+app5 ..> b2 : uses via\na tunnel
+@enduml

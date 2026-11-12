@@ -1,0 +1,10 @@
+@startuml
+' Answer to the slide question, by colour only: the fallback hub in green,
+' the broker and the directory, which have no fallback, in teal
+!include hsg.iuml
+!$HUB2 = "<<fallback>>"
+!$NONE = "<<no fallback>>"
+!$USE2 = "..>"
+!$USE2LABEL = ": alongside, or\nby configuration"
+!include provided.iuml
+@enduml

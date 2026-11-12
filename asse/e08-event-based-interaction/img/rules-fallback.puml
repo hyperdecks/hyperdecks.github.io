@@ -1,0 +1,7 @@
+@startuml
+' Slide question: which components have no fallback yet among the provided instances?
+!include hsg.iuml
+!$USE2 = "..>"
+!$USE2LABEL = ": alongside, or\nby configuration"
+!include provided.iuml
+@enduml

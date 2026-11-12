@@ -1,0 +1,284 @@
+{
+ "title": "Event-based Interaction",
+ "lang": "en",
+ "footer": "Advanced Software and Systems Engineering | Institute of Computer Science | University of St.Gallen",
+ "ref_label": "Exercise 8",
+ "slides": [
+  {
+   "layout": "title",
+   "id": "start",
+   "kicker": "Exercise Session 8",
+   "title": "Event-based Interaction",
+   "presenters": [
+    "Alessandro Giugno",
+    "Luka Bekavac",
+    "Simon Mayer"
+   ],
+   "meta": [
+    "University of St.Gallen",
+    "Master in Computer Science",
+    "",
+    "Advanced Software and Systems Engineering (7,856)"
+   ]
+  },
+  {
+   "layout": "syllabus",
+   "title": "Syllabus",
+   "items": [
+    {
+     "date": "14.09.2026",
+     "title": "Fundamentals of Software Architecture"
+    },
+    {
+     "date": "21.09.2026",
+     "title": "Hard Parts I: Service Granularity"
+    },
+    {
+     "date": "28.09.2026",
+     "title": "Performance Testing and Fitness Functions"
+    },
+    {
+     "date": "05.10.2026",
+     "title": "Hard Parts II: Code Sharing"
+    },
+    {
+     "date": "12.10.2026",
+     "title": "Hard Parts III: Data Ownership and Access"
+    },
+    {
+     "date": "19.10.2026",
+     "title": "Intermediate Presentations"
+    },
+    {
+     "date": "09.11.2026",
+     "title": "Principled Architectural Design for Distributed Information Systems",
+     "href": "07b#start"
+    },
+    {
+     "date": "16.11.2026",
+     "title": "Interaction Styles"
+    },
+    {
+     "date": "23.11.2026",
+     "title": "Decoupling and Interoperability",
+     "href": "09#start"
+    },
+    {
+     "date": "30.11.2026",
+     "title": "Hypermedia APIs",
+     "href": "10#start"
+    },
+    {
+     "date": "07.12.2026",
+     "title": "Interaction with AI Agents and with Physical Devices",
+     "href": "11#start"
+    },
+    {
+     "date": "14.12.2026",
+     "title": "Final Presentations"
+    }
+   ],
+   "current": 8,
+   "break_after": 6,
+   "assignments": [
+    {
+     "title": "Event Storming, Architecture Characteristics, ADRs, Service Granularity, Spring 101",
+     "from": 1,
+     "to": 2
+    },
+    {
+     "title": "Hexagonal Architecture, Persistence, Interactions, Testing",
+     "from": 3,
+     "to": 5
+    },
+    {
+     "title": "Uniform Interaction, Event-Driven Interaction, Hypermedia Ecosystems",
+     "from": 7,
+     "to": 9
+    },
+    {
+     "title": "Semantic Hypermedia, Agents and the Web of Things",
+     "from": 10,
+     "to": 11
+    }
+   ]
+  },
+  {
+   "layout": "image",
+   "title": "Today",
+   "image": "img/event-interactions.svg",
+   "shadow": false,
+   "alt": "Two graphs side by side. W3C WebSub: Groups 1, 2 and 3 are linked with each other in both directions, and each points to a resource directory, which holds a resource list of auction URLs such as http://group1.ex.org/auctions/. MQTT: Groups 1, 2 and 3 are each linked in both directions to one event broker in the middle."
+  },
+  {
+   "layout": "text",
+   "title": "PITAS Infrastructure Rules",
+   "lead": "They hold for Assignments 8 to 11. Your final presentation assesses each objective against its “Achieved when” column, using these terms.",
+   "defs": [
+    [
+     "Component",
+     "A kind of shared service: WebSub hub, MQTT broker, pod server, identity provider (Solid-OIDC issuer) or discovery service"
+    ],
+    [
+     "Instance",
+     "One running deployment of a component at its own address, e.g. the HiveMQ public broker"
+    ],
+    [
+     "Operator",
+     "The party that decides what runs on an instance and can stop it"
+    ]
+   ],
+   "aside": {
+    "image": "img/rules-terms.svg",
+    "shadow": false,
+    "alt": "A frame labelled Operator: HiveMQ around a machine labelled HiveMQ cloud, which holds a green box labelled Instance of MQTT broker at broker.hivemq.com.",
+    "caption": "The notation of the following diagrams"
+   }
+  },
+  {
+   "layout": "image",
+   "title": "Who Operates an Instance?",
+   "image": "img/rules-operators.svg",
+   "alt": "Deployment diagram with one frame per operator. Top row: Google and Switchboard each run a WebSub hub, HiveMQ runs an MQTT broker, and the course runs the resource directory on its resource VM. Bottom row: Group 2 runs a PITAS app and an MQTT broker on its VM and a second MQTT broker on an extra VM; Group 5 runs a PITAS app on its VM.",
+   "shadow": false,
+   "lead": "Rule 1: a group operates its group VM and any extra VM the course gives it.",
+   "notes": "Top row: the outside providers Google, Switchboard, HiveMQ and the course. Bottom row: two of the six groups."
+  },
+  {
+   "layout": "image",
+   "title": "Self-Hosted or Foreign?",
+   "callout": {
+    "text": "Who is a foreign provider for Group 5?"
+   },
+   "image": "img/rules-selfhosted.svg",
+   "alt": "The deployment diagram of the previous slide, with one frame per operator: Google, Switchboard, HiveMQ, the course, Group 2 and Group 5. The two MQTT brokers on the VMs of Group 2 are green and marked self-hosted.",
+   "shadow": false,
+   "notes": "Ask the room first; the next slide shows the answer.",
+   "lead": "Rule 2: your own VMs are self-hosted. Rule 3: every other operator is a foreign provider."
+  },
+  {
+   "layout": "image",
+   "title": "Self-Hosted or Foreign?",
+   "callout": {
+    "text": "Who is a foreign provider for Group 5?"
+   },
+   "image": "img/rules-foreign.svg",
+   "alt": "The same diagram with the answer: the frames of Google, Switchboard, HiveMQ, the course and Group 2 are highlighted in teal and titled foreign provider. Only the frame of Group 5 keeps the title operator. The two MQTT brokers of Group 2 are still marked self-hosted.",
+   "shadow": false,
+   "notes": "Every operator except Group 5, Group 2 included (Rule 3). Group 2's brokers are self-hosted for Group 2 (Rule 2) and come from a foreign provider for Group 5.",
+   "lead": "Rule 2: your own VMs are self-hosted. Rule 3: every other operator is a foreign provider."
+  },
+  {
+   "layout": "text",
+   "title": "When Does an Instance Count?",
+   "points": [
+    "(a) the decision log lists it",
+    "(b) it is reachable from every group VM",
+    "(c) a group other than its operator uses it in a demonstration",
+    "(d) if a group operates it, it runs on that group's VM or an extra VM from the course"
+   ],
+   "aside": {
+    "image": "img/rules-counts.svg",
+    "alt": "Group 5's PITAS app uses an MQTT broker on the Group 2 VM, marked counts, and, through a tunnel, an MQTT broker on a Group 2 laptop, marked not counted.",
+    "shadow": false,
+    "caption": "Both brokers are listed and reachable. The one on the laptop fails (d)."
+   },
+   "paragraphs": [
+    "Rule 4: an instance counts exactly when"
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "One Service, Several Components",
+   "points": [
+    "Rule 5: a service counts once for each component it provides",
+    "A Community Solid Server (CSS) is both a pod server and an identity provider",
+    "You will learn more about the CSS in Assignment 9"
+   ],
+   "aside": {
+    "image": "img/rules-css.svg",
+    "alt": "On a course VM operated by the course, a Community Solid Server provides two interfaces: pod server and identity provider.",
+    "shadow": false
+   }
+  },
+  {
+   "layout": "image",
+   "title": "Independently Operated",
+   "callout": {
+    "text": "Are the two MQTT brokers of Group 2 independently operated?"
+   },
+   "image": "img/rules-independent.svg",
+   "alt": "Google and Switchboard each run a WebSub hub in their own operator frame. Group 2 runs one MQTT broker on its VM and one on its extra VM, both inside the Group 2 frame.",
+   "shadow": false,
+   "caption": "The two WebSub hubs are independently operated.",
+   "notes": "No. Group 2 operates both of its VMs (Rule 1), so one party can stop both brokers.",
+   "lead": "Rule 6: different operators, so no single party can reconfigure or stop both."
+  },
+  {
+   "layout": "image",
+   "title": "A Single Designated Instance",
+   "image": "img/rules-designated.svg",
+   "alt": "The PITAS apps of Groups 1 to 6 all point to one MQTT broker in the HiveMQ cloud, marked designated, with the note: the only counting MQTT broker.",
+   "shadow": false,
+   "caption": "Who operates it does not matter.",
+   "lead": "Rule 7: the only counting instance of a component, used by all six groups."
+  },
+  {
+   "layout": "text",
+   "title": "A Fallback",
+   "callout": {
+    "text": "Which components have no fallback yet among the provided instances?"
+   },
+   "points": [
+    "Rule 8: a second counting instance of the same component",
+    "It has a different operator",
+    "Groups use it alongside the first instance, or switch to it by changing configuration only"
+   ],
+   "aside": {
+    "image": "img/rules-fallback.svg",
+    "alt": "Group 5's PITAS app uses four provided instances: the WebSub hub of Google, the WebSub hub of Switchboard, reached by a dashed arrow labelled alongside, or by configuration, the MQTT broker of HiveMQ and the resource directory of the course.",
+    "shadow": false
+   },
+   "notes": "Ask the room first; the next slide shows the answer."
+  },
+  {
+   "layout": "text",
+   "title": "A Fallback",
+   "callout": {
+    "text": "Which components have no fallback yet among the provided instances?"
+   },
+   "points": [
+    "Rule 8: a second counting instance of the same component",
+    "It has a different operator",
+    "Groups use it alongside the first instance, or switch to it by changing configuration only"
+   ],
+   "aside": {
+    "image": "img/rules-nofallback.svg",
+    "alt": "The same diagram with the answer in colour: the WebSub hub of Switchboard is green, and the MQTT broker of HiveMQ and the resource directory of the course are teal.",
+    "shadow": false
+   },
+   "notes": "Answer to the question: the MQTT broker (only HiveMQ) and the discovery service (only the course's resource directory). The WebSub hubs have a fallback: Google and Switchboard, once both count. A group can give the broker a fallback, e.g. a broker on its own VM that another group uses."
+  },
+  {
+   "layout": "text",
+   "title": "The Decision Log Decides What Counts",
+   "points": [
+    {
+     "text": "This week the task force decides",
+     "sub": [
+      "which hubs and brokers the ecosystem relies on",
+      "the topic structure, delivery guarantees and payload contents",
+      "whether notifications are signed"
+     ]
+    },
+    "Several objectives in your role briefing depend on these decisions",
+    "Record them as ADRs in the [decision log](https://github.com/unisg-scs-asse/pitas-hs26-itf/tree/main/adr) of the task force",
+    "Rule 9: the narrative parts of your role briefing, such as the memo, add no conditions to your objectives"
+   ]
+  },
+  {
+   "layout": "questions",
+   "title": "Any Questions / Comments / Doubts / Concerns?"
+  }
+ ]
+}

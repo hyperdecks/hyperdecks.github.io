@@ -1,0 +1,23 @@
+@startuml
+!include hsg.iuml
+rectangle "Operator: Google" {
+  node "Google cloud" {
+    component "WebSub hub" as hubG
+  }
+}
+rectangle "Operator: Switchboard" {
+  node "Switchboard server" {
+    component "WebSub hub" as hubS
+  }
+}
+rectangle "Operator: Group 2" {
+  node "Group 2 VM" {
+    component "MQTT broker" as b1
+  }
+  node "extra VM" {
+    component "MQTT broker" as b2
+  }
+}
+hubG -[hidden]right- hubS
+hubS -[hidden]right- b1
+@enduml

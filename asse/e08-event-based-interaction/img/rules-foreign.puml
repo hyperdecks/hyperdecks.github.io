@@ -1,0 +1,18 @@
+@startuml
+' Answer to the slide question: the foreign providers for Group 5
+!include hsg.iuml
+!$SH = "<<self-hosted>>"
+!$F = "<<foreign provider>>"
+!$FG = $F
+!$FS = $F
+!$FH = $F
+!$FC = $F
+!$FG2 = $F
+!$OG = "Foreign provider: Google"
+!$OS = "Foreign provider: Switchboard"
+!$OH = "Foreign provider: HiveMQ"
+!$OC = "Foreign provider: the course"
+!$O2 = "Foreign provider: Group 2"
+show <<self-hosted>> stereotype
+!include ecosystem.iuml
+@enduml

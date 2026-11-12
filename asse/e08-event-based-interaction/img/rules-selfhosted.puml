@@ -1,0 +1,7 @@
+@startuml
+' Slide question: the ecosystem with Group 2's self-hosted brokers marked
+!include hsg.iuml
+!$SH = "<<self-hosted>>"
+show <<self-hosted>> stereotype
+!include ecosystem.iuml
+@enduml

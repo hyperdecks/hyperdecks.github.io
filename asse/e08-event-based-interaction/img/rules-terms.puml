@@ -1,0 +1,8 @@
+@startuml
+!include hsg.iuml
+rectangle "Operator: HiveMQ" {
+  node "Machine: HiveMQ cloud" {
+    component "Instance of MQTT broker\nat broker.hivemq.com" as i
+  }
+}
+@enduml

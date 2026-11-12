@@ -1,0 +1,12 @@
+@startuml
+!include hsg.iuml
+rectangle "Operator: the course" {
+  node "course VM" {
+    component "Community Solid Server" as css
+    interface "pod server" as pod
+    interface "identity provider" as idp
+  }
+}
+css -down- pod
+css -down- idp
+@enduml

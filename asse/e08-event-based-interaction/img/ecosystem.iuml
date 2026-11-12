@@ -1,0 +1,83 @@
+' The PITAS ecosystem used by all rule diagrams: four outside providers, two groups.
+' Each diagram may set a frame title ($O..), a frame stereotype ($F..) or the stereotype
+' of Group 2's brokers ($SH) before including this file; the rest keep these defaults.
+!if %not(%variable_exists("$OG"))
+!$OG = "Operator: Google"
+!endif
+!if %not(%variable_exists("$OS"))
+!$OS = "Operator: Switchboard"
+!endif
+!if %not(%variable_exists("$OH"))
+!$OH = "Operator: HiveMQ"
+!endif
+!if %not(%variable_exists("$OC"))
+!$OC = "Operator: the course"
+!endif
+!if %not(%variable_exists("$O2"))
+!$O2 = "Operator: Group 2"
+!endif
+!if %not(%variable_exists("$O5"))
+!$O5 = "Operator: Group 5"
+!endif
+!if %not(%variable_exists("$FG"))
+!$FG = ""
+!endif
+!if %not(%variable_exists("$FS"))
+!$FS = ""
+!endif
+!if %not(%variable_exists("$FH"))
+!$FH = ""
+!endif
+!if %not(%variable_exists("$FC"))
+!$FC = ""
+!endif
+!if %not(%variable_exists("$FG2"))
+!$FG2 = ""
+!endif
+!if %not(%variable_exists("$FG5"))
+!$FG5 = ""
+!endif
+!if %not(%variable_exists("$SH"))
+!$SH = ""
+!endif
+rectangle "$OG" as G $FG {
+  node "Google cloud" {
+    component "WebSub hub" as hubG
+  }
+}
+rectangle "$OS" as S $FS {
+  node "Switchboard server" {
+    component "WebSub hub" as hubS
+  }
+}
+rectangle "$OH" as H $FH {
+  node "HiveMQ cloud" {
+    component "MQTT broker" as mqttH
+  }
+}
+rectangle "$OC" as C $FC {
+  node "resource VM" {
+    component "resource directory" as dir
+  }
+}
+rectangle "$O2" as G2 $FG2 {
+  node "Group 2 VM" {
+    component "PITAS app" as app2
+    component "MQTT broker" as mqtt2 $SH
+  }
+  node "extra VM" {
+    component "MQTT broker" as mqtt2b $SH
+  }
+}
+rectangle "$O5" as G5 $FG5 {
+  node "Group 5 VM" {
+    component "PITAS app" as app5
+  }
+}
+' Hidden links between components (links between frames add an empty band on top)
+hubG -[hidden]right- hubS
+hubS -[hidden]right- mqttH
+mqttH -[hidden]right- dir
+mqtt2b -[hidden]right- app5
+hubG -[hidden]down- app2
+dir -[hidden]down- app5
