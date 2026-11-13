@@ -714,7 +714,15 @@ def shape_paths(g, w, h, adj):
         y2, y3 = (h - gap) / 2, (h + gap) / 2
         return [f"M{_f(x0)} {_f(y2 - th)}H{_f(x1)}V{_f(y2)}H{_f(x0)}Z", f"M{_f(x0)} {_f(y3)}H{_f(x1)}V{_f(y3 + th)}H{_f(x0)}Z"]
     if g == "arc":
-        return [f"M{_f(w / 2)} 0A{_f(w / 2)} {_f(h / 2)} 0 0 1 {_f(w)} {_f(h / 2)}"]
+        # elliptical arc from adj1 to adj2 (60000ths of a degree, clockwise, default the upper right quarter)
+        rx, ry = w / 2, h / 2
+        st, en = math.radians(adj.get("adj1", 16200000) / 60000), math.radians(adj.get("adj2", 0) / 60000)
+        par = lambda a: math.atan2(rx * math.sin(a), ry * math.cos(a))      # visual angle -> ellipse parameter
+        p0, p1 = par(st), par(en)
+        sweep = (en - st) % (2 * math.pi)
+        pt = lambda q: (rx + rx * math.cos(q), ry + ry * math.sin(q))
+        (x0, y0), (x1, y1) = pt(p0), pt(p1)
+        return [f"M{_f(x0)} {_f(y0)}A{_f(rx)} {_f(ry)} 0 {1 if sweep > math.pi else 0} 1 {_f(x1)} {_f(y1)}"]
     if g in ("line", "straightConnector1"):
         return [f"M0 0L{_f(w)} {_f(h)}"]
     if g == "curvedConnector2":

@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 520" role="img" aria-label="Fabricated logo: Office 364, with a cracked orange tile">
+<rect width="760" height="520" fill="#fff"/>
+<g transform="translate(40,70)">
+<path d="M40 0H300Q340 0 340 40V320Q340 360 300 360H40Q0 360 0 320V40Q0 0 40 0Z" fill="#d83b01"/>
+<path d="M105 70L235 40V300L105 270Z" fill="#fff"/>
+<path d="M105 70V270L60 245V95Z" fill="#fbd3c5"/>
+<path d="M235 40L255 30V310L235 300Z" fill="#fbd3c5"/>
+<path d="M150 0L178 92L132 150L190 210L160 290L196 360" fill="none" stroke="#fff" stroke-width="14" stroke-linejoin="round" stroke-linecap="round"/>
+<path d="M150 0L178 92L132 150L190 210L160 290L196 360" fill="none" stroke="#7a1f00" stroke-width="4" stroke-linejoin="round" stroke-linecap="round" opacity=".55"/>
+</g>
+<text x="420" y="215" font-family="Gill Sans, Gill Sans MT, Calibri, Arial, sans-serif" font-size="86" font-weight="700" fill="#333">Office</text>
+<text x="420" y="320" font-family="Gill Sans, Gill Sans MT, Calibri, Arial, sans-serif" font-size="120" font-weight="700" fill="#d83b01">364</text>
+<text x="422" y="375" font-family="Gill Sans, Gill Sans MT, Calibri, Arial, sans-serif" font-size="30" fill="#666">One day short.</text>
+</svg>
