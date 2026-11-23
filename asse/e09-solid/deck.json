@@ -1,0 +1,136 @@
+{
+ "title": "Data Decentralization",
+ "lang": "en",
+ "footer": "Advanced Software and Systems Engineering | Institute of Computer Science | University of St.Gallen",
+ "ref_label": "Exercise 9",
+ "slides": [
+  {
+   "layout": "title",
+   "id": "start",
+   "kicker": "Exercise Session 9",
+   "title": "Data Decentralization",
+   "presenters": [
+    "Alessandro Giugno",
+    "Luka Bekavac",
+    "Simon Mayer"
+   ],
+   "meta": [
+    "University of St.Gallen",
+    "Master in Computer Science",
+    "",
+    "Advanced Software and Systems Engineering (7,856)"
+   ]
+  },
+  {
+   "layout": "section",
+   "title": "A Bit of Feedback",
+   "kicker": "Exercise Session 9"
+  },
+  {
+   "layout": "text",
+   "title": "A Bit of Feedback: Measurement and Decisions",
+   "groups": [
+    {
+     "heading": "Reminder about Exercise 7, Task 3.2",
+     "paragraphs": [
+      "In the coming exercises, you will also compare [the protocols] by *measurement*, with respect to their **performance**. You will extend [the testing infrastructure] with every new protocol and use it in every following exercise, so design it with that in mind. […] **Metrics** by which you could compare the protocols include, for example:"
+     ],
+     "points": [
+      "the **latency** from launching an auction until a bid arrives",
+      "the number of **auctions or bids per second** an auction house sustains",
+      "the **messages and bytes** exchanged per interaction"
+     ]
+    }
+   ]
+  },
+  {
+   "layout": "text",
+   "title": "A Bit of Feedback: Measurement and Decisions",
+   "groups": [
+    {
+     "heading": "Reminder about Exercise 7, Task 3.2",
+     "paragraphs": [
+      "In the coming exercises, you will also compare [the protocols] by *measurement*, with respect to their **performance**. You will extend [the testing infrastructure] with every new protocol and use it in every following exercise, so design it with that in mind. […] **Metrics** by which you could compare the protocols include, for example:"
+     ],
+     "points": [
+      "the **latency** from launching an auction until a bid arrives",
+      "the number of **auctions or bids per second** an auction house sustains",
+      "the **messages and bytes** exchanged per interaction"
+     ]
+    },
+    {
+     "heading": "Decision Log",
+     "points": [
+      "Focus on the why, not on rules"
+     ]
+    }
+   ]
+  },
+  {
+   "layout": "image",
+   "title": "PlugFest: Testing E7 and E8",
+   "image": "img/plugfest_2026.jpg",
+   "alt": "Plugfest announcement: Tuesday, November 24, 17:00, Room 61-110 (Lab Room), pizza and drinks provided. A cartoon of people plugging laptops and servers together around an interop diagram. Plug together. Make it interoperable."
+  },
+  {
+   "layout": "section",
+   "title": "About the Exercise",
+   "kicker": "Exercise Session 9"
+  },
+  {
+   "layout": "image",
+   "title": "About the Exercise: What You Know So Far",
+   "image": "img/sovereignty-deployment-step0.svg",
+   "shadow": false,
+   "alt": "Deployment diagram with Client, Auctioneer, an EventQueue, a PITAS application with Bidder, pitas-jobs and pitas-scheduler, and pitas-worker-pool, and a Worker. No pods and no interactions are shown yet."
+  },
+  {
+   "layout": "image",
+   "title": "About the Exercise: Setup and Commission",
+   "image": "img/sovereignty-deployment-step1.svg",
+   "shadow": false,
+   "alt": "Deployment diagram with Client, ClientPod, Auctioneer, an EventQueue, an AuctionHousePods group with AuctioneerPod and BidderPod, a PITAS application with Bidder, pitas-jobs and pitas-scheduler, and pitas-worker-pool, and a Worker with WorkerPod. Steps 1 to 8 show, in green: the Worker registers its WebID with pitas-worker-pool, writes its details to WorkerPod, and the pool stores the WebID in BidderPod. The Client writes the task input to ClientPod and commissions the task with a link. The Auctioneer creates the auction in AuctioneerPod and pushes an auction event, which the EventQueue delivers to the Bidder.",
+   "notes": "This flow is one example of how the sovereignty rules can work. Your implementation can differ from it."
+  },
+  {
+   "layout": "image",
+   "title": "About the Exercise: Bidding and Award",
+   "image": "img/sovereignty-deployment-step2.svg",
+   "shadow": false,
+   "alt": "Deployment diagram with Client, ClientPod, Auctioneer, an EventQueue, an AuctionHousePods group with AuctioneerPod and BidderPod, a PITAS application with Bidder, pitas-jobs and pitas-scheduler, and pitas-worker-pool, and a Worker with WorkerPod. Steps 1 to 8 show in black. Steps 9 to 16 show in green: the Bidder reads the auction, fetches the registered Worker WebIDs and the worker details from WorkerPod, evaluates the auction and appends a bid to AuctioneerPod. The Auctioneer reads the bids, evaluates them and writes the award.",
+   "notes": "This flow is one example of how the sovereignty rules can work. Your implementation can differ from it."
+  },
+  {
+   "layout": "image",
+   "title": "About the Exercise: Award and Execution",
+   "image": "img/sovereignty-deployment-step3.svg",
+   "shadow": false,
+   "alt": "Deployment diagram with Client, ClientPod, Auctioneer, an EventQueue, an AuctionHousePods group with AuctioneerPod and BidderPod, a PITAS application with Bidder, pitas-jobs and pitas-scheduler, and pitas-worker-pool, and a Worker with WorkerPod. Steps 1 to 16 show in black. Steps 17 to 23 show in green: the Auctioneer pushes an award event, the EventQueue delivers it, the Bidder reads the award and hands the won job over to pitas-jobs, which dispatches it to the Worker. The Worker fetches the task input from ClientPod and executes it without keeping a copy.",
+   "notes": "This flow is one example of how the sovereignty rules can work. Your implementation can differ from it."
+  },
+  {
+   "layout": "image",
+   "title": "About the Exercise: Result Back to the Client",
+   "image": "img/sovereignty-deployment-step4.svg",
+   "shadow": false,
+   "alt": "Deployment diagram with Client, ClientPod, Auctioneer, an EventQueue, an AuctionHousePods group with AuctioneerPod and BidderPod, a PITAS application with Bidder, pitas-jobs and pitas-scheduler, and pitas-worker-pool, and a Worker with WorkerPod. Steps 1 to 23 show in black. Steps 24 to 30 show in green: the Worker appends the result to ClientPod and reports execution done, the Bidder polls the job status and pushes a result event, the EventQueue delivers it to the Auctioneer, which notifies the Client with a link, and the Client reads the result from ClientPod.",
+   "notes": "This flow is one example of how the sovereignty rules can work. Your implementation can differ from it."
+  },
+  {
+   "layout": "text",
+   "title": "About the Exercise: Refactoring the Persistence Layer",
+   "points": [
+    "Moving the data into pods touches your persistence layer",
+    {
+     "text": "Expect coupling that was invisible before",
+     "sub": [
+      "Code that assumes transactional writes",
+      "Identifiers minted by a local database"
+     ]
+    },
+    "Ensure that your git history contains a commit for E5"
+   ],
+   "notes": "• Task 3.1: the refactoring very likely exposes coupling that was invisible before\n• Examples: code that assumed transactional writes, code that relied on identifiers minted by a local database\n• Hand-in: just a heads up; detailed info about final submission will follow"
+  }
+ ]
+}

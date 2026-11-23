@@ -1,0 +1,5 @@
+@startuml
+' Step 3 of 4 of sovereignty-deployment-minimal.puml (see there).
+!$STEP = 3
+!include sovereignty-deployment-minimal.puml
+@enduml

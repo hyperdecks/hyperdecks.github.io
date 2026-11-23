@@ -1,0 +1,5 @@
+@startuml
+' Step 0 (no pods, no interactions) of sovereignty-deployment-minimal.puml (see there).
+!$STEP = 0
+!include sovereignty-deployment-minimal.puml
+@enduml
